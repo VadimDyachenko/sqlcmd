@@ -45,10 +45,9 @@ public class DatabaseManager {
     public void create(DataSet users) {
         try {
             Statement statement = connection.createStatement();
-            String tableNames = getNameFormated(users, "%s,");
+            String columnName = getNameFormated(users, "%s,");
             String values = getValuesFormated(users, "'%s',");
-
-            statement.executeUpdate("INSERT INTO public.users (" + tableNames + ")" + "VALUES (" + values + ")");
+            statement.executeUpdate("INSERT INTO public.users (" + columnName + ")" + "VALUES (" + values + ")");
             statement.close();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -77,6 +76,26 @@ public class DatabaseManager {
         } catch (SQLException e) {
             e.printStackTrace();
             return new DataSet[0];
+        }
+    }
+
+    public void update (String tableName, int id, DataSet newValue) {
+        try {
+            String tableNames = getNameFormated(newValue, "%s = ?,");
+            String sql = "UPDATE public." + tableName + " SET " + tableNames + " WHERE id = ?";
+            PreparedStatement ps = connection.prepareStatement(sql);
+
+            int index = 1;
+            for (Object value : newValue.getValues()) {
+                ps.setObject(index, value);
+                index++;
+            }
+            ps.setObject(index, id);
+
+            ps.executeUpdate();
+            ps.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
     }
 

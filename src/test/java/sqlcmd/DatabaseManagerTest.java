@@ -2,7 +2,6 @@ package sqlcmd;
 
 import org.junit.Before;
 import org.junit.Test;
-import sqlcmd.DatabaseManager;
 
 import java.util.Arrays;
 
@@ -13,6 +12,7 @@ import static org.junit.Assert.assertEquals;
  */
 public class DatabaseManagerTest {
     private DatabaseManager manager;
+    private String tableName ="users";
     @Before
     public void setupManager() {
         manager = new DatabaseManager();
@@ -29,20 +29,45 @@ public class DatabaseManagerTest {
     @Test
     public void testGetTableData(){
         //given
-        manager.clear("users");
+        manager.clear(tableName);
         //when
         DataSet inputData = new DataSet();
         inputData.put("id", 10);
         inputData.put("name", "Semen Petrov");
-        inputData.put("age", 40);
+        inputData.put("password", "qwert");
         manager.create(inputData);
         //then
-        DataSet[] users = manager.getTableData("users");
+        DataSet[] users = manager.getTableData(tableName);
         assertEquals(1, users.length);
 
         DataSet user = users[0];
-        assertEquals("[id, name, age]", Arrays.toString(user.getNames()));
-        assertEquals("[10, Semen Petrov, 40]", Arrays.toString(user.getValues()));
+        assertEquals("[id, name, password]", Arrays.toString(user.getNames()));
+        assertEquals("[10, Semen Petrov, qwert]", Arrays.toString(user.getValues()));
 
+    }
+
+    @Test
+    public void testUpdateTableData() {
+        //given
+        manager.clear(tableName);
+        DataSet inputData = new DataSet();
+        inputData.put("id", 10);
+        inputData.put("name", "Semen Petrov");
+        inputData.put("password", "qwert");
+        manager.create(inputData);
+
+        //when
+        DataSet newValue = new DataSet();
+        newValue.put("password", "abcde");
+        newValue.put("name", "Bob Marley");
+        manager.update(tableName, 10, newValue);
+
+        //then
+        DataSet[] users = manager.getTableData(tableName);
+        assertEquals(1, users.length);
+
+        DataSet user = users[0];
+        assertEquals("[id, name, password]", Arrays.toString(user.getNames()));
+        assertEquals("[10, Bob Marley, abcde]", Arrays.toString(user.getValues()));
     }
 }
