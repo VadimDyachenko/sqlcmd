@@ -25,4 +25,24 @@ public class DatabaseManagerTest {
         assertEquals("[users, staff]", Arrays.toString(tableNames));
         System.out.println("");
     }
+
+    @Test
+    public void testGetTableData(){
+        //given
+        manager.clear("users");
+        //when
+        DataSet inputData = new DataSet();
+        inputData.put("id", 10);
+        inputData.put("name", "Semen Petrov");
+        inputData.put("age", 40);
+        manager.create(inputData);
+        //then
+        DataSet[] users = manager.getTableData("users");
+        assertEquals(1, users.length);
+
+        DataSet user = users[0];
+        assertEquals("[id, name, age]", Arrays.toString(user.getNames()));
+        assertEquals("[10, Semen Petrov, 40]", Arrays.toString(user.getValues()));
+
+    }
 }
