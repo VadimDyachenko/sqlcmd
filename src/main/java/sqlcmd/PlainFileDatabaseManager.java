@@ -6,7 +6,7 @@ package sqlcmd;
 public class PlainFileDatabaseManager implements DatabaseManager {
     @Override
     public void connect(String database, String user, String password) {
-        //test
+        //test2
 
     }
 
