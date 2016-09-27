@@ -10,12 +10,12 @@ import static org.junit.Assert.assertEquals;
 /**
  * Created by Vadim on 24.09.2016.
  */
-public class DatabaseManagerTest {
+public class JDBCDatabaseManagerTest {
     private DatabaseManager manager;
-    private String tableName ="users";
+    private static final String TABLE_NAME ="users";
     @Before
     public void setupManager() {
-        manager = new DatabaseManager();
+        manager = new JDBCDatabaseManager();
         manager.connect("sqlcmd", "javauser", "test");
     }
 
@@ -29,7 +29,7 @@ public class DatabaseManagerTest {
     @Test
     public void testGetTableData(){
         //given
-        manager.clear(tableName);
+        manager.clear(TABLE_NAME);
         //when
         DataSet inputData = new DataSet();
         inputData.put("id", 10);
@@ -37,7 +37,7 @@ public class DatabaseManagerTest {
         inputData.put("password", "qwert");
         manager.create(inputData);
         //then
-        DataSet[] users = manager.getTableData(tableName);
+        DataSet[] users = manager.getTableData(TABLE_NAME);
         assertEquals(1, users.length);
 
         DataSet user = users[0];
@@ -49,7 +49,7 @@ public class DatabaseManagerTest {
     @Test
     public void testUpdateTableData() {
         //given
-        manager.clear(tableName);
+        manager.clear(TABLE_NAME);
         DataSet inputData = new DataSet();
         inputData.put("id", 10);
         inputData.put("name", "Semen Petrov");
@@ -60,10 +60,10 @@ public class DatabaseManagerTest {
         DataSet newValue = new DataSet();
         newValue.put("password", "abcde");
         newValue.put("name", "Bob Marley");
-        manager.update(tableName, 10, newValue);
+        manager.update(TABLE_NAME, 10, newValue);
 
         //then
-        DataSet[] users = manager.getTableData(tableName);
+        DataSet[] users = manager.getTableData(TABLE_NAME);
         assertEquals(1, users.length);
 
         DataSet user = users[0];
