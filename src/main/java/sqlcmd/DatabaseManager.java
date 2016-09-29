@@ -4,6 +4,8 @@ public interface DatabaseManager {
 
     void connect(String database, String user, String password);
 
+    void disconnect();
+
     String[] getAllTableNames();
 
     void create(DataSet users);

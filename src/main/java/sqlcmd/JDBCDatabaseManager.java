@@ -19,6 +19,20 @@ public class JDBCDatabaseManager implements DatabaseManager {
     }
 
     @Override
+    public void disconnect() {
+        try {
+            if (!connection.isClosed()) {
+                connection.close();
+                System.out.println("Connection closed.");
+            } else {
+                System.out.println("No any established connections.");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
     public String[] getAllTableNames() {
         String[] resultTableNames;
         try {

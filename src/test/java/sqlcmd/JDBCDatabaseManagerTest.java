@@ -1,8 +1,11 @@
 package sqlcmd;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
 import java.util.Arrays;
 
 import static org.junit.Assert.assertEquals;
@@ -11,19 +14,25 @@ import static org.junit.Assert.assertEquals;
  * Created by Vadim on 24.09.2016.
  */
 public class JDBCDatabaseManagerTest {
+    private final ByteArrayOutputStream consoleOutputStream = new ByteArrayOutputStream();
     private DatabaseManager manager;
     private static final String TABLE_NAME ="users";
     @Before
     public void setupManager() {
         manager = new JDBCDatabaseManager();
         manager.connect("sqlcmd", "javauser", "test");
+        System.setOut(new PrintStream(consoleOutputStream));
+    }
+
+    @After
+    public void cleanUpStream() {
+        System.setOut(null);
     }
 
     @Test
     public void testGetAllTableNames() {
         String[] tableNames = manager.getAllTableNames();
         assertEquals("[users, staff]", Arrays.toString(tableNames));
-        System.out.println("");
     }
 
     @Test
@@ -69,5 +78,21 @@ public class JDBCDatabaseManagerTest {
         DataSet user = users[0];
         assertEquals("[id, name, password]", Arrays.toString(user.getNames()));
         assertEquals("[10, Bob Marley, abcde]", Arrays.toString(user.getValues()));
+    }
+
+    @Test
+    public void disconnectTest1() {
+        manager.disconnect();
+        assertEquals("Connection closed.\n", consoleOutputStream.toString());
+    }
+
+    @Test
+    public void disconnectTest2() {
+        //when
+        manager.disconnect();
+        //than
+        manager.disconnect();
+        assertEquals("Connection closed.\n" +
+                "No any established connections.\n", consoleOutputStream.toString());
     }
 }
