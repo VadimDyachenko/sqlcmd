@@ -1,4 +1,4 @@
-package sqlcmd;
+package sqlcmd.database;
 
 import java.sql.*;
 
@@ -6,27 +6,22 @@ public class JDBCDatabaseManager implements DatabaseManager {
     private Connection connection;
 
     @Override
-    public void connect(String database, String user, String password) {
-        try {
+    public void connect(String database, String user, String password) throws SQLException{
+//        try {
             connection = DriverManager.getConnection(
                     "jdbc:postgresql://192.168.1.5:5432/" + database, user, password);
-        } catch (SQLException e) {
-            System.out.println(String.format("Cant get connection for database: %s user: %s", database, user));
-            e.printStackTrace();
-            connection = null;
-        }
+//        } catch (SQLException e) {
+//            System.out.println(String.format("Cant get connection for database: %s user: %s", database, user));
+//            e.printStackTrace();
+//            connection = null;
+//        }
 
     }
 
     @Override
     public void disconnect() {
         try {
-            if (!connection.isClosed()) {
-                connection.close();
-                System.out.println("Connection closed.");
-            } else {
-                System.out.println("No any established connections.");
-            }
+            connection.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }

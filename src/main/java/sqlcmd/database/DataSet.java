@@ -1,4 +1,4 @@
-package sqlcmd;
+package sqlcmd.database;
 
 import java.util.ArrayList;
 import java.util.Arrays;

@@ -1,12 +1,18 @@
-package sqlcmd;
+package sqlcmd.database;
 
 /**
  * Created by Vadim on 27.09.2016.
  */
 public class PlainFileDatabaseManager implements DatabaseManager {
+    //TODO implement methods
+
     @Override
-    public void connect(String database, String user, String password) {
-        //test2
+    public void connect(String fileName, String user, String password) {
+
+    }
+
+    @Override
+    public void disconnect() {
 
     }
 
