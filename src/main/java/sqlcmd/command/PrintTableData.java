@@ -24,6 +24,5 @@ public class PrintTableData implements Command {
         DataSet[] tableData = manager.getTableData(tableName);
         String[] columnNames = tableData[0].getNames();
 
-
     }
 }

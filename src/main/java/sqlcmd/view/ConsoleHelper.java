@@ -8,13 +8,14 @@ import java.io.InputStreamReader;
 
 public class ConsoleHelper implements View {
     private BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+
     @Override
     public void writeMessage(String message) {
         System.out.println(message);
     }
 
     @Override
-    public String readLine() throws InterruptOperationException{
+    public String readLine() throws InterruptOperationException {
         String result = "";
         try {
             result = reader.readLine();
@@ -35,20 +36,20 @@ public class ConsoleHelper implements View {
     @Override
     public Operation askOperation() throws InterruptOperationException {
         writeMessage("Please choose an operation desired or type 'EXIT' for exiting");
-        writeMessage("1 - List all table names");
-        writeMessage("2 - List table");
 
         while (true) {
-            String choice = readLine();
-            try
-            {
-                Integer numOfChoice = Integer.parseInt(choice);
-                if (numOfChoice == 0) throw new IllegalArgumentException();
-                return Operation.getAllowableOperation(numOfChoice);
-            } catch (Exception e) {
-                writeMessage("invalid.data");
-            }
+            writeMessage("1 - List all table names");
+            writeMessage("2 - Print table");
+            writeMessage("3 - Change table");
+            writeMessage("4 - Exit");  //TODO вырезать exit
 
+            String choice = readLine();
+            try {
+                Integer numOfChoice = Integer.parseInt(choice);
+                return Operation.getAllowableOperation(numOfChoice);
+            } catch (IllegalArgumentException e) {
+                writeMessage("\nPlease choise correct number:");
+            }
         }
     }
 }

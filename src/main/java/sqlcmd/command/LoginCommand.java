@@ -19,7 +19,8 @@ public class LoginCommand implements Command {
         String login;
         String password;
         view.writeMessage("Welcome to SQLCmd!\n" +
-                "Enter model name, login and password.\n");
+                "Enter model name, login and password.\n" +
+                "Type 'exit' for exit program.\n" );
         while (true) {
             view.writeMessage("Please, enter model name:");
             databaseName = view.readLine();
