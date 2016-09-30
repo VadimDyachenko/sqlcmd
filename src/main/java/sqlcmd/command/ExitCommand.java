@@ -1,26 +1,26 @@
 package sqlcmd.command;
 
-import sqlcmd.view.ConsoleHelper;
 import sqlcmd.database.DatabaseManager;
 import sqlcmd.exception.InterruptOperationException;
+import sqlcmd.view.View;
 
 
 public class ExitCommand implements Command {
     private final DatabaseManager manager;
-    private final ConsoleHelper consoleHelper;
+    private final View view;
 
-    public ExitCommand(DatabaseManager manager, ConsoleHelper consoleHelper) {
+    public ExitCommand(DatabaseManager manager, View view) {
         this.manager = manager;
-        this.consoleHelper = consoleHelper;
+        this.view = view;
     }
 
     @Override
     public void execute() throws InterruptOperationException {
         manager.disconnect();
-        consoleHelper.writeMessage("Do you really want to exit? <y/n>");
-        String answer = consoleHelper.readLine();
+        view.writeMessage("Do you really want to exit? <y/n>");
+        String answer = view.readLine();
         if (answer.trim().toLowerCase().equals("y")) {
-            consoleHelper.writeMessage("Thank you for using SQLCmd. Good luck.");
+            view.writeMessage("Thank you for using SQLCmd. Good luck.");
         }
     }
 }

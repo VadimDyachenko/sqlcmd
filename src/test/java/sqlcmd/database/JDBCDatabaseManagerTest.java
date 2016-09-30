@@ -51,7 +51,7 @@ public class JDBCDatabaseManagerTest {
         inputData.put("id", 10);
         inputData.put("name", "Semen Petrov");
         inputData.put("password", "qwert");
-        manager.create(inputData);
+        manager.create(TABLE_NAME, inputData);
         //then
         DataSet[] users = manager.getTableData(TABLE_NAME);
         assertEquals(1, users.length);
@@ -70,7 +70,7 @@ public class JDBCDatabaseManagerTest {
         inputData.put("id", 10);
         inputData.put("name", "Semen Petrov");
         inputData.put("password", "qwert");
-        manager.create(inputData);
+        manager.create(TABLE_NAME, inputData);
 
         //when
         DataSet newValue = new DataSet();

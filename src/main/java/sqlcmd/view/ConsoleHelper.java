@@ -6,12 +6,14 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
-public class ConsoleHelper {
+public class ConsoleHelper implements View {
     private BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+    @Override
     public void writeMessage(String message) {
         System.out.println(message);
     }
 
+    @Override
     public String readLine() throws InterruptOperationException{
         String result = "";
         try {
@@ -25,10 +27,12 @@ public class ConsoleHelper {
         return result;
     }
 
+    @Override
     public void printExitMessage() {
         writeMessage("Terminated. Thank you for using SQLCmd. Good luck.");
     }
 
+    @Override
     public Operation askOperation() throws InterruptOperationException {
         writeMessage("Please choose an operation desired or type 'EXIT' for exiting");
         writeMessage("1 - List all table names");

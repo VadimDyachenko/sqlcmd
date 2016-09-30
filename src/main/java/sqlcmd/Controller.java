@@ -6,6 +6,7 @@ import sqlcmd.database.JDBCDatabaseManager;
 import sqlcmd.exception.InterruptOperationException;
 import sqlcmd.view.ConsoleHelper;
 import sqlcmd.view.Operation;
+import sqlcmd.view.View;
 
 public class Controller {
 
@@ -16,20 +17,20 @@ public class Controller {
 
     private void run() {
         DatabaseManager manager = new JDBCDatabaseManager();
-        ConsoleHelper consoleHelper = new ConsoleHelper();
-        CommandExecutor commandExecutor = new CommandExecutor(manager, consoleHelper);
+        View view = new ConsoleHelper();
+        CommandExecutor commandExecutor = new CommandExecutor(manager, view);
 
         try {
             commandExecutor.execute(Operation.LOGIN);
             Operation operation;
             do {
-                operation = consoleHelper.askOperation();
+                operation = view.askOperation();
                 commandExecutor.execute(operation);
             }
             while (operation != Operation.EXIT);
 
         } catch (InterruptOperationException e) {
-            consoleHelper.printExitMessage();
+            view.printExitMessage();
         }
         System.exit(0);
     }

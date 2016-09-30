@@ -1,16 +1,16 @@
 package sqlcmd.command;
 
-import sqlcmd.view.ConsoleHelper;
 import sqlcmd.database.DatabaseManager;
 import sqlcmd.exception.InterruptOperationException;
+import sqlcmd.view.View;
 
 public class LoginCommand implements Command {
     private DatabaseManager manager;
-    private ConsoleHelper consoleHelper;
+    private View view;
 
-    public LoginCommand(DatabaseManager manager, ConsoleHelper consoleHelper) {
+    public LoginCommand(DatabaseManager manager, View view) {
         this.manager = manager;
-        this.consoleHelper = consoleHelper;
+        this.view = view;
     }
 
     @Override
@@ -18,22 +18,22 @@ public class LoginCommand implements Command {
         String databaseName;
         String login;
         String password;
-        consoleHelper.writeMessage("Welcome to SQLCmd!\n" +
+        view.writeMessage("Welcome to SQLCmd!\n" +
                 "Enter database name, login and password.\n");
         while (true) {
-            consoleHelper.writeMessage("Please, enter database name:");
-            databaseName = consoleHelper.readLine();
-            consoleHelper.writeMessage("Enter you login:");
-            login = consoleHelper.readLine();
-            consoleHelper.writeMessage("Enter you password:");
-            password = consoleHelper.readLine();
+            view.writeMessage("Please, enter database name:");
+            databaseName = view.readLine();
+            view.writeMessage("Enter you login:");
+            login = view.readLine();
+            view.writeMessage("Enter you password:");
+            password = view.readLine();
             try {
                 manager.connect(databaseName, login, password);
-                consoleHelper.writeMessage("Connection successful!\n");
+                view.writeMessage("Connection successful!\n");
                 break;
             } catch (Exception e) {
-                consoleHelper.writeMessage("Connection failed: " + e.getMessage());
-                consoleHelper.writeMessage("Try again.");
+                view.writeMessage("Connection failed: " + e.getMessage());
+                view.writeMessage("Try again.");
             }
         }
 
