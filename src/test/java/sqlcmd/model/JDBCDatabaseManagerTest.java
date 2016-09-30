@@ -7,6 +7,8 @@ import org.junit.Test;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.util.Arrays;
+import java.util.Iterator;
+import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 
@@ -85,7 +87,7 @@ public class JDBCDatabaseManagerTest {
     }
 
     @Test
-    public void getMaxRowLenghtTest() {
+    public void getTableRowLenghtTest() {
         //given
         manager.clear(TABLE_NAME);
         DataSet inputData1 = new DataSet();
@@ -105,9 +107,16 @@ public class JDBCDatabaseManagerTest {
         manager.create(TABLE_NAME, inputData3);
 
         //when
-        Integer size = manager.getMaxRowLenght("users", "name");
+        Map<String, Integer> table = manager.getTableRowLenght(TABLE_NAME);
+        Iterator it = table.entrySet().iterator();
+        while (it.hasNext()) {
+            Map.Entry pair = (Map.Entry) it.next();
+            System.out.println(pair.getKey() + " = " + pair.getValue());
+        }
         //than
-        assertEquals("13", size.toString());
+        assertEquals("password = 9\n" +
+                "name = 13\n" +
+                "id = 3\n", consoleOutputStream.toString());
     }
 
 //    @Test

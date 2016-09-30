@@ -1,21 +1,17 @@
 package sqlcmd.model;
 
 import java.sql.*;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 public class JDBCDatabaseManager implements DatabaseManager {
     private Connection connection;
 
     @Override
-    public void connect(String database, String user, String password) throws SQLException{
-//        try {
-            connection = DriverManager.getConnection(
-                    "jdbc:postgresql://192.168.1.5:5432/" + database, user, password);
-//        } catch (SQLException e) {
-//            System.out.println(String.format("Cant get connection for model: %s user: %s", model, user));
-//            e.printStackTrace();
-//            connection = null;
-//        }
-
+    public void connect(String database, String user, String password) throws SQLException {
+        connection = DriverManager.getConnection(
+                "jdbc:postgresql://192.168.1.5:5432/" + database, user, password);
     }
 
     @Override
@@ -55,7 +51,7 @@ public class JDBCDatabaseManager implements DatabaseManager {
             Statement statement = connection.createStatement();
             String columnName = getNameFormated(users, "%s,");
             String values = getValuesFormated(users, "'%s',");
-            statement.executeUpdate("INSERT INTO public." + tableName +"(" + columnName + ")" + "VALUES (" + values + ")");
+            statement.executeUpdate("INSERT INTO public." + tableName + "(" + columnName + ")" + "VALUES (" + values + ")");
             statement.close();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -120,18 +116,62 @@ public class JDBCDatabaseManager implements DatabaseManager {
         }
     }
 
-    @Override
-    public int getMaxRowLenght(String tableName, String columnName) {
+    public Map<String, Integer> getTableRowLenght(String tableName) {
         try {
             Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery("SELECT max(char_length(" + columnName + ")) AS Max_Length_String FROM " + tableName);
-            resultSet.next();
-            return resultSet.getInt(1);
+            Map<String, Integer> result = new HashMap<>();
+            Map<String, String> tableDataType = new HashMap<>();
+            ResultSet resultSet = statement.executeQuery(
+                    "SELECT column_name, data_type " +
+                            "FROM information_schema.columns " +
+                            "WHERE table_schema = 'public' and table_name = '" + tableName + "'"
+            );
+//            select table_schema, table_name, column_name, data_type
+//            from information_schema.columns
+//            where table_schema = 'tt' and table_name = 't';
+//            table_schema | table_name | column_name | data_type
+//           --------------+------------+-------------+-----------
+//            tt           | t          | i           | integer
+//            tt           | t          | n           | numeric
+
+            while (resultSet.next()) {
+                String key = resultSet.getString("column_name");
+                String value = resultSet.getString("data_type");
+                tableDataType.put(key, value);
+            }
+
+            Iterator it = tableDataType.entrySet().iterator();
+            while (it.hasNext()) {
+                Map.Entry pair = (Map.Entry) it.next();
+                String key = (String) pair.getKey();
+                Integer value = getRowLength(statement, tableName, key, (String) pair.getValue());
+                result.put(key, value);
+            }
+            return result;
         } catch (SQLException e) {
             e.printStackTrace();
-            return 0;
+            return null;
         }
     }
+
+    private Integer getRowLength(Statement statement, String tableName, String columnName, String dataType) {
+        ResultSet resultSet;
+        String sqlQuery = "";
+        try {
+            if (dataType.equals("integer")) {
+                sqlQuery = "SELECT max(" + columnName + ") FROM " + tableName;
+            } else if (dataType.equals("character varying")) {
+                sqlQuery = "SELECT max(char_length(" + columnName + ")) AS Max_Length_String FROM " + tableName;
+            }
+                resultSet = statement.executeQuery(sqlQuery);
+                resultSet.next();
+                return resultSet.getInt(1);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return -1;
+    }
+
 
     private String getNameFormated(DataSet newValue, String format) {
         String string = "";

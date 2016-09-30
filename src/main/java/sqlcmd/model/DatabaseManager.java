@@ -1,5 +1,7 @@
 package sqlcmd.model;
 
+import java.util.Map;
+
 public interface DatabaseManager {
 
     void connect(String database, String user, String password) throws Exception;
@@ -16,5 +18,5 @@ public interface DatabaseManager {
 
     void clear(String database);
 
-    int getMaxRowLenght(String tableName, String columnName);
+    Map<String, Integer> getTableRowLenght(String tableName);
 }
