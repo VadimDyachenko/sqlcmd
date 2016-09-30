@@ -1,6 +1,6 @@
 package sqlcmd.command;
 
-import sqlcmd.database.DatabaseManager;
+import sqlcmd.model.DatabaseManager;
 import sqlcmd.exception.InterruptOperationException;
 import sqlcmd.view.View;
 

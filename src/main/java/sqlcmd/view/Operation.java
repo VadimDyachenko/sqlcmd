@@ -2,7 +2,7 @@ package sqlcmd.view;
 
 public enum Operation {
     LOGIN,
-    LIST,
+    LIST_TABLE,
     TABLE_PRINT,
     TABLE_CHANGE,
     EXIT;
@@ -11,7 +11,7 @@ public enum Operation {
         switch(i)
         {
             case 1:
-                return Operation.LIST;
+                return Operation.LIST_TABLE;
             case 2:
                 return Operation.TABLE_PRINT;
             case 3:

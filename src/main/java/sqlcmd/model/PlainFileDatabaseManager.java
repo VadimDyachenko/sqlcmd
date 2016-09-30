@@ -1,4 +1,4 @@
-package sqlcmd.database;
+package sqlcmd.model;
 
 /**
  * Created by Vadim on 27.09.2016.
@@ -22,7 +22,7 @@ public class PlainFileDatabaseManager implements DatabaseManager {
     }
 
     @Override
-    public void create(DataSet users) {
+    public void create(String tableName, DataSet data) {
 
     }
 
@@ -39,5 +39,10 @@ public class PlainFileDatabaseManager implements DatabaseManager {
     @Override
     public void clear(String database) {
 
+    }
+
+    @Override
+    public int getMaxRowLenght(String tableName, String columnName) {
+        return 0;
     }
 }

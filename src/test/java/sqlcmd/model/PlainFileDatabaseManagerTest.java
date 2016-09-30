@@ -1,4 +1,4 @@
-package sqlcmd.database;
+package sqlcmd.model;
 
 /**
  * Created by Vadim on 27.09.2016.

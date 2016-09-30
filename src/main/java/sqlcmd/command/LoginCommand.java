@@ -1,6 +1,6 @@
 package sqlcmd.command;
 
-import sqlcmd.database.DatabaseManager;
+import sqlcmd.model.DatabaseManager;
 import sqlcmd.exception.InterruptOperationException;
 import sqlcmd.view.View;
 
@@ -19,9 +19,9 @@ public class LoginCommand implements Command {
         String login;
         String password;
         view.writeMessage("Welcome to SQLCmd!\n" +
-                "Enter database name, login and password.\n");
+                "Enter model name, login and password.\n");
         while (true) {
-            view.writeMessage("Please, enter database name:");
+            view.writeMessage("Please, enter model name:");
             databaseName = view.readLine();
             view.writeMessage("Enter you login:");
             login = view.readLine();

@@ -1,4 +1,4 @@
-package sqlcmd.database;
+package sqlcmd.model;
 
 public interface DatabaseManager {
 

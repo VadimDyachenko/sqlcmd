@@ -1,11 +1,8 @@
-package sqlcmd.database;
+package sqlcmd.model;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import sqlcmd.database.DataSet;
-import sqlcmd.database.DatabaseManager;
-import sqlcmd.database.JDBCDatabaseManager;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
@@ -85,6 +82,32 @@ public class JDBCDatabaseManagerTest {
         DataSet user = users[0];
         assertEquals("[id, name, password]", Arrays.toString(user.getNames()));
         assertEquals("[10, Bob Marley, abcde]", Arrays.toString(user.getValues()));
+    }
+
+    @Test
+    public void getMaxRowLenghtTest() {
+        //given
+        manager.clear(TABLE_NAME);
+        DataSet inputData1 = new DataSet();
+        inputData1.put("id", 1);
+        inputData1.put("name", "Semen Petrov");
+        inputData1.put("password", "qwert");
+        manager.create(TABLE_NAME, inputData1);
+        DataSet inputData2 = new DataSet();
+        inputData2.put("id", 2);
+        inputData2.put("name", "Bob Marley");
+        inputData2.put("password", "pass1");
+        manager.create(TABLE_NAME, inputData2);
+        DataSet inputData3 = new DataSet();
+        inputData3.put("id", 3);
+        inputData3.put("name", "Pendalf White");
+        inputData3.put("password", "password1");
+        manager.create(TABLE_NAME, inputData3);
+
+        //when
+        Integer size = manager.getMaxRowLenght("users", "name");
+        //than
+        assertEquals("13", size.toString());
     }
 
 //    @Test

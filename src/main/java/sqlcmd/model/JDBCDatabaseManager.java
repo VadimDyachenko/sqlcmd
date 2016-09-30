@@ -1,4 +1,4 @@
-package sqlcmd.database;
+package sqlcmd.model;
 
 import java.sql.*;
 
@@ -11,7 +11,7 @@ public class JDBCDatabaseManager implements DatabaseManager {
             connection = DriverManager.getConnection(
                     "jdbc:postgresql://192.168.1.5:5432/" + database, user, password);
 //        } catch (SQLException e) {
-//            System.out.println(String.format("Cant get connection for database: %s user: %s", database, user));
+//            System.out.println(String.format("Cant get connection for model: %s user: %s", model, user));
 //            e.printStackTrace();
 //            connection = null;
 //        }
@@ -50,12 +50,12 @@ public class JDBCDatabaseManager implements DatabaseManager {
     }
 
     @Override
-    public void create(DataSet users) {
+    public void create(String tableName, DataSet users) {
         try {
             Statement statement = connection.createStatement();
             String columnName = getNameFormated(users, "%s,");
             String values = getValuesFormated(users, "'%s',");
-            statement.executeUpdate("INSERT INTO public.users (" + columnName + ")" + "VALUES (" + values + ")");
+            statement.executeUpdate("INSERT INTO public." + tableName +"(" + columnName + ")" + "VALUES (" + values + ")");
             statement.close();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -117,6 +117,19 @@ public class JDBCDatabaseManager implements DatabaseManager {
             statement.close();
         } catch (SQLException e) {
             e.printStackTrace();
+        }
+    }
+
+    @Override
+    public int getMaxRowLenght(String tableName, String columnName) {
+        try {
+            Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery("SELECT max(char_length(" + columnName + ")) AS Max_Length_String FROM " + tableName);
+            resultSet.next();
+            return resultSet.getInt(1);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return 0;
         }
     }
 

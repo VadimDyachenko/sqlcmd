@@ -1,8 +1,8 @@
 package sqlcmd;
 
 import sqlcmd.command.CommandExecutor;
-import sqlcmd.database.DatabaseManager;
-import sqlcmd.database.JDBCDatabaseManager;
+import sqlcmd.model.DatabaseManager;
+import sqlcmd.model.JDBCDatabaseManager;
 import sqlcmd.exception.InterruptOperationException;
 import sqlcmd.view.ConsoleHelper;
 import sqlcmd.view.Operation;
