@@ -14,8 +14,8 @@ public final class CommandExecutor {
 
     public CommandExecutor(DatabaseManager manager, View view) {
         commandMap.put(Operation.LOGIN, new LoginCommand(manager, view));
-        commandMap.put(Operation.LIST_TABLE, new ListTableNames(manager, view));
-        commandMap.put(Operation.TABLE_PRINT, new PrintTableData(manager, view));
+        commandMap.put(Operation.LIST_TABLE, new ListTableNamesCommand(manager, view));
+        commandMap.put(Operation.TABLE_PRINT, new PrintTableDataCommand(manager, view));
 //        commandMap.put(Operation.TABLE_CHANGE, new LoginCommand(manager, consoleHelper));
         commandMap.put(Operation.EXIT, new ExitCommand(manager, view));
     }

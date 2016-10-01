@@ -9,11 +9,11 @@ import java.util.Arrays;
 /**
  * Created by vadim on 29.09.16.
  */
-public class ListTableNames implements Command {
+public class ListTableNamesCommand implements Command {
     private DatabaseManager manager;
     private View view;
 
-    public ListTableNames(DatabaseManager manager, View view) {
+    public ListTableNamesCommand(DatabaseManager manager, View view) {
         this.manager = manager;
         this.view = view;
     }

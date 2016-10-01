@@ -7,11 +7,11 @@ import sqlcmd.view.View;
 
 import java.util.Arrays;
 
-public class PrintTableData implements Command {
+public class PrintTableDataCommand implements Command {
     private DatabaseManager manager;
     private View view;
 
-    public PrintTableData(DatabaseManager manager, View view) {
+    public PrintTableDataCommand(DatabaseManager manager, View view) {
         this.manager = manager;
         this.view = view;
     }

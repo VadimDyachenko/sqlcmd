@@ -2,7 +2,6 @@ package sqlcmd.model;
 
 import java.sql.*;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
 public class JDBCDatabaseManager implements DatabaseManager {
@@ -116,16 +115,11 @@ public class JDBCDatabaseManager implements DatabaseManager {
         }
     }
 
-    public Map<String, Integer> getTableRowLenght(String tableName) {
-        try {
-            Statement statement = connection.createStatement();
-            Map<String, Integer> result = new HashMap<>();
-            Map<String, String> tableDataType = new HashMap<>();
-            ResultSet resultSet = statement.executeQuery(
-                    "SELECT column_name, data_type " +
-                            "FROM information_schema.columns " +
-                            "WHERE table_schema = 'public' and table_name = '" + tableName + "'"
-            );
+    /**
+     * Метод возвращает Мap
+     * @param tableName
+     * @return
+     */
 //            select table_schema, table_name, column_name, data_type
 //            from information_schema.columns
 //            where table_schema = 'tt' and table_name = 't';
@@ -134,19 +128,24 @@ public class JDBCDatabaseManager implements DatabaseManager {
 //            tt           | t          | i           | integer
 //            tt           | t          | n           | numeric
 
-            while (resultSet.next()) {
-                String key = resultSet.getString("column_name");
-                String value = resultSet.getString("data_type");
-                tableDataType.put(key, value);
-            }
+    public Map<String, Integer> getTableRowLenght(String tableName) {
+        try {
+            Statement statement = connection.createStatement();
+            Map<String, Integer> result = new HashMap<>();
+            ResultSet resultTableSet = statement.executeQuery(
+                            "SELECT column_name, data_type " +
+                            "FROM information_schema.columns " +
+                            "WHERE table_schema = 'public' and table_name = '" + tableName + "'"
+            );
 
-            Iterator it = tableDataType.entrySet().iterator();
-            while (it.hasNext()) {
-                Map.Entry pair = (Map.Entry) it.next();
-                String key = (String) pair.getKey();
-                Integer value = getRowLength(statement, tableName, key, (String) pair.getValue());
+            while (resultTableSet.next()) {
+                String key = resultTableSet.getString("column_name");
+                String dataType = resultTableSet.getString("data_type");
+                Integer value = getRowLength(tableName, key, dataType);
                 result.put(key, value);
             }
+            resultTableSet.close();
+            statement.close();
             return result;
         } catch (SQLException e) {
             e.printStackTrace();
@@ -154,10 +153,11 @@ public class JDBCDatabaseManager implements DatabaseManager {
         }
     }
 
-    private Integer getRowLength(Statement statement, String tableName, String columnName, String dataType) {
-        ResultSet resultSet;
-        String sqlQuery = "";
+    private Integer getRowLength(String tableName, String columnName, String dataType) {
         try {
+        ResultSet resultSet;
+        Statement statement = connection.createStatement();
+        String sqlQuery = "";
             if (dataType.equals("integer")) {
                 sqlQuery = "SELECT max(" + columnName + ") FROM " + tableName;
             } else if (dataType.equals("character varying")) {
