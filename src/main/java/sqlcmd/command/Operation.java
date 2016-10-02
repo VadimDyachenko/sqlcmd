@@ -1,21 +1,22 @@
-package sqlcmd.view;
+package sqlcmd.command;
 
 public enum Operation {
-    LOGIN,
+    CONNECT,
     LIST_TABLE,
+    SELECT_TABLE,
     TABLE_PRINT,
     TABLE_CHANGE,
     EXIT;
 
-    public static Operation getAllowableOperation(Integer i) {
+    public static Operation getMainOperation(Integer i) {
         switch(i)
         {
             case 1:
-                return Operation.LIST_TABLE;
+                return Operation.CONNECT;
             case 2:
-                return Operation.TABLE_PRINT;
+                return Operation.LIST_TABLE;
             case 3:
-                return Operation.TABLE_CHANGE;
+                return Operation.SELECT_TABLE;
             case 4:
                 return Operation.EXIT;
             default:

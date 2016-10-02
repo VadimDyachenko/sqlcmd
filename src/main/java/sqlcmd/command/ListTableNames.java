@@ -9,11 +9,11 @@ import java.util.Arrays;
 /**
  * Created by vadim on 29.09.16.
  */
-public class ListTableNamesCommand implements Command {
+public class ListTableNames implements Command {
     private DatabaseManager manager;
     private View view;
 
-    public ListTableNamesCommand(DatabaseManager manager, View view) {
+    public ListTableNames(DatabaseManager manager, View view) {
         this.manager = manager;
         this.view = view;
     }
@@ -21,6 +21,7 @@ public class ListTableNamesCommand implements Command {
     @Override
     public void execute() throws InterruptOperationException {
         String[] tableNames = manager.getAllTableNames();
-        view.writeMessage("\n" + Arrays.toString(tableNames) + "\n");
+        view.writeMessage("\nAvailable tables:");
+        view.writeMessage(Arrays.toString(tableNames) + "\n");
     }
 }

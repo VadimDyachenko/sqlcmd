@@ -4,11 +4,11 @@ import sqlcmd.model.DatabaseManager;
 import sqlcmd.exception.InterruptOperationException;
 import sqlcmd.view.View;
 
-public class LoginCommand implements Command {
+public class Connect implements Command {
     private DatabaseManager manager;
     private View view;
 
-    public LoginCommand(DatabaseManager manager, View view) {
+    public Connect(DatabaseManager manager, View view) {
         this.manager = manager;
         this.view = view;
     }
@@ -18,9 +18,8 @@ public class LoginCommand implements Command {
         String databaseName;
         String login;
         String password;
-        view.writeMessage("Welcome to SQLCmd!\n" +
-                "Enter database name, login and password.\n" +
-                "Type 'exit' for exit program.\n" );
+        view.writeMessage("Enter database name, login and password.\n" +
+                          "Type 'exit' for exit program.\n" );
         while (true) {
             view.writeMessage("Please, enter database name:");
             databaseName = view.readLine();

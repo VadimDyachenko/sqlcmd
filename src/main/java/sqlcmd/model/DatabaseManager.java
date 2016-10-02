@@ -18,5 +18,9 @@ public interface DatabaseManager {
 
     void clear(String database);
 
-    Map<String, Integer> getTableRowLenght(String tableName);
+//    Map<String, Integer> getTableRowLenght(String tableName);
+
+    boolean isConnected();
+
+    String getDatabaseName();
 }

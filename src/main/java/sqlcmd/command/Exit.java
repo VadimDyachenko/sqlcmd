@@ -5,11 +5,11 @@ import sqlcmd.exception.InterruptOperationException;
 import sqlcmd.view.View;
 
 
-public class ExitCommand implements Command {
+public class Exit implements Command {
     private final DatabaseManager manager;
     private final View view;
 
-    public ExitCommand(DatabaseManager manager, View view) {
+    public Exit(DatabaseManager manager, View view) {
         this.manager = manager;
         this.view = view;
     }

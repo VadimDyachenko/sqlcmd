@@ -12,5 +12,4 @@ public interface View {
 
     void printExitMessage();
 
-    Operation askOperation() throws InterruptOperationException;
 }

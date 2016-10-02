@@ -5,7 +5,7 @@ import sqlcmd.model.DatabaseManager;
 import sqlcmd.model.JDBCDatabaseManager;
 import sqlcmd.exception.InterruptOperationException;
 import sqlcmd.view.ConsoleHelper;
-import sqlcmd.view.Operation;
+import sqlcmd.command.Operation;
 import sqlcmd.view.View;
 
 public class Controller {
@@ -19,12 +19,13 @@ public class Controller {
         DatabaseManager manager = new JDBCDatabaseManager();
         View view = new ConsoleHelper();
         CommandExecutor commandExecutor = new CommandExecutor(manager, view);
+        view.writeMessage("Welcome to SQLCmd!\n");
 
         try {
-            commandExecutor.execute(Operation.LOGIN);
+//            commandExecutor.execute(Operation.LOGIN);
             Operation operation;
             do {
-                operation = view.askOperation();
+                operation = commandExecutor.askMainOperation();
                 commandExecutor.execute(operation);
             }
             while (true); //operation != Operation.EXIT);

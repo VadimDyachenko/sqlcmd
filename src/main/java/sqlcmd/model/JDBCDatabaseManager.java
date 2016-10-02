@@ -5,11 +5,13 @@ import java.util.HashMap;
 
 public class JDBCDatabaseManager implements DatabaseManager {
     private Connection connection;
+    String databaseName;
 
     @Override
-    public void connect(String database, String user, String password) throws SQLException {
+    public void connect(String databaseName, String user, String password) throws SQLException {
+        this.databaseName = databaseName;
         connection = DriverManager.getConnection(
-                "jdbc:postgresql://192.168.1.5:5432/" + database, user, password);
+                "jdbc:postgresql://192.168.1.5:5432/" + databaseName, user, password);
     }
 
     @Override
@@ -114,70 +116,80 @@ public class JDBCDatabaseManager implements DatabaseManager {
         }
     }
 
-    /**
-     * Метод возвращает HashМap(Название колонки, максимальная длина поля колонки)
-     * @param tableName
-     * @return result
-     */
-    public HashMap<String, Integer> getTableRowLenght(String tableName) {
-        try {
-            Statement statement = connection.createStatement();
-            HashMap<String, Integer> result = new HashMap<>();
-            ResultSet resultTableSet = statement.executeQuery(
-                    "SELECT column_name, data_type " +
-                    "FROM information_schema.columns " +
-                    "WHERE table_schema = 'public' and table_name = '" + tableName + "'"
-            );
-//            select table_schema, table_name, column_name, data_type
-//            from information_schema.columns
-//            where table_schema = 'tt' and table_name = 't';
-//            table_schema | table_name | column_name | data_type
-//           --------------+------------+-------------+-----------
-//            tt           | t          | i           | integer
-//            tt           | t          | n           | numeric
+//    /**
+//     * Метод возвращает HashМap(Название колонки, максимальная длина поля колонки)
+//     * @param tableName
+//     * @return result
+//     */
+//    public HashMap<String, Integer> getTableRowLenght(String tableName) {
+//        try {
+//            Statement statement = connection.createStatement();
+//            HashMap<String, Integer> result = new HashMap<>();
+//            ResultSet resultTableSet = statement.executeQuery(
+//                    "SELECT column_name, data_type " +
+//                    "FROM information_schema.columns " +
+//                    "WHERE table_schema = 'public' and table_name = '" + tableName + "'"
+//            );
+////            select table_schema, table_name, column_name, data_type
+////            from information_schema.columns
+////            where table_schema = 'tt' and table_name = 't';
+////            table_schema | table_name | column_name | data_type
+////           --------------+------------+-------------+-----------
+////            tt           | t          | i           | integer
+////            tt           | t          | n           | numeric
+//
+//            while (resultTableSet.next()) {
+//                String key = resultTableSet.getString("column_name");
+//                String dataType = resultTableSet.getString("data_type");
+//                Integer value = getRowLength(tableName, key, dataType);
+//                result.put(key, value);
+//            }
+//
+//            resultTableSet.close();
+//            statement.close();
+//            return result;
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//            return null;
+//        }
+//    }
+//
+//    /**
+//     * Метод возвращает максимальную длину поля колонки
+//     * @param tableName
+//     * @param columnName
+//     * @param dataType
+//     * @return Integer
+//     */
+//    private Integer getRowLength(String tableName, String columnName, String dataType) {
+//        try {
+//            ResultSet resultSet;
+//            Statement statement = connection.createStatement();
+//            String sqlQuery = "";
+//            if (dataType.equals("integer")) {
+//                sqlQuery = "SELECT max(" + columnName + ") FROM " + tableName;
+//            } else if (dataType.equals("character varying")) {
+//                sqlQuery = "SELECT max(char_length(" + columnName + ")) AS Max_Length_String FROM " + tableName;
+//            } else {
+//                return -1;  //No compatible data_type
+//            }
+//            resultSet = statement.executeQuery(sqlQuery);
+//            resultSet.next();
+//            return resultSet.getInt(1);
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//            return -1;
+//        }
+//    }
 
-            while (resultTableSet.next()) {
-                String key = resultTableSet.getString("column_name");
-                String dataType = resultTableSet.getString("data_type");
-                Integer value = getRowLength(tableName, key, dataType);
-                result.put(key, value);
-            }
-
-            resultTableSet.close();
-            statement.close();
-            return result;
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return null;
-        }
+    @Override
+    public boolean isConnected() {
+        return connection != null;
     }
 
-    /**
-     * Метод возвращает максимальную длину поля колонки
-     * @param tableName
-     * @param columnName
-     * @param dataType
-     * @return Integer
-     */
-    private Integer getRowLength(String tableName, String columnName, String dataType) {
-        try {
-            ResultSet resultSet;
-            Statement statement = connection.createStatement();
-            String sqlQuery = "";
-            if (dataType.equals("integer")) {
-                sqlQuery = "SELECT max(" + columnName + ") FROM " + tableName;
-            } else if (dataType.equals("character varying")) {
-                sqlQuery = "SELECT max(char_length(" + columnName + ")) AS Max_Length_String FROM " + tableName;
-            } else {
-                return -1;  //No compatible data_type
-            }
-            resultSet = statement.executeQuery(sqlQuery);
-            resultSet.next();
-            return resultSet.getInt(1);
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return -1;
-        }
+    @Override
+    public String getDatabaseName() {
+        return isConnected()? databaseName : "";
     }
 
     private String getNameFormatted(DataSet newValue, String format) {
