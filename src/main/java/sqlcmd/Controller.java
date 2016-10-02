@@ -27,7 +27,7 @@ public class Controller {
                 operation = view.askOperation();
                 commandExecutor.execute(operation);
             }
-            while (operation != Operation.EXIT);
+            while (true); //operation != Operation.EXIT);
 
         } catch (InterruptOperationException e) {
             view.printExitMessage();

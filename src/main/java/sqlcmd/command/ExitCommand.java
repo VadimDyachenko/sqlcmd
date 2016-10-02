@@ -16,11 +16,12 @@ public class ExitCommand implements Command {
 
     @Override
     public void execute() throws InterruptOperationException {
-        manager.disconnect();
         view.writeMessage("Do you really want to exit? <y/n>");
         String answer = view.readLine();
         if (answer.trim().toLowerCase().equals("y")) {
             view.writeMessage("Thank you for using SQLCmd. Good luck.");
+            manager.disconnect();
+            System.exit(0);
         }
     }
 }

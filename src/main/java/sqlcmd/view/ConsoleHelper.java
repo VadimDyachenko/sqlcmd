@@ -41,7 +41,7 @@ public class ConsoleHelper implements View {
             writeMessage("1 - List all table names");
             writeMessage("2 - Print table");
             writeMessage("3 - Change table");
-            writeMessage("4 - Exit");  //TODO вырезать exit
+            writeMessage("4 - Exit");
 
             String choice = readLine();
             try {

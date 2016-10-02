@@ -2,7 +2,6 @@ package sqlcmd.model;
 
 import java.sql.*;
 import java.util.HashMap;
-import java.util.Map;
 
 public class JDBCDatabaseManager implements DatabaseManager {
     private Connection connection;
@@ -48,8 +47,8 @@ public class JDBCDatabaseManager implements DatabaseManager {
     public void create(String tableName, DataSet users) {
         try {
             Statement statement = connection.createStatement();
-            String columnName = getNameFormated(users, "%s,");
-            String values = getValuesFormated(users, "'%s',");
+            String columnName = getNameFormatted(users, "%s,");
+            String values = getValuesFormatted(users, "'%s',");
             statement.executeUpdate("INSERT INTO public." + tableName + "(" + columnName + ")" + "VALUES (" + values + ")");
             statement.close();
         } catch (SQLException e) {
@@ -86,7 +85,7 @@ public class JDBCDatabaseManager implements DatabaseManager {
     @Override
     public void update(String tableName, int id, DataSet newValue) {
         try {
-            String tableNames = getNameFormated(newValue, "%s = ?,");
+            String tableNames = getNameFormatted(newValue, "%s = ?,");
             String sql = "UPDATE public." + tableName + " SET " + tableNames + " WHERE id = ?";
             PreparedStatement ps = connection.prepareStatement(sql);
 
@@ -116,10 +115,19 @@ public class JDBCDatabaseManager implements DatabaseManager {
     }
 
     /**
-     * Метод возвращает Мap
+     * Метод возвращает HashМap(Название колонки, максимальная длина поля колонки)
      * @param tableName
-     * @return
+     * @return result
      */
+    public HashMap<String, Integer> getTableRowLenght(String tableName) {
+        try {
+            Statement statement = connection.createStatement();
+            HashMap<String, Integer> result = new HashMap<>();
+            ResultSet resultTableSet = statement.executeQuery(
+                    "SELECT column_name, data_type " +
+                    "FROM information_schema.columns " +
+                    "WHERE table_schema = 'public' and table_name = '" + tableName + "'"
+            );
 //            select table_schema, table_name, column_name, data_type
 //            from information_schema.columns
 //            where table_schema = 'tt' and table_name = 't';
@@ -128,22 +136,13 @@ public class JDBCDatabaseManager implements DatabaseManager {
 //            tt           | t          | i           | integer
 //            tt           | t          | n           | numeric
 
-    public Map<String, Integer> getTableRowLenght(String tableName) {
-        try {
-            Statement statement = connection.createStatement();
-            Map<String, Integer> result = new HashMap<>();
-            ResultSet resultTableSet = statement.executeQuery(
-                            "SELECT column_name, data_type " +
-                            "FROM information_schema.columns " +
-                            "WHERE table_schema = 'public' and table_name = '" + tableName + "'"
-            );
-
             while (resultTableSet.next()) {
                 String key = resultTableSet.getString("column_name");
                 String dataType = resultTableSet.getString("data_type");
                 Integer value = getRowLength(tableName, key, dataType);
                 result.put(key, value);
             }
+
             resultTableSet.close();
             statement.close();
             return result;
@@ -153,27 +152,35 @@ public class JDBCDatabaseManager implements DatabaseManager {
         }
     }
 
+    /**
+     * Метод возвращает максимальную длину поля колонки
+     * @param tableName
+     * @param columnName
+     * @param dataType
+     * @return Integer
+     */
     private Integer getRowLength(String tableName, String columnName, String dataType) {
         try {
-        ResultSet resultSet;
-        Statement statement = connection.createStatement();
-        String sqlQuery = "";
+            ResultSet resultSet;
+            Statement statement = connection.createStatement();
+            String sqlQuery = "";
             if (dataType.equals("integer")) {
                 sqlQuery = "SELECT max(" + columnName + ") FROM " + tableName;
             } else if (dataType.equals("character varying")) {
                 sqlQuery = "SELECT max(char_length(" + columnName + ")) AS Max_Length_String FROM " + tableName;
+            } else {
+                return -1;  //No compatible data_type
             }
-                resultSet = statement.executeQuery(sqlQuery);
-                resultSet.next();
-                return resultSet.getInt(1);
+            resultSet = statement.executeQuery(sqlQuery);
+            resultSet.next();
+            return resultSet.getInt(1);
         } catch (SQLException e) {
             e.printStackTrace();
+            return -1;
         }
-        return -1;
     }
 
-
-    private String getNameFormated(DataSet newValue, String format) {
+    private String getNameFormatted(DataSet newValue, String format) {
         String string = "";
         for (String name : newValue.getNames()) {
             string += String.format(format, name);
@@ -182,7 +189,7 @@ public class JDBCDatabaseManager implements DatabaseManager {
         return string;
     }
 
-    private String getValuesFormated(DataSet input, String format) {
+    private String getValuesFormatted(DataSet input, String format) {
         String values = "";
         for (Object value : input.getValues()) {
             values += String.format(format, value);
