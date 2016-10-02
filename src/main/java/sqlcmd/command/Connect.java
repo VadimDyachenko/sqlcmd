@@ -7,8 +7,9 @@ import sqlcmd.view.View;
 public class Connect implements Command {
     private DatabaseManager manager;
     private View view;
-
-    public Connect(DatabaseManager manager, View view) {
+    private CommandExecutor commandExecutor;
+    public Connect(CommandExecutor commandExecutor, DatabaseManager manager, View view) {
+        this.commandExecutor = commandExecutor;
         this.manager = manager;
         this.view = view;
     }
@@ -23,11 +24,15 @@ public class Connect implements Command {
         while (true) {
             view.writeMessage("Please, enter database name:");
             databaseName = view.readLine();
+            commandExecutor.setDatabaseName(databaseName);
             view.writeMessage("Enter you login:");
             login = view.readLine();
             view.writeMessage("Enter you password:");
             password = view.readLine();
             try {
+                if (manager.isConnected()) {
+                    manager.disconnect();
+                }
                 manager.connect(databaseName, login, password);
                 view.writeMessage("Connection successful!\n");
                 break;

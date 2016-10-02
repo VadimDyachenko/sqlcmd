@@ -2,14 +2,14 @@ package sqlcmd.model;
 
 import java.sql.*;
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 
 public class JDBCDatabaseManager implements DatabaseManager {
     private Connection connection;
-    String databaseName;
 
     @Override
     public void connect(String databaseName, String user, String password) throws SQLException {
-        this.databaseName = databaseName;
         connection = DriverManager.getConnection(
                 "jdbc:postgresql://192.168.1.5:5432/" + databaseName, user, password);
     }
@@ -24,23 +24,20 @@ public class JDBCDatabaseManager implements DatabaseManager {
     }
 
     @Override
-    public String[] getAllTableNames() {
-        String[] resultTableNames;
+    public List<String> getAllTableNames() {
+        List<String> resultTableNames = new LinkedList<>();
         try {
             Statement statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery("SELECT count(*) FROM information_schema.tables WHERE table_schema = 'public'");
             resultSet.next();
-            resultTableNames = new String[resultSet.getInt("count")];
             resultSet = statement.executeQuery("SELECT table_name FROM information_schema.tables WHERE table_schema='public' AND table_type='BASE TABLE'");
-            int index = 0;
             while (resultSet.next()) {
-                resultTableNames[index++] = resultSet.getString("table_name");
+                resultTableNames.add(resultSet.getString("table_name"));
             }
             resultSet.close();
             statement.close();
         } catch (SQLException e) {
             e.printStackTrace();
-            return new String[0];
         }
         return resultTableNames;
     }
@@ -185,11 +182,6 @@ public class JDBCDatabaseManager implements DatabaseManager {
     @Override
     public boolean isConnected() {
         return connection != null;
-    }
-
-    @Override
-    public String getDatabaseName() {
-        return isConnected()? databaseName : "";
     }
 
     private String getNameFormatted(DataSet newValue, String format) {

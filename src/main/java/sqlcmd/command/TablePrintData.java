@@ -5,19 +5,22 @@ import sqlcmd.model.DataSet;
 import sqlcmd.model.DatabaseManager;
 import sqlcmd.view.View;
 
+import java.util.List;
+
 public class TablePrintData implements Command {
     private DatabaseManager manager;
     private View view;
+    private CommandExecutor commandExecutor;
 
-    public TablePrintData(DatabaseManager manager, View view) {
+    public TablePrintData(CommandExecutor commandExecutor, DatabaseManager manager, View view) {
+        this.commandExecutor = commandExecutor;
         this.manager = manager;
         this.view = view;
     }
 
     @Override
     public void execute() throws InterruptOperationException {
-        view.writeMessage("Enter table name:");
-        String tableName = view.readLine();
+        String tableName = commandExecutor.getTableName();
         DataSet[] tableData = manager.getTableData(tableName);
         int[] tableRowLength = getTableRowMaxLenght(tableData);
         printHeader(tableData[0]);
@@ -63,7 +66,7 @@ public class TablePrintData implements Command {
         view.writeMessage(sb.toString());
     }
 
-    private void printRow(DataSet dataSet/*, Map<String, Integer> table*/) {
+    private void printRow(DataSet dataSet) {
         Object[] columnValues = dataSet.getValues();
         StringBuilder sb = new StringBuilder();
         sb.append('|');

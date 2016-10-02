@@ -8,6 +8,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.util.Arrays;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
@@ -37,8 +38,19 @@ public class JDBCDatabaseManagerTest {
 
     @Test
     public void testGetAllTableNames() {
-        String[] tableNames = manager.getAllTableNames();
-        assertEquals("[users, staff]", Arrays.toString(tableNames));
+        List<String> tableNames = manager.getAllTableNames();
+        printTableNames(tableNames);
+        assertEquals("[users, staff]", consoleOutputStream.toString());
+    }
+    private void printTableNames(List<String> tableNames)  {
+
+        String availableTables = "[";
+        for (String name : tableNames) {
+            availableTables += name + ", ";
+        }
+        availableTables = availableTables.substring(0, availableTables.length() - 2) + "]";
+
+        System.out.print(availableTables);
     }
 
     @Test

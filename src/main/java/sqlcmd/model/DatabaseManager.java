@@ -1,6 +1,6 @@
 package sqlcmd.model;
 
-import java.util.Map;
+import java.util.List;
 
 public interface DatabaseManager {
 
@@ -8,7 +8,7 @@ public interface DatabaseManager {
 
     void disconnect();
 
-    String[] getAllTableNames();
+    List<String> getAllTableNames();
 
     void create(String tableName, DataSet data);
 
@@ -18,9 +18,5 @@ public interface DatabaseManager {
 
     void clear(String database);
 
-//    Map<String, Integer> getTableRowLenght(String tableName);
-
     boolean isConnected();
-
-    String getDatabaseName();
 }
