@@ -5,8 +5,6 @@ import sqlcmd.model.DataSet;
 import sqlcmd.model.DatabaseManager;
 import sqlcmd.view.View;
 
-import java.util.List;
-
 public class TablePrintData implements Command {
     private DatabaseManager manager;
     private View view;
@@ -23,21 +21,11 @@ public class TablePrintData implements Command {
         String tableName = commandExecutor.getTableName();
         DataSet[] tableData = manager.getTableData(tableName);
         int[] tableRowLength = getTableRowMaxLenght(tableData);
-        printHeader(tableData[0]);
+        printHeader(tableData[0], tableRowLength);
         for (int i = 0; i < tableData.length; i++) {
-            printRow(tableData[i]/*, tableRowLength*/);
+            printRow(tableData[i], tableRowLength);
         }
         view.writeMessage("\n");
-
-
-//        int[] rowTableLength = new int[tableData.length];
-//        String[] columnNames = tableData[0].getNames();
-
-//        for (int index = 0; index < tableData.length; index++) {
-//            manager.getTableRowMaxLenght(tableName);
-//        }
-//
-//        System.out.println(Arrays.toString(rowTableLength));
     }
 
     private int[] getTableRowMaxLenght(DataSet[] tableData) {
@@ -45,7 +33,7 @@ public class TablePrintData implements Command {
         for (int i = 0; i < result.length; i++) {
             int maxLength = 0;
             for (int j = 0; j < tableData.length; j++) {
-                int length = tableData[i].getValues()[j].toString().length();
+                int length = tableData[j].getValues()[i].toString().length();
                 if (maxLength < length) {
                     maxLength = length;
                 }
@@ -55,24 +43,51 @@ public class TablePrintData implements Command {
         return result;
     }
 
-    private void printHeader(DataSet dataSet) {
+    private void printHeader(DataSet dataSet, int[] rowLength) {
         String[] columnNames = dataSet.getNames();
         StringBuilder sb = new StringBuilder();
         sb.append('|');
-        for (String columnName : columnNames) {
-            sb.append(columnName);
+        for (int i = 0; i < columnNames.length; i++) {
+            sb.append(columnNames[i]);
+            for (int j = (rowLength[i] - columnNames[i].length()); j > 0; j--) {
+                sb.append(" ");
+            }
             sb.append('|');
         }
         view.writeMessage(sb.toString());
+        printTableLine(rowLength);
     }
 
-    private void printRow(DataSet dataSet) {
+
+    private void printRow(DataSet dataSet, int[] rowLength) {
         Object[] columnValues = dataSet.getValues();
         StringBuilder sb = new StringBuilder();
         sb.append('|');
-        for (Object columnValue : columnValues) {
-            sb.append(columnValue);
+//        for (Object columnValue : columnValues) {
+//            sb.append(columnValue);
+//            sb.append('|');
+//        }
+
+        for (int i = 0; i < columnValues.length; i++) {
+            sb.append(columnValues[i]);
+            for (int j = (rowLength[i] - columnValues[i].toString().length()); j > 0; j--) {
+                sb.append(" ");
+            }
             sb.append('|');
+        }
+
+        view.writeMessage(sb.toString());
+//        printTableLine(rowLength);
+    }
+
+    private void printTableLine(int[] rowLength) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("+");
+        for (int length : rowLength) {
+            for (int j = 0; j < length; j++) {
+                sb.append("-");
+            }
+            sb.append("+");
         }
         view.writeMessage(sb.toString());
     }

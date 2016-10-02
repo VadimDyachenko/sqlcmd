@@ -77,7 +77,7 @@ public final class CommandExecutor {
         this.tableLevel = true;
     }
 
-    public void setTableLevel(boolean tableLevel) {
-        this.tableLevel = tableLevel;
+    public void resetTableLevel() {
+        tableLevel = false;
     }
 }

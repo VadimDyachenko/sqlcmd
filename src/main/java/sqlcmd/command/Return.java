@@ -14,7 +14,6 @@ public class Return implements Command{
 
     @Override
     public void execute() throws InterruptOperationException {
-        commandExecutor.setTableLevel(false);
-        commandExecutor.setTableName("");
+        commandExecutor.resetTableLevel();
     }
 }
