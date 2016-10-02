@@ -28,9 +28,7 @@ public class JDBCDatabaseManager implements DatabaseManager {
         List<String> resultTableNames = new LinkedList<>();
         try {
             Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery("SELECT count(*) FROM information_schema.tables WHERE table_schema = 'public'");
-            resultSet.next();
-            resultSet = statement.executeQuery("SELECT table_name FROM information_schema.tables WHERE table_schema='public' AND table_type='BASE TABLE'");
+            ResultSet resultSet = statement.executeQuery("SELECT table_name FROM information_schema.tables WHERE table_schema='public' AND table_type='BASE TABLE'");
             while (resultSet.next()) {
                 resultTableNames.add(resultSet.getString("table_name"));
             }

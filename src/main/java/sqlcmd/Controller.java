@@ -22,13 +22,12 @@ public class Controller {
         view.writeMessage("Welcome to SQLCmd!\n");
 
         try {
-//            commandExecutor.execute(Operation.LOGIN);
             Operation operation;
             do {
                 operation = commandExecutor.askMainOperation();
                 commandExecutor.execute(operation);
             }
-            while (true); //operation != Operation.EXIT);
+            while (true);
 
         } catch (InterruptOperationException e) {
             view.printExitMessage();
