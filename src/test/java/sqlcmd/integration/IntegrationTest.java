@@ -24,16 +24,16 @@ public class IntegrationTest {
 
     private static final String MAIN_MENU =
             "Please choose an operation desired or type 'EXIT' for exiting\n" +
-            "1 - Connect to database\n" +
-            "2 - List all table names\n" +
-            "3 - Select table to work\n" +
-            "4 - Exit\n";
+                    "1 - Connect to database\n" +
+                    "2 - List all table names\n" +
+                    "3 - Select table to work\n" +
+                    "4 - Exit\n";
 
     private static final String TABLE_MENU =
             "Please choose an operation desired or type 'EXIT' for exiting\n" +
-            "1 - Print table data\n" +
-            "2 - Change table records\n" +
-            "3 - Return to previous menu\n";
+                    "1 - Print table data\n" +
+                    "2 - Change table records\n" +
+                    "3 - Return to previous menu\n";
 
 
     @Before
@@ -397,6 +397,55 @@ public class IntegrationTest {
                 TABLE_MENU +
                 //input - 3
                 "Connected to database: <sqlcmd>\n" +
+                MAIN_MENU +
+                //input - exit
+                "Terminated. Thank you for using SQLCmd. Good luck.\n", getData());
+    }
+
+    @Test
+    public void testConnectToAnotherDatabase() {
+        //given
+        in.addLine("1");
+        in.addLine("sqlcmd");
+        in.addLine("javauser");
+        in.addLine("test");
+        in.addLine("1");
+        in.addLine("postgres");
+        in.addLine("javauser");
+        in.addLine("test");
+        in.addLine("exit");
+        //when
+        Controller.main(new String[0]);
+        //then
+        assertEquals("Welcome to SQLCmd!\n" +
+                "\n" +
+                MAIN_MENU +
+                // input - 1
+                "Enter database name, login and password.\n" +
+                "Type 'exit' for exit program.\n" +
+                "\n" +
+                "Please, enter database name:\n" +
+                //input - sqlcmd
+                "Enter you login:\n" +
+                //input - javauser
+                "Enter you password:\n" +
+                //input - test
+                "Connection successful!\n" +
+                "\n" +
+                "Connected to database: <sqlcmd>\n" +
+                MAIN_MENU +
+                "Enter database name, login and password.\n" +
+                "Type 'exit' for exit program.\n" +
+                "\n" +
+                "Please, enter database name:\n" +
+                //input - postgers
+                "Enter you login:\n" +
+                //input - javauser
+                "Enter you password:\n" +
+                //input - test
+                "Connection successful!\n" +
+                "\n" +
+                "Connected to database: <postgres>\n" +
                 MAIN_MENU +
                 //input - exit
                 "Terminated. Thank you for using SQLCmd. Good luck.\n", getData());
