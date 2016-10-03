@@ -13,9 +13,6 @@ import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 
-/**
- * Created by Vadim on 24.09.2016.
- */
 public class JDBCDatabaseManagerTest {
     private final ByteArrayOutputStream consoleOutputStream = new ByteArrayOutputStream();
     private DatabaseManager manager;

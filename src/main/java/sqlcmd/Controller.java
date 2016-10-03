@@ -1,6 +1,7 @@
 package sqlcmd;
 
 import sqlcmd.command.CommandExecutor;
+import sqlcmd.exception.ExitException;
 import sqlcmd.model.DatabaseManager;
 import sqlcmd.model.JDBCDatabaseManager;
 import sqlcmd.exception.InterruptOperationException;
@@ -28,10 +29,11 @@ public class Controller {
                 commandExecutor.execute(operation);
             }
             while (true);
-
-        } catch (InterruptOperationException e) {
+        } catch (ExitException e2) {
+            //NOP
+        } catch(InterruptOperationException e1) {
             view.printExitMessage();
+            //System.exit(0);
         }
-        System.exit(0);
     }
 }

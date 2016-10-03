@@ -1,5 +1,6 @@
 package sqlcmd.command;
 
+import sqlcmd.exception.ExitException;
 import sqlcmd.model.DatabaseManager;
 import sqlcmd.exception.InterruptOperationException;
 import sqlcmd.view.View;
@@ -23,7 +24,7 @@ public class Exit implements Command {
             if(manager.isConnected()) {
                 manager.disconnect();
             }
-            System.exit(0);
+            throw new ExitException();
         }
     }
 }
