@@ -63,10 +63,6 @@ public class TablePrintData implements Command {
         Object[] columnValues = dataSet.getValues();
         StringBuilder sb = new StringBuilder();
         sb.append('|');
-//        for (Object columnValue : columnValues) {
-//            sb.append(columnValue);
-//            sb.append('|');
-//        }
 
         for (int i = 0; i < columnValues.length; i++) {
             sb.append(columnValues[i]);
@@ -75,9 +71,7 @@ public class TablePrintData implements Command {
             }
             sb.append('|');
         }
-
         view.writeMessage(sb.toString());
-//        printTableLine(rowLength);
     }
 
     private void printTableLine(int[] rowLength) {
