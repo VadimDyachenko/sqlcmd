@@ -23,7 +23,8 @@ public final class CommandExecutor {
         commandMap.put(Operation.LIST_TABLE, new ListTableNames(manager, view));
         commandMap.put(Operation.SELECT_TABLE, new SelectTable(this, manager, view));
         commandMap.put(Operation.TABLE_PRINT, new TablePrintData(this, manager, view));
-        commandMap.put(Operation.TABLE_CREATE_RECORD, new TableCreateRecord(manager, view));
+        commandMap.put(Operation.TABLE_CREATE_RECORD, new TableCreateRecord(this, manager, view));
+        commandMap.put(Operation.TABLE_CLEAR, new TableClear(this, manager, view));
         commandMap.put(Operation.RETURN, new Return(this));
         commandMap.put(Operation.EXIT, new Exit(manager, view));
     }
@@ -48,7 +49,8 @@ public final class CommandExecutor {
             } else {
                 view.writeMessage("1 - Print table data");
                 view.writeMessage("2 - Change table records");
-                view.writeMessage("3 - Return to previous menu");
+                view.writeMessage("3 - Clear table");
+                view.writeMessage("4 - Return to previous menu");
             }
             String choice = view.readLine();
             try {

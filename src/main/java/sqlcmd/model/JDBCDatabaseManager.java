@@ -111,6 +111,27 @@ public class JDBCDatabaseManager implements DatabaseManager {
         }
     }
 
+    @Override
+    public List<String> getTableColumnNames(String tableName) {
+        List<String> resultList = new LinkedList<>();
+        try {
+            Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery(
+                            "SELECT column_name FROM information_schema.columns " +
+                            "WHERE table_schema = 'public' and table_name = '" + tableName + "'"
+                            );
+            while (resultSet.next()) {
+                resultList.add(resultSet.getString("column_name"));
+            }
+            resultSet.close();
+            statement.close();
+            return resultList;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return resultList;
+    }
+
 //    /**
 //     * Метод возвращает HashМap(Название колонки, максимальная длина поля колонки)
 //     * @param tableName
@@ -146,34 +167,6 @@ public class JDBCDatabaseManager implements DatabaseManager {
 //        } catch (SQLException e) {
 //            e.printStackTrace();
 //            return null;
-//        }
-//    }
-//
-//    /**
-//     * Метод возвращает максимальную длину поля колонки
-//     * @param tableName
-//     * @param columnName
-//     * @param dataType
-//     * @return Integer
-//     */
-//    private Integer getRowLength(String tableName, String columnName, String dataType) {
-//        try {
-//            ResultSet resultSet;
-//            Statement statement = connection.createStatement();
-//            String sqlQuery = "";
-//            if (dataType.equals("integer")) {
-//                sqlQuery = "SELECT max(" + columnName + ") FROM " + tableName;
-//            } else if (dataType.equals("character varying")) {
-//                sqlQuery = "SELECT max(char_length(" + columnName + ")) AS Max_Length_String FROM " + tableName;
-//            } else {
-//                return -1;  //No compatible data_type
-//            }
-//            resultSet = statement.executeQuery(sqlQuery);
-//            resultSet.next();
-//            return resultSet.getInt(1);
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//            return -1;
 //        }
 //    }
 

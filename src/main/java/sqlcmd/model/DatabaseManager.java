@@ -18,5 +18,7 @@ public interface DatabaseManager {
 
     void clear(String database);
 
+    List<String> getTableColumnNames(String tableName);
+
     boolean isConnected();
 }

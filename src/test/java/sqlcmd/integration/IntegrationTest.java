@@ -33,7 +33,8 @@ public class IntegrationTest {
             "Please choose an operation desired or type 'EXIT' for exiting\n" +
                     "1 - Print table data\n" +
                     "2 - Change table records\n" +
-                    "3 - Return to previous menu\n";
+                    "3 - Clear table\n" +
+                    "4 - Return to previous menu\n";
 
 
     @Before
@@ -208,8 +209,11 @@ public class IntegrationTest {
                 "Type 'exit' for exit program.\n" +
                 "\n" +
                 "Please, enter database name:\n" +
+                // input - sqlcmd
                 "Enter you login:\n" +
+                // input - javauser
                 "Enter you password:\n" +
+                // input - test
                 "Connection successful!\n" +
                 "\n" +
                 //input - 2
@@ -305,10 +309,10 @@ public class IntegrationTest {
                 TABLE_MENU +
                 //input - 1
                 "|id|name        |password    |\n" +
-                "+-+------------+------------+\n" +
-                "|1|Semen Petrov|qwert       |\n" +
-                "|2|Bob Marley  |pass1       |\n" +
-                "|3|Coca Cola   |pepsithebest|\n" +
+                "+--+------------+------------+\n" +
+                "|1 |Semen Petrov|qwert       |\n" +
+                "|2 |Bob Marley  |pass1       |\n" +
+                "|3 |Coca Cola   |pepsithebest|\n" +
                 "\n" +
                 "\n" +
                 "Connected to database: <sqlcmd>. Selected table: <users>\n" +
@@ -367,7 +371,7 @@ public class IntegrationTest {
         in.addLine("test");
         in.addLine("3");
         in.addLine("users");
-        in.addLine("3");
+        in.addLine("4");
         in.addLine("exit");
         //when
         Controller.main(new String[0]);
@@ -395,7 +399,7 @@ public class IntegrationTest {
                 "\n" +
                 "Connected to database: <sqlcmd>. Selected table: <users>\n" +
                 TABLE_MENU +
-                //input - 3
+                //input - 4
                 "Connected to database: <sqlcmd>\n" +
                 MAIN_MENU +
                 //input - exit

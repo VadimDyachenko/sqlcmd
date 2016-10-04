@@ -20,6 +20,10 @@ public class TablePrintData implements Command {
     public void execute() throws InterruptOperationException {
         String tableName = commandExecutor.getTableName();
         DataSet[] tableData = manager.getTableData(tableName);
+        if (tableData.length == 0) {
+            view.writeMessage(String.format("Table <%s> is empty.\n", tableName));
+            return;
+        }
         int[] tableRowLength = getTableRowMaxLenght(tableData);
         printHeader(tableData[0], tableRowLength);
         for (int i = 0; i < tableData.length; i++) {
@@ -31,14 +35,14 @@ public class TablePrintData implements Command {
     private int[] getTableRowMaxLenght(DataSet[] tableData) {
         int[] result = new int[tableData[0].getNames().length];
         for (int i = 0; i < result.length; i++) {
-            int maxLength = 0;
+            int length = tableData[0].getNames()[i].length();;
             for (int j = 0; j < tableData.length; j++) {
-                int length = tableData[j].getValues()[i].toString().length();
-                if (maxLength < length) {
-                    maxLength = length;
+                int lengthValue = tableData[j].getValues()[i].toString().length();
+                if (length < lengthValue) {
+                    length = lengthValue;
                 }
             }
-            result[i] = maxLength;
+            result[i] = length;
         }
         return result;
     }

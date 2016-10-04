@@ -110,4 +110,15 @@ public class JDBCDatabaseManagerTest {
         assertEquals("[id, name, password]", Arrays.toString(user.getNames()));
         assertEquals("[10, Bob Marley, abcde]", Arrays.toString(user.getValues()));
     }
+
+    @Test
+    public void testClearTableData() {
+        //given
+        //when
+        manager.clear(TABLE_NAME);
+
+        //then
+        DataSet[] users = manager.getTableData(TABLE_NAME);
+        assertEquals(0, users.length);
+    }
 }
