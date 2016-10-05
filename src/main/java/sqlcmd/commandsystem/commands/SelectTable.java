@@ -1,5 +1,7 @@
-package sqlcmd.command;
+package sqlcmd.commandsystem.commands;
 
+import sqlcmd.commandsystem.Command;
+import sqlcmd.commandsystem.CommandExecutor;
 import sqlcmd.exception.InterruptOperationException;
 import sqlcmd.model.DatabaseManager;
 import sqlcmd.view.View;
@@ -10,12 +12,10 @@ import java.util.List;
  * Created by vadim on 02.10.16.
  */
 public class SelectTable implements Command {
-    private CommandExecutor commandExecutor;
     private DatabaseManager manager;
     private View view;
 
-    public SelectTable(CommandExecutor commandExecutor, DatabaseManager manager, View view) {
-        this.commandExecutor = commandExecutor;
+    public SelectTable(DatabaseManager manager, View view) {
         this.manager = manager;
         this.view = view;
     }
@@ -32,7 +32,8 @@ public class SelectTable implements Command {
         while (true) {
             String tableName = view.readLine();
             if (tableNames.contains(tableName)) {
-                commandExecutor.setTableName(tableName);
+                manager.setCurrentTableName(tableName);
+                manager.changeTableLayer(true);
                 break;
             } else {
                 view.writeMessage("Enter correct table name. Available tables:");

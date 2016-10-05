@@ -1,12 +1,40 @@
 package sqlcmd.model;
 
 import java.sql.*;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
 public class JDBCDatabaseManager implements DatabaseManager {
     private Connection connection;
+    private String currentDatabaseName;
+    private String currentTableName;
+    private boolean tableLayer = false;
+
+    @Override
+    public boolean isTableLayer() {
+        return tableLayer;
+    }
+
+    @Override
+    public void changeTableLayer(boolean tableLayer) {
+        this.tableLayer = tableLayer;
+    }
+
+    public String getCurrentDatabaseName() {
+        return currentDatabaseName;
+    }
+
+    public String getCurrentTableName() {
+        return currentTableName;
+    }
+
+    public void setCurrentDatabaseName(String currentDatabaseName) {
+        this.currentDatabaseName = currentDatabaseName;
+    }
+
+    public void setCurrentTableName(String currentTableName) {
+        this.currentTableName = currentTableName;
+    }
 
     @Override
     public void connect(String databaseName, String user, String password) throws SQLException {
@@ -93,9 +121,9 @@ public class JDBCDatabaseManager implements DatabaseManager {
     }
 
     @Override
-    public void clear(String database) {
+    public void clearCurrentTable() {
         try (Statement statement = connection.createStatement()) {
-            statement.executeUpdate("DELETE FROM public." + database);
+            statement.executeUpdate("DELETE FROM public." + currentTableName);
         } catch (SQLException e) {
             e.printStackTrace();
         }

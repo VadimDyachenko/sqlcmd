@@ -50,7 +50,8 @@ public class IntegrationTest {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        manager.clear(TABLE_NAME);
+        manager.setCurrentTableName(TABLE_NAME);
+        manager.clearCurrentTable();
         DataSet inputData1 = new DataSet();
         inputData1.put("id", 1);
         inputData1.put("name", "Semen Petrov");

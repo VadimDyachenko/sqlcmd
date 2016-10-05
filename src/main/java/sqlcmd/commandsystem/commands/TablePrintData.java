@@ -1,5 +1,7 @@
-package sqlcmd.command;
+package sqlcmd.commandsystem.commands;
 
+import sqlcmd.commandsystem.Command;
+import sqlcmd.commandsystem.CommandExecutor;
 import sqlcmd.exception.InterruptOperationException;
 import sqlcmd.model.DataSet;
 import sqlcmd.model.DatabaseManager;
@@ -8,17 +10,16 @@ import sqlcmd.view.View;
 public class TablePrintData implements Command {
     private DatabaseManager manager;
     private View view;
-    private CommandExecutor commandExecutor;
 
-    public TablePrintData(CommandExecutor commandExecutor, DatabaseManager manager, View view) {
-        this.commandExecutor = commandExecutor;
+
+    public TablePrintData(DatabaseManager manager, View view) {
         this.manager = manager;
         this.view = view;
     }
 
     @Override
     public void execute() throws InterruptOperationException {
-        String tableName = commandExecutor.getTableName();
+        String tableName = manager.getCurrentTableName();
         DataSet[] tableData = manager.getTableData(tableName);
         if (tableData.length == 0) {
             view.writeMessage(String.format("Table <%s> is empty.\n", tableName));

@@ -1,15 +1,16 @@
 package sqlcmd;
 
-import sqlcmd.command.CommandExecutor;
+import sqlcmd.commandsystem.CommandExecutor;
 import sqlcmd.exception.ExitException;
 import sqlcmd.model.DatabaseManager;
 import sqlcmd.model.JDBCDatabaseManager;
 import sqlcmd.exception.InterruptOperationException;
 import sqlcmd.view.ConsoleHelper;
-import sqlcmd.command.Operation;
 import sqlcmd.view.View;
 
 public class Controller {
+    private DatabaseManager manager;
+    private View view;
 
     public static void main(String[] args) {
         Controller controller = new Controller();
@@ -17,23 +18,62 @@ public class Controller {
     }
 
     private void run() {
-        DatabaseManager manager = new JDBCDatabaseManager();
-        View view = new ConsoleHelper();
+        manager = new JDBCDatabaseManager();
+        view = new ConsoleHelper();
         CommandExecutor commandExecutor = new CommandExecutor(manager, view);
         view.writeMessage("Welcome to SQLCmd!\n");
-
         try {
             Operation operation;
             do {
-                operation = commandExecutor.askMainOperation();
+                operation = askOperation();
                 commandExecutor.execute(operation);
             }
             while (true);
         } catch (ExitException e2) {
             //NOP
-        } catch(InterruptOperationException e1) {
+        }
+        catch (InterruptOperationException e1) {
             view.printExitMessage();
-            //System.exit(0);
+            //System.exit(0);  <--- закомментировано из-за тестов.
+        }
+    }
+
+    private Operation askOperation() throws InterruptOperationException {
+
+        if (manager.isConnected() && !manager.isTableLayer()) {
+            view.writeMessage(String.format("Connected to database: <%s>", manager.getCurrentDatabaseName()));
+        } else if (manager.isConnected() && manager.isTableLayer()) { //TODO reduce this if test OK
+            view.writeMessage(String.format("Connected to database: <%s>. Selected table: <%s>", manager.getCurrentDatabaseName(), manager.getCurrentTableName()));
+        }
+        view.writeMessage("Please choose an operation desired or type 'EXIT' for exiting");
+        while (true) {
+            if (!manager.isTableLayer()) {
+                view.writeMessage(
+                                "1 - Connect to database\n" +
+                                "2 - List all table names\n" +
+                                "3 - Select table to work\n" +
+                                "4 - Exit"
+                );
+            } else {
+                view.writeMessage(
+                                "1 - Print table data\n" +
+                                "2 - Change table records\n" +
+                                "3 - Clear table\n" +
+                                "4 - Return to previous menu"
+                );
+            }
+            String choice = view.readLine();
+
+            try {
+                Integer numOfChoice = Integer.parseInt(choice);
+                if (manager.isTableLayer()) {
+                    return Operation.getTableOperation(numOfChoice);
+                } else {
+                    return Operation.getMainOperation(numOfChoice);
+                }
+            } catch (IllegalArgumentException e) {
+                view.writeMessage("\nPlease choise correct number:");
+            }
         }
     }
 }

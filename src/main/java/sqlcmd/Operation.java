@@ -1,4 +1,4 @@
-package sqlcmd.command;
+package sqlcmd;
 
 public enum Operation {
     CONNECT,

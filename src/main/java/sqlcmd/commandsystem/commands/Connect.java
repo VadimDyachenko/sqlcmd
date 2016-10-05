@@ -1,5 +1,7 @@
-package sqlcmd.command;
+package sqlcmd.commandsystem.commands;
 
+import sqlcmd.commandsystem.Command;
+import sqlcmd.commandsystem.CommandExecutor;
 import sqlcmd.model.DatabaseManager;
 import sqlcmd.exception.InterruptOperationException;
 import sqlcmd.view.View;
@@ -7,9 +9,8 @@ import sqlcmd.view.View;
 public class Connect implements Command {
     private DatabaseManager manager;
     private View view;
-    private CommandExecutor commandExecutor;
-    public Connect(CommandExecutor commandExecutor, DatabaseManager manager, View view) {
-        this.commandExecutor = commandExecutor;
+
+    public Connect(DatabaseManager manager, View view) {
         this.manager = manager;
         this.view = view;
     }
@@ -24,7 +25,7 @@ public class Connect implements Command {
         while (true) {
             view.writeMessage("Please, enter database name:");
             databaseName = view.readLine();
-            commandExecutor.setDatabaseName(databaseName);
+            manager.setCurrentDatabaseName(databaseName);
             view.writeMessage("Enter you login:");
             login = view.readLine();
             view.writeMessage("Enter you password:");

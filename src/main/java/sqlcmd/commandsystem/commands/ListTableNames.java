@@ -1,10 +1,10 @@
-package sqlcmd.command;
+package sqlcmd.commandsystem.commands;
 
+import sqlcmd.commandsystem.Command;
 import sqlcmd.exception.InterruptOperationException;
 import sqlcmd.model.DatabaseManager;
 import sqlcmd.view.View;
 
-import java.util.Arrays;
 import java.util.List;
 
 /**

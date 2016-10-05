@@ -1,5 +1,7 @@
-package sqlcmd.command;
+package sqlcmd.commandsystem.commands;
 
+import sqlcmd.commandsystem.Command;
+import sqlcmd.commandsystem.CommandExecutor;
 import sqlcmd.exception.InterruptOperationException;
 import sqlcmd.model.DataSet;
 import sqlcmd.model.DatabaseManager;
@@ -9,19 +11,17 @@ import java.util.List;
 
 
 public class TableCreateRecord implements Command {
-    private CommandExecutor commandExecutor;
     private DatabaseManager manager;
     private View view;
 
-    public TableCreateRecord(CommandExecutor commandExecutor, DatabaseManager manager, View view) {
-        this.commandExecutor = commandExecutor;
+    public TableCreateRecord(DatabaseManager manager, View view) {
         this.manager = manager;
         this.view = view;
     }
 
     @Override
     public void execute() throws InterruptOperationException {
-        String tableName = commandExecutor.getTableName();
+        String tableName = manager.getCurrentTableName();
 
         view.writeMessage("Enter data to create table record.\n" +
         "Input format: ColumnName1|Value1|ColumnName2|Value2| ... |ColumnNameN|ValueN\n");

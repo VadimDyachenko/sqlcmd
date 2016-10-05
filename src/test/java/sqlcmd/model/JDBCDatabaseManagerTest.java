@@ -31,7 +31,9 @@ public class JDBCDatabaseManagerTest {
     @After
     public void cleanUpStream() {
         System.setOut(null);
-        manager.clear(TABLE_NAME);
+        manager.setCurrentTableName(TABLE_NAME);
+        manager.changeTableLayer(true);
+        manager.clearCurrentTable();
         DataSet inputData1 = new DataSet();
         inputData1.put("id", 1);
         inputData1.put("name", "Semen Petrov");
@@ -69,7 +71,9 @@ public class JDBCDatabaseManagerTest {
     @Test
     public void testGetTableData(){
         //given
-        manager.clear(TABLE_NAME);
+        manager.setCurrentTableName(TABLE_NAME);
+        manager.changeTableLayer(true);
+        manager.clearCurrentTable();
         //when
         DataSet inputData = new DataSet();
         inputData.put("id", 10);
@@ -89,7 +93,9 @@ public class JDBCDatabaseManagerTest {
     @Test
     public void testUpdateTableData() {
         //given
-        manager.clear(TABLE_NAME);
+        manager.setCurrentTableName(TABLE_NAME);
+        manager.changeTableLayer(true);
+        manager.clearCurrentTable();
         DataSet inputData = new DataSet();
         inputData.put("id", 10);
         inputData.put("name", "Semen Petrov");
@@ -114,8 +120,10 @@ public class JDBCDatabaseManagerTest {
     @Test
     public void testClearTableData() {
         //given
+        manager.setCurrentTableName(TABLE_NAME);
+        manager.changeTableLayer(true);
         //when
-        manager.clear(TABLE_NAME);
+        manager.clearCurrentTable();
         //then
         DataSet[] users = manager.getTableData(TABLE_NAME);
         assertEquals(0, users.length);
