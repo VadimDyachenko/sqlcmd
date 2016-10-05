@@ -55,16 +55,16 @@ public class JDBCDatabaseManagerTest {
         printTableNames(tableNames);
         assertEquals("[users, staff]", consoleOutputStream.toString());
     }
-    private void printTableNames(List<String> tableNames)  {
 
-        String availableTables = "[";
-        for (String name : tableNames) {
-            availableTables += name + ", ";
-        }
-        availableTables = availableTables.substring(0, availableTables.length() - 2) + "]";
-
-        System.out.print(availableTables);
+    @Test
+    public void getTableColumnNames() {
+        //given
+        //when
+        List<String> columnNames = manager.getTableColumnNames(TABLE_NAME);
+        printTableNames(columnNames);
+        assertEquals("[id, name, password]", consoleOutputStream.toString());
     }
+
 
     @Test
     public void testGetTableData(){
@@ -116,9 +116,19 @@ public class JDBCDatabaseManagerTest {
         //given
         //when
         manager.clear(TABLE_NAME);
-
         //then
         DataSet[] users = manager.getTableData(TABLE_NAME);
         assertEquals(0, users.length);
+    }
+
+    private void printTableNames(List<String> tableNames)  {
+
+        String availableTables = "[";
+        for (String name : tableNames) {
+            availableTables += name + ", ";
+        }
+        availableTables = availableTables.substring(0, availableTables.length() - 2) + "]";
+
+        System.out.print(availableTables);
     }
 }

@@ -23,7 +23,7 @@ public class TableCreateRecord implements Command {
     public void execute() throws InterruptOperationException {
         String tableName = commandExecutor.getTableName();
 
-        view.writeMessage("Enter data to change/create table record.\n" +
+        view.writeMessage("Enter data to create table record.\n" +
         "Input format: ColumnName1|Value1|ColumnName2|Value2| ... |ColumnNameN|ValueN\n");
         view.writeMessage(String.format("Available column name for table <%s> :", tableName));
 
@@ -44,14 +44,14 @@ public class TableCreateRecord implements Command {
         }
 
         DataSet dataSet = new DataSet();
-        for (int index = 1; index < (data.length / 2); index++) {
-            String columnName = data[index*2];
-            String value = data[index*2 + 1];
+        for (int index = 0; index < data.length; index += 2) {
+            String columnName = data[index];
+            String value = data[index + 1];
             dataSet.put(columnName, value);
         }
         manager.create(tableName, dataSet);
 
-        view.writeMessage(String.format("Record %s was create successful in table <%s>", dataSet, tableName));
+        view.writeMessage(String.format("Record %s was create successful in table <%s>\n", dataSet, tableName));
 
         //TODO implements me!!!
     }

@@ -17,7 +17,7 @@ public class ConsoleHelper implements View {
     @Override
     public String readLine() throws InterruptOperationException {
         String result = "";
-        try /*(BufferedReader reader = new BufferedReader(new InputStreamReader(System.in)))*/{
+        try {
             result = reader.readLine();
             if ("exit".equalsIgnoreCase(result)) {
                 throw new InterruptOperationException();
