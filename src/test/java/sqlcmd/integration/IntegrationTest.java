@@ -505,7 +505,7 @@ public class IntegrationTest {
         try {
             String result = new String(out.toByteArray(), "UTF-8");
             out.reset();
-            return result;
+            return result.replaceAll(System.lineSeparator(), "\n");
         } catch (UnsupportedEncodingException e) {
             return e.getMessage();
         }

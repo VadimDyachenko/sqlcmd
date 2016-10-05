@@ -17,7 +17,9 @@ public class JDBCDatabaseManager implements DatabaseManager {
     @Override
     public void disconnect() {
         try {
-            connection.close();
+            if (connection != null) {
+                connection.close();
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -26,14 +28,12 @@ public class JDBCDatabaseManager implements DatabaseManager {
     @Override
     public List<String> getAllTableNames() {
         List<String> resultTableNames = new LinkedList<>();
-        try {
-            Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery("SELECT table_name FROM information_schema.tables WHERE table_schema='public' AND table_type='BASE TABLE'");
+        try (Statement statement = connection.createStatement();
+             ResultSet resultSet = statement.executeQuery("SELECT table_name FROM information_schema.tables WHERE table_schema='public' AND table_type='BASE TABLE'");
+        ) {
             while (resultSet.next()) {
                 resultTableNames.add(resultSet.getString("table_name"));
             }
-            resultSet.close();
-            statement.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -42,12 +42,10 @@ public class JDBCDatabaseManager implements DatabaseManager {
 
     @Override
     public void create(String tableName, DataSet users) {
-        try {
-            Statement statement = connection.createStatement();
+        try (Statement statement = connection.createStatement()) {
             String columnName = getNameFormatted(users, "%s,");
             String values = getValuesFormatted(users, "'%s',");
             statement.executeUpdate("INSERT INTO public." + tableName + "(" + columnName + ")" + "VALUES (" + values + ")");
-            statement.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -55,10 +53,11 @@ public class JDBCDatabaseManager implements DatabaseManager {
 
     @Override
     public DataSet[] getTableData(String tableName) {
-        try {
+        try (Statement statement = connection.createStatement();
+             ResultSet resultSet = statement.executeQuery("SELECT * FROM public." + tableName)
+        ) {
             int size = getSize(tableName);
-            Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery("SELECT * FROM public." + tableName);
+
             ResultSetMetaData resultSetMetaData = resultSet.getMetaData();
             DataSet[] result = new DataSet[size];
             int index = 0;
@@ -69,10 +68,7 @@ public class JDBCDatabaseManager implements DatabaseManager {
                     dataSet.put(resultSetMetaData.getColumnName(i), resultSet.getObject(i));
                 }
             }
-            resultSet.close();
-            statement.close();
             return result;
-
         } catch (SQLException e) {
             e.printStackTrace();
             return new DataSet[0];
@@ -81,20 +77,16 @@ public class JDBCDatabaseManager implements DatabaseManager {
 
     @Override
     public void update(String tableName, int id, DataSet newValue) {
-        try {
-            String tableNames = getNameFormatted(newValue, "%s = ?,");
-            String sql = "UPDATE public." + tableName + " SET " + tableNames + " WHERE id = ?";
-            PreparedStatement ps = connection.prepareStatement(sql);
-
+        String tableNames = getNameFormatted(newValue, "%s = ?,");
+        String sql = "UPDATE public." + tableName + " SET " + tableNames + " WHERE id = ?";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
             int index = 1;
             for (Object value : newValue.getValues()) {
                 ps.setObject(index, value);
                 index++;
             }
             ps.setObject(index, id);
-
             ps.executeUpdate();
-            ps.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -102,10 +94,8 @@ public class JDBCDatabaseManager implements DatabaseManager {
 
     @Override
     public void clear(String database) {
-        try {
-            Statement statement = connection.createStatement();
+        try (Statement statement = connection.createStatement()) {
             statement.executeUpdate("DELETE FROM public." + database);
-            statement.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -114,61 +104,20 @@ public class JDBCDatabaseManager implements DatabaseManager {
     @Override
     public List<String> getTableColumnNames(String tableName) {
         List<String> resultList = new LinkedList<>();
-        try {
-            Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery(
-                            "SELECT column_name FROM information_schema.columns " +
-                            "WHERE table_schema = 'public' and table_name = '" + tableName + "'"
-                            );
+        try (Statement statement = connection.createStatement();
+             ResultSet resultSet = statement.executeQuery(
+                     "SELECT column_name FROM information_schema.columns " +
+                             "WHERE table_schema = 'public' and table_name = '" + tableName + "'")
+        ) {
             while (resultSet.next()) {
                 resultList.add(resultSet.getString("column_name"));
             }
-            resultSet.close();
-            statement.close();
             return resultList;
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return resultList;
     }
-
-//    /**
-//     * Метод возвращает HashМap(Название колонки, максимальная длина поля колонки)
-//     * @param tableName
-//     * @return result
-//     */
-//    public HashMap<String, Integer> getTableRowLenght(String tableName) {
-//        try {
-//            Statement statement = connection.createStatement();
-//            HashMap<String, Integer> result = new HashMap<>();
-//            ResultSet resultTableSet = statement.executeQuery(
-//                    "SELECT column_name, data_type " +
-//                    "FROM information_schema.columns " +
-//                    "WHERE table_schema = 'public' and table_name = '" + tableName + "'"
-//            );
-////            select table_schema, table_name, column_name, data_type
-////            from information_schema.columns
-////            where table_schema = 'tt' and table_name = 't';
-////            table_schema | table_name | column_name | data_type
-////           --------------+------------+-------------+-----------
-////            tt           | t          | i           | integer
-////            tt           | t          | n           | numeric
-//
-//            while (resultTableSet.next()) {
-//                String key = resultTableSet.getString("column_name");
-//                String dataType = resultTableSet.getString("data_type");
-//                Integer value = getRowLength(tableName, key, dataType);
-//                result.put(key, value);
-//            }
-//
-//            resultTableSet.close();
-//            statement.close();
-//            return result;
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//            return null;
-//        }
-//    }
 
     @Override
     public boolean isConnected() {
