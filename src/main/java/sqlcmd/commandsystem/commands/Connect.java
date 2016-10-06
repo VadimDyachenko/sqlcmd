@@ -17,19 +17,15 @@ public class Connect implements Command {
 
     @Override
     public void execute() throws InterruptOperationException {
-        String databaseName;
-        String login;
-        String password;
         view.writeMessage("Enter database name, login and password.\n" +
                           "Type 'exit' for exit program.\n" );
         while (true) {
-            view.writeMessage("Please, enter database name:");
-            databaseName = view.readLine();
+            String databaseName = getInputString("Please, enter database name:");;
+            String login = getInputString("Enter you login:");
+            String password = getInputString("Enter you password:");
+
             manager.setCurrentDatabaseName(databaseName);
-            view.writeMessage("Enter you login:");
-            login = view.readLine();
-            view.writeMessage("Enter you password:");
-            password = view.readLine();
+
             try {
                 if (manager.isConnected()) {
                     manager.disconnect();
@@ -37,11 +33,19 @@ public class Connect implements Command {
                 manager.connect(databaseName, login, password);
                 view.writeMessage("Connection successful!\n");
                 break;
+
             } catch (Exception e) {
                 view.writeMessage("Connection failed: " + e.getMessage());
                 view.writeMessage("Try again.");
             }
         }
+
+    }
+
+    private String getInputString(String message) throws InterruptOperationException {
+
+        view.writeMessage(message);
+        return view.readLine();
 
     }
 }

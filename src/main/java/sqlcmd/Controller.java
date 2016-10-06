@@ -42,26 +42,19 @@ public class Controller {
 
         if (manager.isConnected() && !manager.isTableLayer()) {
             view.writeMessage(String.format("Connected to database: <%s>", manager.getCurrentDatabaseName()));
-        } else if (manager.isConnected() && manager.isTableLayer()) { //TODO reduce this if test OK
+        } else if (manager.isConnected() && manager.isTableLayer()) {
             view.writeMessage(String.format("Connected to database: <%s>. Selected table: <%s>", manager.getCurrentDatabaseName(), manager.getCurrentTableName()));
         }
+
         view.writeMessage("Please choose an operation desired or type 'EXIT' for exiting");
+
         while (true) {
             if (!manager.isTableLayer()) {
-                view.writeMessage(
-                                "1 - Connect to database\n" +
-                                "2 - List all table names\n" +
-                                "3 - Select table to work\n" +
-                                "4 - Exit"
-                );
+                printMainMenu();
             } else {
-                view.writeMessage(
-                                "1 - Print table data\n" +
-                                "2 - Change table records\n" +
-                                "3 - Clear table\n" +
-                                "4 - Return to previous menu"
-                );
+                printTableMenu();
             }
+
             String choice = view.readLine();
 
             try {
@@ -75,5 +68,23 @@ public class Controller {
                 view.writeMessage("\nPlease choise correct number:");
             }
         }
+    }
+
+    private void printMainMenu() {
+        view.writeMessage(
+                        "1 - Connect to database\n" +
+                        "2 - List all table names\n" +
+                        "3 - Select table to work\n" +
+                        "4 - Exit"
+        );
+    }
+
+    private void printTableMenu() {
+        view.writeMessage(
+                        "1 - Print table data\n" +
+                        "2 - Change table records\n" +
+                        "3 - Clear table\n" +
+                        "4 - Return to previous menu"
+        );
     }
 }
