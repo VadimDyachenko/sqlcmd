@@ -1,8 +1,6 @@
-package sqlcmd.commandsystem;
+package sqlcmd.command;
 
-import com.sun.org.apache.bcel.internal.generic.RETURN;
 import sqlcmd.Operation;
-import sqlcmd.commandsystem.commands.*;
 import sqlcmd.model.DatabaseManager;
 import sqlcmd.exception.InterruptOperationException;
 import sqlcmd.view.View;

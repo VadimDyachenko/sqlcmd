@@ -7,8 +7,8 @@ import java.util.List;
 
 public class JDBCDatabaseManager implements DatabaseManager {
     private Connection connection;
-    private final String HOST = "//192.168.1.5:5432/"; // Database host address, write:  //localhost:5432/   for connect to local postgresql database
-    private String currentDatabaseName;
+    private final String HOST = "//192.168.1.5:5432/";  // Database host address, write:  //localhost:5432/
+    private String currentDatabaseName;                 // for connect to local postgresql database
     private String currentTableName;
     private boolean tableLayer = false;
 
@@ -61,7 +61,9 @@ public class JDBCDatabaseManager implements DatabaseManager {
         List<String> resultTableNames = new LinkedList<>();
 
         try (Statement statement = connection.createStatement();
-             ResultSet resultSet = statement.executeQuery("SELECT table_name FROM information_schema.tables WHERE table_schema='public' AND table_type='BASE TABLE'");
+             ResultSet resultSet = statement.executeQuery(
+                     "SELECT table_name FROM information_schema.tables " +
+                             "WHERE table_schema='public' AND table_type='BASE TABLE'");
         ) {
             while (resultSet.next()) {
                 resultTableNames.add(resultSet.getString("table_name"));
@@ -73,11 +75,12 @@ public class JDBCDatabaseManager implements DatabaseManager {
 
     @Override
     public void createTableRecord(String tableName, DataSet users) throws SQLException {
-        try (Statement statement = connection.createStatement())
-        {
+        try (Statement statement = connection.createStatement()) {
             String columnName = getNameFormatted(users, "%s,");
             String values = getValuesFormatted(users, "'%s',");
-            statement.executeUpdate("INSERT INTO public." + tableName + "(" + columnName + ")" + "VALUES (" + values + ")");
+            statement.executeUpdate("INSERT INTO public." +
+                    tableName + "(" + columnName + ")" +
+                    "VALUES (" + values + ")");
         }
     }
 
@@ -108,8 +111,7 @@ public class JDBCDatabaseManager implements DatabaseManager {
         String tableNames = getNameFormatted(newValue, "%s = ?,");
         String sql = "UPDATE public." + tableName + " SET " + tableNames + " WHERE id = ?";
 
-        try (PreparedStatement ps = connection.prepareStatement(sql))
-        {
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
             int index = 1;
             for (Object value : newValue.getValues()) {
                 ps.setObject(index, value);
@@ -122,14 +124,13 @@ public class JDBCDatabaseManager implements DatabaseManager {
 
     @Override
     public void clearCurrentTable() throws SQLException {
-        try (Statement statement = connection.createStatement())
-        {
+        try (Statement statement = connection.createStatement()) {
             statement.executeUpdate("DELETE FROM public." + currentTableName);
         }
     }
 
     @Override
-    public List<String> getTableColumnNames(String tableName) throws SQLException{
+    public List<String> getTableColumnNames(String tableName) throws SQLException {
         List<String> resultList = new ArrayList<>();
         try (Statement statement = connection.createStatement();
              ResultSet resultSet = statement.executeQuery(

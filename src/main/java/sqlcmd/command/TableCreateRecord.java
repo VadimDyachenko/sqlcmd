@@ -1,6 +1,5 @@
-package sqlcmd.commandsystem.commands;
+package sqlcmd.command;
 
-import sqlcmd.commandsystem.Command;
 import sqlcmd.exception.InterruptOperationException;
 import sqlcmd.model.DataSet;
 import sqlcmd.model.DatabaseManager;
@@ -51,7 +50,8 @@ public class TableCreateRecord implements Command {
             view.writeMessage("Failure, because " + e.getMessage());
         }
 
-        view.writeMessage(String.format("Record %s was createTableRecord successful in table <%s>\n", dataSet, tableName));
+        view.writeMessage(String.format(
+                "Record %s was createTableRecord successful in table <%s>\n", dataSet, tableName));
     }
 
     private void printAvailableColumnNames(List<String> columnNames) {

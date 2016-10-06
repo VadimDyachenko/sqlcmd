@@ -286,7 +286,7 @@ public class IntegrationTest {
         in.addLine(USER_NAME);
         in.addLine(USER_PASSWORD);
         in.addLine("3");
-        in.addLine("users");
+        in.addLine(TABLE_NAME);
         in.addLine("exit");
         //when
         Controller.main(new String[0]);
@@ -320,6 +320,44 @@ public class IntegrationTest {
     }
 
     @Test
+    public void testSelectTableToEmptyDatabase() {
+        //given
+        in.addLine("1");
+        in.addLine(EMPTY_DATABASE_NAME);
+        in.addLine(USER_NAME);
+        in.addLine(USER_PASSWORD);
+        in.addLine("3");
+        in.addLine("exit");
+        //when
+        Controller.main(new String[0]);
+        //then
+        assertEquals("Welcome to SQLCmd!\n" +
+                "\n" +
+                MAIN_MENU +
+                // input - 1
+                "Enter database name, login and password.\n" +
+                "Type 'exit' for exit program.\n" +
+                "\n" +
+                "Please, enter database name:\n" +
+                //input - EMPTY_DATABASE_NAME
+                "Enter you login:\n" +
+                //input - USER_NAME
+                "Enter you password:\n" +
+                //input - USER_PASSWORD
+                "Connection successful!\n" +
+                "\n" +
+                //input - 3
+                "Connected to database: <" + EMPTY_DATABASE_NAME + ">\n" +
+                MAIN_MENU +
+                "There are no tables in the database <" + EMPTY_DATABASE_NAME + ">\n" +
+                "\n" +
+                "Connected to database: <" + EMPTY_DATABASE_NAME + ">\n" +
+                MAIN_MENU +
+                //input - exit
+                "Terminated. Thank you for using SQLCmd. Good luck.\n", getData());
+    }
+
+    @Test
     public void testPrintTableWithConnect() {
         //given
         in.addLine("1");
@@ -327,7 +365,7 @@ public class IntegrationTest {
         in.addLine(USER_NAME);
         in.addLine(USER_PASSWORD);
         in.addLine("3");
-        in.addLine("users");
+        in.addLine(TABLE_NAME);
         in.addLine("1");
         in.addLine("exit");
         //when
@@ -343,9 +381,9 @@ public class IntegrationTest {
                 "Please, enter database name:\n" +
                 //input - DATABASE_NAME
                 "Enter you login:\n" +
-                //input - javauser
+                //input - USER_NAME
                 "Enter you password:\n" +
-                //input - test +
+                //input - USER_PASSWORD
                 "Connection successful!\n" +
                 "\n" +
                 //input - 3
@@ -354,7 +392,7 @@ public class IntegrationTest {
                 "Enter table name. Available tables:\n" +
                 "[users, staff]\n" +
                 "\n" +
-                //input - users
+                //input - TABLE_NAME
                 "Connected to database: <" + DATABASE_NAME + ">. Selected table: <users>\n" +
                 TABLE_MENU +
                 //input - 1

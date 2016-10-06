@@ -1,4 +1,4 @@
-package sqlcmd.commandsystem;
+package sqlcmd.command;
 
 import sqlcmd.exception.InterruptOperationException;
 

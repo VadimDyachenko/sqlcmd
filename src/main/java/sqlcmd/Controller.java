@@ -1,6 +1,6 @@
 package sqlcmd;
 
-import sqlcmd.commandsystem.CommandExecutor;
+import sqlcmd.command.CommandExecutor;
 import sqlcmd.exception.ExitException;
 import sqlcmd.model.DatabaseManager;
 import sqlcmd.model.JDBCDatabaseManager;
@@ -42,7 +42,8 @@ public class Controller {
         if (manager.isConnected() && !manager.isTableLayer()) {
             view.writeMessage(String.format("Connected to database: <%s>", manager.getCurrentDatabaseName()));
         } else if (manager.isConnected() && manager.isTableLayer()) {
-            view.writeMessage(String.format("Connected to database: <%s>. Selected table: <%s>", manager.getCurrentDatabaseName(), manager.getCurrentTableName()));
+            view.writeMessage(String.format("Connected to database: <%s>. Selected table: <%s>",
+                    manager.getCurrentDatabaseName(), manager.getCurrentTableName()));
         }
 
         view.writeMessage("Please choose an operation desired or type 'EXIT' for exiting");
