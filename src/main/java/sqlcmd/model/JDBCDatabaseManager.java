@@ -7,10 +7,23 @@ import java.util.List;
 
 public class JDBCDatabaseManager implements DatabaseManager {
     private Connection connection;
-    private final String HOST = "//192.168.1.5:5432/";  // Database host address, write:  //localhost:5432/
-    private String currentDatabaseName;                 // for connect to local postgresql database
+    private final String DATABASE_HOST = "//192.168.1.5:5432/";  // Database host address, write:  //localhost:5432/
+    private String currentDatabaseName;                          // for connect to local postgresql database
     private String currentTableName;
     private boolean tableLayer = false;
+
+    @Override
+    public void connect(String databaseName, String user, String password) throws SQLException {
+        connection = DriverManager.getConnection(
+                "jdbc:postgresql:" + DATABASE_HOST + databaseName, user, password);
+    }
+
+    @Override
+    public void disconnect() throws SQLException {
+        if (connection != null) {
+            connection.close();
+        }
+    }
 
     @Override
     public boolean isTableLayer() {
@@ -42,21 +55,10 @@ public class JDBCDatabaseManager implements DatabaseManager {
         this.currentTableName = currentTableName;
     }
 
-    @Override
-    public void connect(String databaseName, String user, String password) throws SQLException {
-        connection = DriverManager.getConnection(
-                "jdbc:postgresql:" + HOST + databaseName, user, password);
-    }
-
-    @Override
-    public void disconnect() throws SQLException {
-        if (connection != null) {
-            connection.close();
-        }
-    }
 
     @Override
     public List<String> getAllTableNames() throws SQLException {
+        checkConnection();
 
         List<String> resultTableNames = new LinkedList<>();
 
@@ -75,6 +77,7 @@ public class JDBCDatabaseManager implements DatabaseManager {
 
     @Override
     public void createTableRecord(String tableName, DataSet users) throws SQLException {
+        checkConnection();
         try (Statement statement = connection.createStatement()) {
             String columnName = getNameFormatted(users, "%s,");
             String values = getValuesFormatted(users, "'%s',");
@@ -86,6 +89,7 @@ public class JDBCDatabaseManager implements DatabaseManager {
 
     @Override
     public DataSet[] getTableData(String tableName) throws SQLException {
+        checkConnection();
         try (Statement statement = connection.createStatement();
              ResultSet resultSet = statement.executeQuery("SELECT * FROM public." + tableName)
         ) {
@@ -107,7 +111,7 @@ public class JDBCDatabaseManager implements DatabaseManager {
 
     @Override
     public void updateTableRecord(String tableName, int id, DataSet newValue) throws SQLException {
-
+        checkConnection();
         String tableNames = getNameFormatted(newValue, "%s = ?,");
         String sql = "UPDATE public." + tableName + " SET " + tableNames + " WHERE id = ?";
 
@@ -124,6 +128,7 @@ public class JDBCDatabaseManager implements DatabaseManager {
 
     @Override
     public void clearCurrentTable() throws SQLException {
+        checkConnection();
         try (Statement statement = connection.createStatement()) {
             statement.executeUpdate("DELETE FROM public." + currentTableName);
         }
@@ -131,6 +136,7 @@ public class JDBCDatabaseManager implements DatabaseManager {
 
     @Override
     public List<String> getTableColumnNames(String tableName) throws SQLException {
+        checkConnection();
         List<String> resultList = new ArrayList<>();
         try (Statement statement = connection.createStatement();
              ResultSet resultSet = statement.executeQuery(
@@ -174,5 +180,11 @@ public class JDBCDatabaseManager implements DatabaseManager {
         int size = resultSet.getInt("count");
         resultSet.close();
         return size;
+    }
+
+    private void checkConnection() throws SQLException {
+        if (connection == null) {
+            throw new SQLException("No connection to the database.");
+        }
     }
 }
