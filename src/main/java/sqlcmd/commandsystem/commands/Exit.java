@@ -20,12 +20,15 @@ public class Exit implements Command {
     public void execute() throws InterruptOperationException {
         view.writeMessage("Do you really want to exit? <y/n>");
         String answer = view.readLine();
+
         if (answer.trim().toLowerCase().equals("y")) {
             view.writeMessage("Thank you for using SQLCmd. Good luck.");
             if(manager.isConnected()) {
                 manager.disconnect();
             }
-            throw new ExitException();
+
+//            System.exit(0);  // <-- For normal use
+            throw new ExitException(); // <-- For integration test
         }
     }
 }

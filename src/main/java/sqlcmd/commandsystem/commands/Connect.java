@@ -18,19 +18,19 @@ public class Connect implements Command {
     @Override
     public void execute() throws InterruptOperationException {
         view.writeMessage("Enter database name, login and password.\n" +
-                          "Type 'exit' for exit program.\n" );
+                "Type 'exit' for exit program.\n");
+
         while (true) {
-            String databaseName = getInputString("Please, enter database name:");;
+            String databaseName = getInputString("Please, enter database name:");
             String login = getInputString("Enter you login:");
             String password = getInputString("Enter you password:");
-
-            manager.setCurrentDatabaseName(databaseName);
 
             try {
                 if (manager.isConnected()) {
                     manager.disconnect();
                 }
                 manager.connect(databaseName, login, password);
+                manager.setCurrentDatabaseName(databaseName);
                 view.writeMessage("Connection successful!\n");
                 break;
 

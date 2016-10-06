@@ -26,9 +26,11 @@ public class SelectTable implements Command {
             view.writeMessage("No one connection to database. Select \"Connect to database\" first.\n");
             return;
         }
+
         List<String> tableNames = manager.getAllTableNames();
         view.writeMessage("Enter table name. Available tables:");
         printAvailableTables(tableNames);
+
         while (true) {
             String tableName = view.readLine();
             if (tableNames.contains(tableName)) {

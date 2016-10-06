@@ -29,10 +29,10 @@ public class Controller {
                 commandExecutor.execute(operation);
             }
             while (true);
-        } catch (ExitException e2) {
+        } catch (ExitException e1) {
             //NOP
         }
-        catch (InterruptOperationException e1) {
+        catch (InterruptOperationException e2) {
             view.printExitMessage();
             //System.exit(0);  <--- закомментировано из-за тестов.
         }

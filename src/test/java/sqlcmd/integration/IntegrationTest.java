@@ -373,6 +373,7 @@ public class IntegrationTest {
         in.addLine("3");
         in.addLine("users");
         in.addLine("3");
+        in.addLine("y");
         in.addLine("exit");
         //when
         Controller.main(new String[0]);
@@ -400,9 +401,56 @@ public class IntegrationTest {
                 "\n" +
                 "Connected to database: <sqlcmd>. Selected table: <users>\n" +
                 TABLE_MENU +
-                //input - 3
+                "Do you really want to clear table <users>? <y/n>\n" +
+                //input - y
                 "Table cler successful.\n" +
                 "\n" +
+                "Connected to database: <sqlcmd>. Selected table: <users>\n" +
+                TABLE_MENU +
+                //input - exit
+                "Terminated. Thank you for using SQLCmd. Good luck.\n", getData());
+    }
+
+    @Test
+    public void testClearTableWithCancell() {
+        //given
+        in.addLine("1");
+        in.addLine("sqlcmd");
+        in.addLine("javauser");
+        in.addLine("test");
+        in.addLine("3");
+        in.addLine("users");
+        in.addLine("3");
+        in.addLine("n");
+        in.addLine("exit");
+        //when
+        Controller.main(new String[0]);
+        //then
+        assertEquals("Welcome to SQLCmd!\n" +
+                "\n" +
+                MAIN_MENU +
+                // input - 1
+                "Enter database name, login and password.\n" +
+                "Type 'exit' for exit program.\n" +
+                "\n" +
+                "Please, enter database name:\n" +
+                //input - sqlcmd
+                "Enter you login:\n" +
+                //input - javauser
+                "Enter you password:\n" +
+                //input - test
+                "Connection successful!\n" +
+                "\n" +
+                "Connected to database: <sqlcmd>\n" +
+                MAIN_MENU +
+                //input - 3
+                "Enter table name. Available tables:\n" +
+                "[users, staff]\n" +
+                "\n" +
+                "Connected to database: <sqlcmd>. Selected table: <users>\n" +
+                TABLE_MENU +
+                "Do you really want to clear table <users>? <y/n>\n" +
+                //input - y
                 "Connected to database: <sqlcmd>. Selected table: <users>\n" +
                 TABLE_MENU +
                 //input - exit

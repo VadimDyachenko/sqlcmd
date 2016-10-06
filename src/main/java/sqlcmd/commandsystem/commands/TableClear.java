@@ -16,7 +16,13 @@ public class TableClear implements Command {
 
     @Override
     public void execute() throws InterruptOperationException {
-        manager.clearCurrentTable();
-        view.writeMessage("Table cler successful.\n");
+
+        view.writeMessage(String.format("Do you really want to clear table <%s>? <y/n>", manager.getCurrentTableName()));
+        String answer = view.readLine();
+
+        if (answer.trim().toLowerCase().equals("y")) {
+            manager.clearCurrentTable();
+            view.writeMessage("Table cler successful.\n");
+        }
     }
 }
