@@ -6,6 +6,7 @@ import sqlcmd.model.DatabaseManager;
 import sqlcmd.view.View;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -22,36 +23,56 @@ public class TableCreateRecord implements Command {
     public void execute() throws InterruptOperationException {
         String tableName = manager.getCurrentTableName();
 
-        view.writeMessage("Enter data to createTableRecord table record.\n" +
-                "Input format: ColumnName1|Value1|ColumnName2|Value2| ... |ColumnNameN|ValueN\n");
-        view.writeMessage(String.format("Available column name for table <%s> :", tableName));
+        printInfo(tableName);
+        List<String> columnNames = getAvailableColumnNames(tableName);
+        printAvailableColumnNames(columnNames);
 
-        try {
-            List<String> columnNames = manager.getTableColumnNames(tableName);
-            printAvailableColumnNames(columnNames);
-        } catch (SQLException e) {
-            view.writeMessage("Failure, because " + e.getMessage());
+        String[] inputUserData = new String[0];
+        while (true) {
+            try {
+                inputUserData = view.readLine().split("\\|");
+                validateInputData(inputUserData, columnNames);
+                break;
+            } catch (IllegalArgumentException e) {
+                view.writeMessage("Incorrect data. " + e.getMessage());
+            }
         }
-
-        String[] data = view.readLine().split("\\|");
-        if (data.length % 2 != 0) {
-            throw new IllegalArgumentException("Invalid number of parameters");
-        }
-
         DataSet dataSet = new DataSet();
-        for (int index = 0; index < data.length; index += 2) {
-            String columnName = data[index];
-            String value = data[index + 1];
+        for (int index = 0; index < inputUserData.length; index += 2) {
+            String columnName = inputUserData[index];
+            String value = inputUserData[index + 1];
             dataSet.put(columnName, value);
         }
         try {
             manager.createTableRecord(tableName, dataSet);
+            view.writeMessage(String.format(
+                    "Record %s was createTableRecord successful in table <%s>\n", dataSet, tableName));
         } catch (SQLException e) {
             view.writeMessage("Failure, because " + e.getMessage());
         }
 
-        view.writeMessage(String.format(
-                "Record %s was createTableRecord successful in table <%s>\n", dataSet, tableName));
+    }
+
+    private List<String> getAvailableColumnNames(String tableName) {
+        List<String> columnNames = new ArrayList<>();
+        try {
+            columnNames = manager.getTableColumnNames(tableName);
+        } catch (SQLException e) {
+            view.writeMessage("Failure, because " + e.getMessage());
+        }
+        return columnNames;
+    }
+
+    private void validateInputData(String[] data, List<String> columnNames) {
+        if (data.length % 2 != 0 || data.length / 2 != columnNames.size()) {
+            throw new IllegalArgumentException("Invalid number of parameters");
+        }
+    }
+
+    private void printInfo(String tableName) {
+        view.writeMessage("Enter data to createTableRecord table record.\n" +
+                "Input format: ColumnName1|Value1|ColumnName2|Value2| ... |ColumnNameN|ValueN\n");
+        view.writeMessage(String.format("Available column name for table <%s> :", tableName));
     }
 
     private void printAvailableColumnNames(List<String> columnNames) {
