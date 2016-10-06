@@ -12,6 +12,7 @@ import sqlcmd.model.JDBCDatabaseManager;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.io.UnsupportedEncodingException;
+import java.sql.SQLException;
 
 import static org.junit.Assert.assertEquals;
 
@@ -52,22 +53,27 @@ public class IntegrationTest {
             e.printStackTrace();
         }
         manager.setCurrentTableName(TABLE_NAME);
-        manager.clearCurrentTable();
-        DataSet inputData1 = new DataSet();
-        inputData1.put("id", 1);
-        inputData1.put("name", "Semen Petrov");
-        inputData1.put("password", "qwert");
-        manager.create(TABLE_NAME, inputData1);
-        DataSet inputData2 = new DataSet();
-        inputData2.put("id", 2);
-        inputData2.put("name", "Bob Marley");
-        inputData2.put("password", "pass1");
-        manager.create(TABLE_NAME, inputData2);
-        DataSet inputData3 = new DataSet();
-        inputData3.put("id", 3);
-        inputData3.put("name", "Coca Cola");
-        inputData3.put("password", "pepsithebest");
-        manager.create(TABLE_NAME, inputData3);
+
+        try {
+            manager.clearCurrentTable();
+            DataSet inputData1 = new DataSet();
+            inputData1.put("id", 1);
+            inputData1.put("name", "Semen Petrov");
+            inputData1.put("password", "qwert");
+            manager.createTableRecord(TABLE_NAME, inputData1);
+            DataSet inputData2 = new DataSet();
+            inputData2.put("id", 2);
+            inputData2.put("name", "Bob Marley");
+            inputData2.put("password", "pass1");
+            manager.createTableRecord(TABLE_NAME, inputData2);
+            DataSet inputData3 = new DataSet();
+            inputData3.put("id", 3);
+            inputData3.put("name", "Coca Cola");
+            inputData3.put("password", "pepsithebest");
+            manager.createTableRecord(TABLE_NAME, inputData3);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     @Test
@@ -404,7 +410,7 @@ public class IntegrationTest {
                 TABLE_MENU +
                 "Do you really want to clear table <users>? <y/n>\n" +
                 //input - y
-                "Table cler successful.\n" +
+                "Table clear successful.\n" +
                 "\n" +
                 "Connected to database: <sqlcmd>. Selected table: <users>\n" +
                 TABLE_MENU +

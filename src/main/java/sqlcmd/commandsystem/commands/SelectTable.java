@@ -6,6 +6,8 @@ import sqlcmd.exception.InterruptOperationException;
 import sqlcmd.model.DatabaseManager;
 import sqlcmd.view.View;
 
+import java.sql.SQLException;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -27,13 +29,20 @@ public class SelectTable implements Command {
             return;
         }
 
-        List<String> tableNames = manager.getAllTableNames();
+        List<String> tableNames = new LinkedList<>();
+        try {
+            tableNames = manager.getAllTableNames();
+        } catch (SQLException e) {
+            view.writeMessage("Failure, because " + e.getMessage());
+        }
+
         view.writeMessage("Enter table name. Available tables:");
+
         printAvailableTables(tableNames);
 
         while (true) {
             String tableName = view.readLine();
-            if (tableNames.contains(tableName)) {
+            if (tableNames != null && tableNames.contains(tableName)) {
                 manager.setCurrentTableName(tableName);
                 manager.changeTableLayer(true);
                 break;

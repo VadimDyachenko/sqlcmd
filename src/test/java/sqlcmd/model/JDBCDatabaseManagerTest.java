@@ -6,10 +6,9 @@ import org.junit.Test;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
+import java.sql.SQLException;
 import java.util.Arrays;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 
@@ -32,28 +31,39 @@ public class JDBCDatabaseManagerTest {
     public void cleanUpStream() {
         System.setOut(null);
         manager.setCurrentTableName(TABLE_NAME);
-        manager.changeTableLayer(true);
-        manager.clearCurrentTable();
-        DataSet inputData1 = new DataSet();
-        inputData1.put("id", 1);
-        inputData1.put("name", "Semen Petrov");
-        inputData1.put("password", "qwert");
-        manager.create(TABLE_NAME, inputData1);
-        DataSet inputData2 = new DataSet();
-        inputData2.put("id", 2);
-        inputData2.put("name", "Bob Marley");
-        inputData2.put("password", "pass1");
-        manager.create(TABLE_NAME, inputData2);
-        DataSet inputData3 = new DataSet();
-        inputData3.put("id", 3);
-        inputData3.put("name", "Coca Cola");
-        inputData3.put("password", "pepsithebest");
-        manager.create(TABLE_NAME, inputData3);
+        manager.changeTableLayer(true); //TODO Maybe cut this?
+
+        try {
+            manager.clearCurrentTable();
+            DataSet inputData1 = new DataSet();
+            inputData1.put("id", 1);
+            inputData1.put("name", "Semen Petrov");
+            inputData1.put("password", "qwert");
+            manager.createTableRecord(TABLE_NAME, inputData1);
+            DataSet inputData2 = new DataSet();
+            inputData2.put("id", 2);
+            inputData2.put("name", "Bob Marley");
+            inputData2.put("password", "pass1");
+            manager.createTableRecord(TABLE_NAME, inputData2);
+            DataSet inputData3 = new DataSet();
+            inputData3.put("id", 3);
+            inputData3.put("name", "Coca Cola");
+            inputData3.put("password", "pepsithebest");
+            manager.createTableRecord(TABLE_NAME, inputData3);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     @Test
     public void testGetAllTableNames() {
-        List<String> tableNames = manager.getAllTableNames();
+
+        List<String> tableNames = null;
+        try {
+            tableNames = manager.getAllTableNames();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         printTableNames(tableNames);
         assertEquals("[users, staff]", consoleOutputStream.toString());
     }
@@ -62,7 +72,12 @@ public class JDBCDatabaseManagerTest {
     public void getTableColumnNames() {
         //given
         //when
-        List<String> columnNames = manager.getTableColumnNames(TABLE_NAME);
+        List<String> columnNames = null;
+        try {
+            columnNames = manager.getTableColumnNames(TABLE_NAME);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         printTableNames(columnNames);
         assertEquals("[id, name, password]", consoleOutputStream.toString());
     }
@@ -73,15 +88,28 @@ public class JDBCDatabaseManagerTest {
         //given
         manager.setCurrentTableName(TABLE_NAME);
         manager.changeTableLayer(true);
-        manager.clearCurrentTable();
+        try {
+            manager.clearCurrentTable();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         //when
         DataSet inputData = new DataSet();
         inputData.put("id", 10);
         inputData.put("name", "Semen Petrov");
         inputData.put("password", "qwert");
-        manager.create(TABLE_NAME, inputData);
+        try {
+            manager.createTableRecord(TABLE_NAME, inputData);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         //then
-        DataSet[] users = manager.getTableData(TABLE_NAME);
+        DataSet[] users = new DataSet[0];
+        try {
+            users = manager.getTableData(TABLE_NAME);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         assertEquals(1, users.length);
 
         DataSet user = users[0];
@@ -94,22 +122,32 @@ public class JDBCDatabaseManagerTest {
     public void testUpdateTableData() {
         //given
         manager.setCurrentTableName(TABLE_NAME);
-        manager.changeTableLayer(true);
+        manager.changeTableLayer(true); //TODO Maybe cut this?
+
+        try {
         manager.clearCurrentTable();
         DataSet inputData = new DataSet();
         inputData.put("id", 10);
         inputData.put("name", "Semen Petrov");
         inputData.put("password", "qwert");
-        manager.create(TABLE_NAME, inputData);
+        manager.createTableRecord(TABLE_NAME, inputData);
 
         //when
         DataSet newValue = new DataSet();
         newValue.put("password", "abcde");
         newValue.put("name", "Bob Marley");
-        manager.update(TABLE_NAME, 10, newValue);
+            manager.updateTableRecord(TABLE_NAME, 10, newValue);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
 
         //then
-        DataSet[] users = manager.getTableData(TABLE_NAME);
+        DataSet[] users = new DataSet[0];
+        try {
+            users = manager.getTableData(TABLE_NAME);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         assertEquals(1, users.length);
 
         DataSet user = users[0];
@@ -122,10 +160,21 @@ public class JDBCDatabaseManagerTest {
         //given
         manager.setCurrentTableName(TABLE_NAME);
         manager.changeTableLayer(true);
+
         //when
-        manager.clearCurrentTable();
+        try {
+            manager.clearCurrentTable();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
         //then
-        DataSet[] users = manager.getTableData(TABLE_NAME);
+        DataSet[] users = new DataSet[0];
+        try {
+            users = manager.getTableData(TABLE_NAME);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         assertEquals(0, users.length);
     }
 

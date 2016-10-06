@@ -7,6 +7,8 @@ import sqlcmd.model.DataSet;
 import sqlcmd.model.DatabaseManager;
 import sqlcmd.view.View;
 
+import java.sql.SQLException;
+
 public class TablePrintData implements Command {
     private DatabaseManager manager;
     private View view;
@@ -20,15 +22,22 @@ public class TablePrintData implements Command {
     @Override
     public void execute() throws InterruptOperationException {
         String tableName = manager.getCurrentTableName();
-        DataSet[] tableData = manager.getTableData(tableName);
+        DataSet[] tableData = new DataSet[0];
+        try {
+            tableData = manager.getTableData(tableName);
+        } catch (SQLException e) {
+            view.writeMessage("Failure, because " + e.getMessage());
+        }
+
         if (tableData.length == 0) {
             view.writeMessage(String.format("Table <%s> is empty.\n", tableName));
             return;
         }
+
         int[] tableRowLength = getTableRowMaxLenght(tableData);
         printHeader(tableData[0], tableRowLength);
-        for (int i = 0; i < tableData.length; i++) {
-            printRow(tableData[i], tableRowLength);
+        for (DataSet aTableData : tableData) {
+            printRow(aTableData, tableRowLength);
         }
         view.writeMessage("\n");
     }
@@ -37,8 +46,8 @@ public class TablePrintData implements Command {
         int[] result = new int[tableData[0].getNames().length];
         for (int i = 0; i < result.length; i++) {
             int length = tableData[0].getNames()[i].length();;
-            for (int j = 0; j < tableData.length; j++) {
-                int lengthValue = tableData[j].getValues()[i].toString().length();
+            for (DataSet data : tableData) {
+                int lengthValue = data.getValues()[i].toString().length();
                 if (length < lengthValue) {
                     length = lengthValue;
                 }

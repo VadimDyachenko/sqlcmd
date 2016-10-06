@@ -5,6 +5,8 @@ import sqlcmd.exception.InterruptOperationException;
 import sqlcmd.model.DatabaseManager;
 import sqlcmd.view.View;
 
+import java.sql.SQLException;
+
 public class TableClear implements Command {
     private DatabaseManager manager;
     private View view;
@@ -21,8 +23,12 @@ public class TableClear implements Command {
         String answer = view.readLine();
 
         if (answer.trim().toLowerCase().equals("y")) {
-            manager.clearCurrentTable();
-            view.writeMessage("Table cler successful.\n");
+            try {
+                manager.clearCurrentTable();
+            } catch (SQLException e) {
+                view.writeMessage("Table not clear, " + e.getMessage());
+            }
+            view.writeMessage("Table clear successful.\n");
         }
     }
 }

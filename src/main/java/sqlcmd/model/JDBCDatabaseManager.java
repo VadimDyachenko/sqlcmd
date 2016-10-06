@@ -1,11 +1,13 @@
 package sqlcmd.model;
 
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
 public class JDBCDatabaseManager implements DatabaseManager {
     private Connection connection;
+    private String HOST = "//192.168.1.5:5432/"; // Database host address, enter //localhost:5432/ for connect to local postgresql database
     private String currentDatabaseName;
     private String currentTableName;
     private boolean tableLayer = false;
@@ -20,18 +22,22 @@ public class JDBCDatabaseManager implements DatabaseManager {
         this.tableLayer = tableLayer;
     }
 
+    @Override
     public String getCurrentDatabaseName() {
         return currentDatabaseName;
     }
 
+    @Override
     public String getCurrentTableName() {
         return currentTableName;
     }
 
+    @Override
     public void setCurrentDatabaseName(String currentDatabaseName) {
         this.currentDatabaseName = currentDatabaseName;
     }
 
+    @Override
     public void setCurrentTableName(String currentTableName) {
         this.currentTableName = currentTableName;
     }
@@ -39,48 +45,44 @@ public class JDBCDatabaseManager implements DatabaseManager {
     @Override
     public void connect(String databaseName, String user, String password) throws SQLException {
         connection = DriverManager.getConnection(
-                "jdbc:postgresql://192.168.1.5:5432/" + databaseName, user, password);
+                "jdbc:postgresql:" + HOST + databaseName, user, password);
     }
 
     @Override
-    public void disconnect() {
-        try {
-            if (connection != null) {
-                connection.close();
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
+    public void disconnect() throws SQLException {
+        if (connection != null) {
+            connection.close();
         }
     }
 
     @Override
-    public List<String> getAllTableNames() {
+    public List<String> getAllTableNames() throws SQLException {
+
         List<String> resultTableNames = new LinkedList<>();
+
         try (Statement statement = connection.createStatement();
              ResultSet resultSet = statement.executeQuery("SELECT table_name FROM information_schema.tables WHERE table_schema='public' AND table_type='BASE TABLE'");
         ) {
             while (resultSet.next()) {
                 resultTableNames.add(resultSet.getString("table_name"));
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
+
+            return resultTableNames;
         }
-        return resultTableNames;
     }
 
     @Override
-    public void create(String tableName, DataSet users) {
-        try (Statement statement = connection.createStatement()) {
+    public void createTableRecord(String tableName, DataSet users) throws SQLException {
+        try (Statement statement = connection.createStatement())
+        {
             String columnName = getNameFormatted(users, "%s,");
             String values = getValuesFormatted(users, "'%s',");
             statement.executeUpdate("INSERT INTO public." + tableName + "(" + columnName + ")" + "VALUES (" + values + ")");
-        } catch (SQLException e) {
-            e.printStackTrace();
         }
     }
 
     @Override
-    public DataSet[] getTableData(String tableName) {
+    public DataSet[] getTableData(String tableName) throws SQLException {
         try (Statement statement = connection.createStatement();
              ResultSet resultSet = statement.executeQuery("SELECT * FROM public." + tableName)
         ) {
@@ -97,17 +99,17 @@ public class JDBCDatabaseManager implements DatabaseManager {
                 }
             }
             return result;
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return new DataSet[0];
         }
     }
 
     @Override
-    public void update(String tableName, int id, DataSet newValue) {
+    public void updateTableRecord(String tableName, int id, DataSet newValue) throws SQLException {
+
         String tableNames = getNameFormatted(newValue, "%s = ?,");
         String sql = "UPDATE public." + tableName + " SET " + tableNames + " WHERE id = ?";
-        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+
+        try (PreparedStatement ps = connection.prepareStatement(sql))
+        {
             int index = 1;
             for (Object value : newValue.getValues()) {
                 ps.setObject(index, value);
@@ -115,23 +117,20 @@ public class JDBCDatabaseManager implements DatabaseManager {
             }
             ps.setObject(index, id);
             ps.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
         }
     }
 
     @Override
-    public void clearCurrentTable() {
-        try (Statement statement = connection.createStatement()) {
+    public void clearCurrentTable() throws SQLException {
+        try (Statement statement = connection.createStatement())
+        {
             statement.executeUpdate("DELETE FROM public." + currentTableName);
-        } catch (SQLException e) {
-            e.printStackTrace();
         }
     }
 
     @Override
-    public List<String> getTableColumnNames(String tableName) {
-        List<String> resultList = new LinkedList<>();
+    public List<String> getTableColumnNames(String tableName) throws SQLException{
+        List<String> resultList = new ArrayList<>();
         try (Statement statement = connection.createStatement();
              ResultSet resultSet = statement.executeQuery(
                      "SELECT column_name FROM information_schema.columns " +
@@ -141,10 +140,7 @@ public class JDBCDatabaseManager implements DatabaseManager {
                 resultList.add(resultSet.getString("column_name"));
             }
             return resultList;
-        } catch (SQLException e) {
-            e.printStackTrace();
         }
-        return resultList;
     }
 
     @Override

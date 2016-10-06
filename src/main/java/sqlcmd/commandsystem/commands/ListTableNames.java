@@ -5,6 +5,7 @@ import sqlcmd.exception.InterruptOperationException;
 import sqlcmd.model.DatabaseManager;
 import sqlcmd.view.View;
 
+import java.sql.SQLException;
 import java.util.List;
 
 public class ListTableNames implements Command {
@@ -22,7 +23,12 @@ public class ListTableNames implements Command {
             view.writeMessage("No one connection to database. Select \"Connect to database\" first.\n");
             return;
         }
-        List<String> tableNames = manager.getAllTableNames();
+        List<String> tableNames = null;
+        try {
+            tableNames = manager.getAllTableNames();
+        } catch (SQLException e) {
+            view.writeMessage("Failure, because " + e.getMessage());
+        }
         printResult(tableNames);
     }
 

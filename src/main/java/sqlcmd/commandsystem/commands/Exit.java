@@ -6,6 +6,8 @@ import sqlcmd.model.DatabaseManager;
 import sqlcmd.exception.InterruptOperationException;
 import sqlcmd.view.View;
 
+import java.sql.SQLException;
+
 
 public class Exit implements Command {
     private final DatabaseManager manager;
@@ -22,10 +24,14 @@ public class Exit implements Command {
         String answer = view.readLine();
 
         if (answer.trim().toLowerCase().equals("y")) {
-            view.writeMessage("Thank you for using SQLCmd. Good luck.");
-            if(manager.isConnected()) {
-                manager.disconnect();
+            try {
+                if (manager.isConnected()) {
+                    manager.disconnect();
+                }
+            } catch (SQLException e) {
+                view.writeMessage(e.getMessage());
             }
+            view.writeMessage("Thank you for using SQLCmd. Good luck.");
 
 //            System.exit(0);  // <-- For normal use
             throw new ExitException(); // <-- For integration test

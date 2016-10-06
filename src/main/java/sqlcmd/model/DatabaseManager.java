@@ -1,5 +1,6 @@
 package sqlcmd.model;
 
+import java.sql.SQLException;
 import java.util.List;
 
 public interface DatabaseManager {
@@ -16,21 +17,21 @@ public interface DatabaseManager {
 
     void setCurrentTableName(String currentTableName);
 
-    void connect(String database, String user, String password) throws Exception;
+    void connect(String database, String user, String password) throws SQLException;
 
-    void disconnect();
+    void disconnect() throws SQLException;
 
-    List<String> getAllTableNames();
+    List<String> getAllTableNames() throws SQLException;
 
-    void create(String tableName, DataSet data);
+    DataSet[] getTableData(String tableName) throws SQLException;
 
-    DataSet[] getTableData(String tableName);
+    void createTableRecord(String tableName, DataSet data) throws SQLException;
 
-    void update(String tableName, int id, DataSet newValue);
+    void updateTableRecord(String tableName, int id, DataSet newValue) throws SQLException;
 
-    void clearCurrentTable();
+    void clearCurrentTable() throws SQLException;
 
-    List<String> getTableColumnNames(String tableName);
+    List<String> getTableColumnNames(String tableName) throws SQLException;
 
     boolean isConnected();
 }
