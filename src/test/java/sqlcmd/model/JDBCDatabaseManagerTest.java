@@ -31,7 +31,6 @@ public class JDBCDatabaseManagerTest {
     public void cleanUpStream() {
         System.setOut(null);
         manager.setCurrentTableName(TABLE_NAME);
-        manager.changeTableLayer(true); //TODO Maybe cut this?
 
         try {
             manager.clearCurrentTable();
@@ -122,7 +121,6 @@ public class JDBCDatabaseManagerTest {
     public void testUpdateTableData() {
         //given
         manager.setCurrentTableName(TABLE_NAME);
-        manager.changeTableLayer(true); //TODO Maybe cut this?
 
         try {
         manager.clearCurrentTable();

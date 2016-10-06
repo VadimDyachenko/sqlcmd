@@ -36,13 +36,18 @@ public class SelectTable implements Command {
             view.writeMessage("Failure, because " + e.getMessage());
         }
 
+        if (tableNames.isEmpty()) {
+            view.writeMessage(String.format("There are no tables in the database <%s>\n", manager.getCurrentDatabaseName()));
+            return;
+        }
+
         view.writeMessage("Enter table name. Available tables:");
 
         printAvailableTables(tableNames);
 
         while (true) {
             String tableName = view.readLine();
-            if (tableNames != null && tableNames.contains(tableName)) {
+            if (tableNames.contains(tableName)) {
                 manager.setCurrentTableName(tableName);
                 manager.changeTableLayer(true);
                 break;

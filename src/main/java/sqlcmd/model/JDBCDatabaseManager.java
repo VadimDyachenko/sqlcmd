@@ -7,7 +7,7 @@ import java.util.List;
 
 public class JDBCDatabaseManager implements DatabaseManager {
     private Connection connection;
-    private String HOST = "//192.168.1.5:5432/"; // Database host address, enter //localhost:5432/ for connect to local postgresql database
+    private final String HOST = "//192.168.1.5:5432/"; // Database host address, write:  //localhost:5432/   for connect to local postgresql database
     private String currentDatabaseName;
     private String currentTableName;
     private boolean tableLayer = false;
