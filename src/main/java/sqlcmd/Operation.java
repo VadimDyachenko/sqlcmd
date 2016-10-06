@@ -6,6 +6,7 @@ public enum Operation {
     SELECT_TABLE,
     TABLE_PRINT,
     TABLE_CREATE_RECORD,
+    TABLE_UPDATE_RECORD,
     TABLE_CLEAR,
     RETURN,
     EXIT;
@@ -34,8 +35,10 @@ public enum Operation {
             case 2:
                 return Operation.TABLE_CREATE_RECORD;
             case 3:
-                return Operation.TABLE_CLEAR;
+                return Operation.TABLE_UPDATE_RECORD;
             case 4:
+                return Operation.TABLE_CLEAR;
+            case 5:
                 return Operation.RETURN;
             default:
                 throw new IllegalArgumentException();

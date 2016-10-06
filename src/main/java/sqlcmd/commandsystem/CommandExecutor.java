@@ -20,6 +20,7 @@ public final class CommandExecutor {
         commandMap.put(Operation.SELECT_TABLE, new SelectTable(manager, view));
         commandMap.put(Operation.TABLE_PRINT, new TablePrintData(manager, view));
         commandMap.put(Operation.TABLE_CREATE_RECORD, new TableCreateRecord(manager, view));
+        commandMap.put(Operation.TABLE_UPDATE_RECORD, new TableUpdateRecord(manager, view));
         commandMap.put(Operation.TABLE_CLEAR, new TableClear(manager, view));
         commandMap.put(Operation.RETURN, new Rerturn(manager, view));
         commandMap.put(Operation.EXIT, new Exit(manager, view));

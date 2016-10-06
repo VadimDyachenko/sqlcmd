@@ -32,9 +32,10 @@ public class IntegrationTest {
     private static final String TABLE_MENU =
             "Please choose an operation desired or type 'EXIT' for exiting\n" +
                     "1 - Print table data\n" +
-                    "2 - Change table records\n" +
-                    "3 - Clear table\n" +
-                    "4 - Return to previous menu\n";
+                    "2 - Create table record\n" +
+                    "3 - Update table record\n" +
+                    "4 - Clear table\n" +
+                    "5 - Return to previous menu\n";
 
 
     @Before
@@ -372,7 +373,7 @@ public class IntegrationTest {
         in.addLine("test");
         in.addLine("3");
         in.addLine("users");
-        in.addLine("3");
+        in.addLine("4");
         in.addLine("y");
         in.addLine("exit");
         //when
@@ -420,7 +421,7 @@ public class IntegrationTest {
         in.addLine("test");
         in.addLine("3");
         in.addLine("users");
-        in.addLine("3");
+        in.addLine("4");
         in.addLine("n");
         in.addLine("exit");
         //when
@@ -466,7 +467,7 @@ public class IntegrationTest {
         in.addLine("test");
         in.addLine("3");
         in.addLine("users");
-        in.addLine("4");
+        in.addLine("5");
         in.addLine("exit");
         //when
         Controller.main(new String[0]);
@@ -494,7 +495,7 @@ public class IntegrationTest {
                 "\n" +
                 "Connected to database: <sqlcmd>. Selected table: <users>\n" +
                 TABLE_MENU +
-                //input - 4
+                //input - 5
                 "Connected to database: <sqlcmd>\n" +
                 MAIN_MENU +
                 //input - exit

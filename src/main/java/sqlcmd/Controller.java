@@ -31,8 +31,7 @@ public class Controller {
             while (true);
         } catch (ExitException e1) {
             //NOP
-        }
-        catch (InterruptOperationException e2) {
+        } catch (InterruptOperationException e2) {
             view.printExitMessage();
             //System.exit(0);  <--- закомментировано из-за тестов.
         }
@@ -82,9 +81,10 @@ public class Controller {
     private void printTableMenu() {
         view.writeMessage(
                         "1 - Print table data\n" +
-                        "2 - Change table records\n" +
-                        "3 - Clear table\n" +
-                        "4 - Return to previous menu"
-        );
+                        "2 - Create table record\n" +
+                        "3 - Update table record\n" +
+                        "4 - Clear table\n" +
+                        "5 - Return to previous menu"
+                        );
     }
 }

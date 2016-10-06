@@ -52,7 +52,5 @@ public class TableCreateRecord implements Command {
         manager.create(tableName, dataSet);
 
         view.writeMessage(String.format("Record %s was create successful in table <%s>\n", dataSet, tableName));
-
-        //TODO implements me!!!
     }
 }
