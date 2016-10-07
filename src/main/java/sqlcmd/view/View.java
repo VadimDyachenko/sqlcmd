@@ -7,6 +7,4 @@ public interface View {
 
     String readLine() throws InterruptOperationException;
 
-    void printExitMessage();
-
 }

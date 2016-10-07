@@ -32,7 +32,7 @@ public class Controller {
         } catch (ExitException e1) {
             //NOP
         } catch (InterruptOperationException e2) {
-            view.printExitMessage();
+            view.writeMessage("Terminated. Thank you for using SQLCmd. Good luck.");
             //System.exit(0);  <--- закомментировано из-за тестов.
         }
     }
@@ -86,6 +86,6 @@ public class Controller {
                         "3 - Update table record\n" +
                         "4 - Clear table\n" +
                         "5 - Return to previous menu"
-                        );
+        );
     }
 }

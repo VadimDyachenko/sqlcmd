@@ -27,9 +27,4 @@ public class ConsoleHelper implements View {
         }
         return result;
     }
-
-    @Override
-    public void printExitMessage() {
-        writeMessage("Terminated. Thank you for using SQLCmd. Good luck.");
-    }
 }

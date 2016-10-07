@@ -31,7 +31,6 @@ public class Exit implements Command {
                 view.writeMessage(e.getMessage());
             }
             view.writeMessage("Thank you for using SQLCmd. Good luck.");
-
 //            System.exit(0);  // <-- For normal use
             throw new ExitException(); // <-- For integration test
         }
