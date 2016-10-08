@@ -20,6 +20,7 @@ public class Exit implements Command {
     @Override
     public void execute() throws InterruptOperationException {
         view.writeMessage("Do you really want to exit? <y/n>");
+
         String answer = view.readLine();
 
         if (answer.trim().toLowerCase().equals("y")) {
@@ -29,10 +30,11 @@ public class Exit implements Command {
                 }
             } catch (SQLException e) {
                 view.writeMessage(e.getMessage());
-            }
+            } finally {
             view.writeMessage("Thank you for using SQLCmd. Good luck.");
-//            System.exit(0);  // <-- For normal use
+//          System.exit(0);  // <-- For normal use
             throw new ExitException(); // <-- For integration test
+            }
         }
     }
 }

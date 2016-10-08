@@ -39,12 +39,7 @@ public class Controller {
 
     private Operation askOperation() throws InterruptOperationException {
 
-        if (manager.isConnected() && !manager.isTableLayer()) {
-            view.writeMessage(String.format("Connected to database: <%s>", manager.getCurrentDatabaseName()));
-        } else if (manager.isConnected() && manager.isTableLayer()) {
-            view.writeMessage(String.format("Connected to database: <%s>. Selected table: <%s>",
-                    manager.getCurrentDatabaseName(), manager.getCurrentTableName()));
-        }
+        printCurrentConnectionAndTable();
 
         view.writeMessage("Please choose an operation desired or type 'EXIT' for exiting");
 
@@ -67,6 +62,15 @@ public class Controller {
             } catch (IllegalArgumentException e) {
                 view.writeMessage("\nPlease choise correct number:");
             }
+        }
+    }
+
+    private void printCurrentConnectionAndTable() {
+        if (manager.isConnected() && !manager.isTableLayer()) {
+            view.writeMessage(String.format("Connected to database: <%s>", manager.getCurrentDatabaseName()));
+        } else if (manager.isConnected() && manager.isTableLayer()) {
+            view.writeMessage(String.format("Connected to database: <%s>. Selected table: <%s>",
+                    manager.getCurrentDatabaseName(), manager.getCurrentTableName()));
         }
     }
 
