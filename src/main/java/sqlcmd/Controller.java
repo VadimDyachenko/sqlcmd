@@ -5,7 +5,7 @@ import sqlcmd.exception.ExitException;
 import sqlcmd.model.DatabaseManager;
 import sqlcmd.model.JDBCDatabaseManager;
 import sqlcmd.exception.InterruptOperationException;
-import sqlcmd.view.ConsoleHelper;
+import sqlcmd.view.Console;
 import sqlcmd.view.View;
 
 public class Controller {
@@ -19,7 +19,7 @@ public class Controller {
 
     private void run() {
         manager = new JDBCDatabaseManager();
-        view = new ConsoleHelper();
+        view = new Console();
         CommandExecutor commandExecutor = new CommandExecutor(manager, view);
         view.writeMessage("Welcome to SQLCmd!\n");
         try {
