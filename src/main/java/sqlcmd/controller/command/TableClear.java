@@ -1,4 +1,4 @@
-package sqlcmd.command;
+package sqlcmd.controller.command;
 
 import sqlcmd.exception.InterruptOperationException;
 import sqlcmd.model.DatabaseManager;

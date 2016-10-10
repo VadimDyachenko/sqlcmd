@@ -13,8 +13,6 @@ public interface DatabaseManager {
 
     String getCurrentTableName();
 
-    void setCurrentDatabaseName(String currentDatabaseName);
-
     void setCurrentTableName(String currentTableName);
 
     void connect(String database, String user, String password) throws SQLException;

@@ -1,4 +1,4 @@
-package sqlcmd.command;
+package sqlcmd.controller.command;
 
 import sqlcmd.exception.InterruptOperationException;
 import sqlcmd.model.DatabaseManager;
@@ -27,12 +27,7 @@ public class SelectTable implements Command {
             return;
         }
 
-        List<String> tableNames = new LinkedList<>();
-        try {
-            tableNames = manager.getAllTableNames();
-        } catch (SQLException e) {
-            view.writeMessage("Failure, because " + e.getMessage());
-        }
+        List<String> tableNames = getAvailableTableNames();
 
         if (tableNames.isEmpty()) {
             view.writeMessage(String.format("There are no tables in the database <%s>\n", manager.getCurrentDatabaseName()));
@@ -47,13 +42,22 @@ public class SelectTable implements Command {
             String tableName = view.readLine();
             if (tableNames.contains(tableName)) {
                 manager.setCurrentTableName(tableName);
-                manager.changeTableLayer(true);
                 break;
             } else {
                 view.writeMessage("Enter correct table name. Available tables:");
                 printAvailableTables(tableNames);
             }
         }
+    }
+
+    private List<String> getAvailableTableNames() {
+        List<String> tableNames = new LinkedList<>();
+        try {
+            tableNames = manager.getAllTableNames();
+        } catch (SQLException e) {
+            view.writeMessage("Failure, because " + e.getMessage());
+        }
+        return tableNames;
     }
 
     private void printAvailableTables(List<String> tableNames) {

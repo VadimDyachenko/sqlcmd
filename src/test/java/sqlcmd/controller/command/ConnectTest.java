@@ -4,13 +4,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
-import sqlcmd.command.Command;
-import sqlcmd.command.Connect;
-import sqlcmd.exception.InterruptOperationException;
 import sqlcmd.model.DatabaseManager;
 import sqlcmd.view.View;
-
-import java.sql.SQLException;
 
 import static junit.framework.TestCase.fail;
 import static org.junit.Assert.assertEquals;

@@ -1,10 +1,11 @@
-package sqlcmd.command;
+package sqlcmd.controller.command;
 
 import sqlcmd.model.DatabaseManager;
 import sqlcmd.view.View;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class ListTableNames implements Command {
@@ -22,8 +23,8 @@ public class ListTableNames implements Command {
             view.writeMessage("No one connection to database. Select \"Connect to database\" first.\n");
             return;
         }
-        List<String> tableNames = new ArrayList<>();
 
+        List<String> tableNames = new ArrayList<>();
         try {
             tableNames = manager.getAllTableNames();
         } catch (SQLException e) {
@@ -34,6 +35,7 @@ public class ListTableNames implements Command {
             view.writeMessage(String.format("There are no tables in the database <%s>\n", manager.getCurrentDatabaseName()));
             return;
         }
+
         printResult(tableNames);
     }
 
@@ -43,7 +45,7 @@ public class ListTableNames implements Command {
         for (String name : tableNames) {
             availableTables += name + ", ";
         }
-        availableTables = availableTables.substring(0, availableTables.length() - 2) + "]";
-        view.writeMessage(availableTables + "\n");
+        availableTables = availableTables.substring(0, availableTables.length() - 2) + "]\n";
+        view.writeMessage(availableTables);
     }
 }

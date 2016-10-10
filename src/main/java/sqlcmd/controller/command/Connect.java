@@ -1,4 +1,4 @@
-package sqlcmd.command;
+package sqlcmd.controller.command;
 
 import sqlcmd.model.DatabaseManager;
 import sqlcmd.exception.InterruptOperationException;
@@ -28,7 +28,6 @@ public class Connect implements Command {
                     manager.disconnect();
                 }
                 manager.connect(databaseName, login, password);
-                manager.setCurrentDatabaseName(databaseName);
                 view.writeMessage("Connection successful!\n");
                 break;
 
@@ -37,13 +36,10 @@ public class Connect implements Command {
                 view.writeMessage("Try again.");
             }
         }
-
     }
 
     private String getInputString(String message) throws InterruptOperationException {
-
         view.writeMessage(message);
         return view.readLine();
-
     }
 }

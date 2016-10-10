@@ -16,6 +16,7 @@ public class JDBCDatabaseManager implements DatabaseManager {
     public void connect(String databaseName, String user, String password) throws SQLException {
         connection = DriverManager.getConnection(
                 "jdbc:postgresql:" + DATABASE_HOST + databaseName, user, password);
+        currentDatabaseName = databaseName;
     }
 
     @Override
@@ -46,15 +47,10 @@ public class JDBCDatabaseManager implements DatabaseManager {
     }
 
     @Override
-    public void setCurrentDatabaseName(String currentDatabaseName) {
-        this.currentDatabaseName = currentDatabaseName;
-    }
-
-    @Override
     public void setCurrentTableName(String currentTableName) {
         this.currentTableName = currentTableName;
+        changeTableLayer(true);
     }
-
 
     @Override
     public List<String> getAllTableNames() throws SQLException {

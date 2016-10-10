@@ -1,32 +1,29 @@
-package sqlcmd;
+package sqlcmd.controller;
 
-import sqlcmd.command.CommandExecutor;
+import sqlcmd.controller.command.CommandExecutor;
 import sqlcmd.exception.ExitException;
 import sqlcmd.model.DatabaseManager;
-import sqlcmd.model.JDBCDatabaseManager;
 import sqlcmd.exception.InterruptOperationException;
-import sqlcmd.view.Console;
 import sqlcmd.view.View;
 
 public class Controller {
+
     private DatabaseManager manager;
     private View view;
 
-    public static void main(String[] args) {
-        Controller controller = new Controller();
-        controller.run();
+    public Controller(DatabaseManager manager, View view) {
+        this.manager = manager;
+        this.view = view;
     }
 
-    private void run() {
-        manager = new JDBCDatabaseManager();
-        view = new Console();
+    public void run() {
         CommandExecutor commandExecutor = new CommandExecutor(manager, view);
         view.writeMessage("Welcome to SQLCmd!\n");
         try {
-            Operation operation;
+            AvailableOperation availableOperation;
             do {
-                operation = askOperation();
-                commandExecutor.execute(operation);
+                availableOperation = askOperation();
+                commandExecutor.execute(availableOperation);
             }
             while (true);
         } catch (ExitException e1) {
@@ -37,7 +34,7 @@ public class Controller {
         }
     }
 
-    private Operation askOperation() throws InterruptOperationException {
+    private AvailableOperation askOperation() throws InterruptOperationException {
 
         printCurrentConnectionAndTable();
 
@@ -55,9 +52,9 @@ public class Controller {
             try {
                 Integer numOfChoice = Integer.parseInt(choice);
                 if (manager.isTableLayer()) {
-                    return Operation.getTableOperation(numOfChoice);
+                    return AvailableOperation.getTableOperation(numOfChoice);
                 } else {
-                    return Operation.getMainOperation(numOfChoice);
+                    return AvailableOperation.getMainOperation(numOfChoice);
                 }
             } catch (IllegalArgumentException e) {
                 view.writeMessage("\nPlease choise correct number:");

@@ -3,7 +3,7 @@ package sqlcmd.integration;
 
 import org.junit.Before;
 import org.junit.Test;
-import sqlcmd.Controller;
+import sqlcmd.SQLcmdMain;
 import sqlcmd.model.DataSet;
 import sqlcmd.model.DatabaseManager;
 import sqlcmd.model.JDBCDatabaseManager;
@@ -15,7 +15,6 @@ import java.io.UnsupportedEncodingException;
 import java.sql.SQLException;
 
 import static org.junit.Assert.assertEquals;
-
 
 public class IntegrationTest {
 
@@ -86,7 +85,7 @@ public class IntegrationTest {
         in.addLine("4");
         in.addLine("y");
         //when
-        Controller.main(new String[0]);
+        SQLcmdMain.main(new String[0]);
 
         //then
         assertEquals("Welcome to SQLCmd!\n" +
@@ -103,7 +102,7 @@ public class IntegrationTest {
         //given
         in.addLine("exit");
         //when
-        Controller.main(new String[0]);
+        SQLcmdMain.main(new String[0]);
         //then
         assertEquals("Welcome to SQLCmd!\n" +
                 "\n" +
@@ -118,7 +117,7 @@ public class IntegrationTest {
         in.addLine("2");
         in.addLine("exit");
         //when
-        Controller.main(new String[0]);
+        SQLcmdMain.main(new String[0]);
         //then
         assertEquals("Welcome to SQLCmd!\n" +
                 "\n" +
@@ -137,7 +136,7 @@ public class IntegrationTest {
         in.addLine("3");
         in.addLine("exit");
         //when
-        Controller.main(new String[0]);
+        SQLcmdMain.main(new String[0]);
         //then
         assertEquals("Welcome to SQLCmd!\n" +
                 "\n" +
@@ -156,7 +155,7 @@ public class IntegrationTest {
         in.addLine("0");
         in.addLine("exit");
         //when
-        Controller.main(new String[0]);
+        SQLcmdMain.main(new String[0]);
         //then
         assertEquals("Welcome to SQLCmd!\n" +
                 "\n" +
@@ -181,7 +180,7 @@ public class IntegrationTest {
         in.addLine(USER_PASSWORD);
         in.addLine("exit");
         //when
-        Controller.main(new String[0]);
+        SQLcmdMain.main(new String[0]);
         //then
         assertEquals("Welcome to SQLCmd!\n" +
                 "\n" +
@@ -211,7 +210,7 @@ public class IntegrationTest {
         in.addLine("2");
         in.addLine("exit");
         //when
-        Controller.main(new String[0]);
+        SQLcmdMain.main(new String[0]);
         //then
         assertEquals("Welcome to SQLCmd!\n" +
                 "\n" +
@@ -250,7 +249,7 @@ public class IntegrationTest {
         in.addLine("2");
         in.addLine("exit");
         //when
-        Controller.main(new String[0]);
+        SQLcmdMain.main(new String[0]);
         //then
         assertEquals("Welcome to SQLCmd!\n" +
                 "\n" +
@@ -289,7 +288,7 @@ public class IntegrationTest {
         in.addLine(TABLE_NAME);
         in.addLine("exit");
         //when
-        Controller.main(new String[0]);
+        SQLcmdMain.main(new String[0]);
         //then
         assertEquals("Welcome to SQLCmd!\n" +
                 "\n" +
@@ -329,7 +328,7 @@ public class IntegrationTest {
         in.addLine("3");
         in.addLine("exit");
         //when
-        Controller.main(new String[0]);
+        SQLcmdMain.main(new String[0]);
         //then
         assertEquals("Welcome to SQLCmd!\n" +
                 "\n" +
@@ -369,7 +368,7 @@ public class IntegrationTest {
         in.addLine("1");
         in.addLine("exit");
         //when
-        Controller.main(new String[0]);
+        SQLcmdMain.main(new String[0]);
         //then
         assertEquals("Welcome to SQLCmd!\n" +
                 "\n" +
@@ -420,7 +419,7 @@ public class IntegrationTest {
         in.addLine("usersa");
         in.addLine("exit");
         //when
-        Controller.main(new String[0]);
+        SQLcmdMain.main(new String[0]);
         //then
         assertEquals("Welcome to SQLCmd!\n" +
                 "\n" +
@@ -463,7 +462,7 @@ public class IntegrationTest {
         in.addLine("y");
         in.addLine("exit");
         //when
-        Controller.main(new String[0]);
+        SQLcmdMain.main(new String[0]);
         //then
         assertEquals("Welcome to SQLCmd!\n" +
                 "\n" +
@@ -511,7 +510,7 @@ public class IntegrationTest {
         in.addLine("n");
         in.addLine("exit");
         //when
-        Controller.main(new String[0]);
+        SQLcmdMain.main(new String[0]);
         //then
         assertEquals("Welcome to SQLCmd!\n" +
                 "\n" +
@@ -556,7 +555,7 @@ public class IntegrationTest {
         in.addLine("5");
         in.addLine("exit");
         //when
-        Controller.main(new String[0]);
+        SQLcmdMain.main(new String[0]);
         //then
         assertEquals("Welcome to SQLCmd!\n" +
                 "\n" +
@@ -601,7 +600,7 @@ public class IntegrationTest {
         in.addLine(USER_PASSWORD);
         in.addLine("exit");
         //when
-        Controller.main(new String[0]);
+        SQLcmdMain.main(new String[0]);
         //then
         assertEquals("Welcome to SQLCmd!\n" +
                 "\n" +
