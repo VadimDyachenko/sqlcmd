@@ -6,6 +6,7 @@ import sqlcmd.model.DatabaseManager;
 import sqlcmd.view.View;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -54,13 +55,13 @@ public class SelectTable implements Command {
     }
 
     private List<String> getAvailableTableNames() {
-        List<String> tableNames = new LinkedList<>();
+        List<String> result = new ArrayList<>();
         try {
-            tableNames = manager.getAllTableNames();
+            result = manager.getAllTableNames();
         } catch (SQLException e) {
             view.writeMessage("Failure, because " + e.getMessage());
         }
-        return tableNames;
+        return result;
     }
 
     private void printAvailableTables(List<String> tableNames) {
