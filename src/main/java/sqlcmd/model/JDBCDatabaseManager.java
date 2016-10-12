@@ -7,16 +7,12 @@ import java.util.List;
 
 public class JDBCDatabaseManager implements DatabaseManager {
     private Connection connection;
-    private final String DATABASE_HOST = "//192.168.1.5:5432/";  // Database host address, write:  //localhost:5432/
-    private String currentDatabaseName;                          // for connect to local postgresql database
-    private String currentTableName;
-    private boolean tableLayer = false;
+    private final String DATABASE_HOST = "//192.168.1.5:5432/";  // write: //localhost:5432/  for localhost database
 
     @Override
     public void connect(String databaseName, String user, String password) throws SQLException {
         connection = DriverManager.getConnection(
                 "jdbc:postgresql:" + DATABASE_HOST + databaseName, user, password);
-        currentDatabaseName = databaseName;
     }
 
     @Override
@@ -26,31 +22,7 @@ public class JDBCDatabaseManager implements DatabaseManager {
         }
     }
 
-    @Override
-    public boolean isTableLayer() {
-        return tableLayer;
-    }
 
-    @Override
-    public void changeTableLayer(boolean tableLayer) {
-        this.tableLayer = tableLayer;
-    }
-
-    @Override
-    public String getCurrentDatabaseName() {
-        return currentDatabaseName;
-    }
-
-    @Override
-    public String getCurrentTableName() {
-        return currentTableName;
-    }
-
-    @Override
-    public void setCurrentTableName(String currentTableName) {
-        this.currentTableName = currentTableName;
-        changeTableLayer(true);
-    }
 
     @Override
     public List<String> getAllTableNames() throws SQLException {
@@ -123,10 +95,10 @@ public class JDBCDatabaseManager implements DatabaseManager {
     }
 
     @Override
-    public void clearCurrentTable() throws SQLException {
+    public void clearCurrentTable(String tableName) throws SQLException {
         checkConnection();
         try (Statement statement = connection.createStatement()) {
-            statement.executeUpdate("DELETE FROM public." + currentTableName);
+            statement.executeUpdate("DELETE FROM public." + tableName);
         }
     }
 

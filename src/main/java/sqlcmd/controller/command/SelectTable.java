@@ -1,5 +1,6 @@
 package sqlcmd.controller.command;
 
+import sqlcmd.controller.Controller;
 import sqlcmd.exception.InterruptOperationException;
 import sqlcmd.model.DatabaseManager;
 import sqlcmd.view.View;
@@ -12,10 +13,12 @@ import java.util.List;
  * Created by vadim on 02.10.16.
  */
 public class SelectTable implements Command {
+    private Controller controller;
     private DatabaseManager manager;
     private View view;
 
-    public SelectTable(DatabaseManager manager, View view) {
+    public SelectTable(Controller controller, DatabaseManager manager, View view) {
+        this.controller = controller;
         this.manager = manager;
         this.view = view;
     }
@@ -30,7 +33,7 @@ public class SelectTable implements Command {
         List<String> tableNames = getAvailableTableNames();
 
         if (tableNames.isEmpty()) {
-            view.writeMessage(String.format("There are no tables in the database <%s>\n", manager.getCurrentDatabaseName()));
+            view.writeMessage(String.format("There are no tables in the database <%s>\n", controller.getCurrentDatabaseName()));
             return;
         }
 
@@ -41,7 +44,7 @@ public class SelectTable implements Command {
         while (true) {
             String tableName = view.readLine();
             if (tableNames.contains(tableName)) {
-                manager.setCurrentTableName(tableName);
+                controller.setCurrentTableName(tableName);
                 break;
             } else {
                 view.writeMessage("Enter correct table name. Available tables:");

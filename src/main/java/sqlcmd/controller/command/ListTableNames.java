@@ -1,5 +1,6 @@
 package sqlcmd.controller.command;
 
+import sqlcmd.controller.Controller;
 import sqlcmd.model.DatabaseManager;
 import sqlcmd.view.View;
 
@@ -9,10 +10,12 @@ import java.util.Arrays;
 import java.util.List;
 
 public class ListTableNames implements Command {
+    private Controller controller;
     private DatabaseManager manager;
     private View view;
 
-    public ListTableNames(DatabaseManager manager, View view) {
+    public ListTableNames(Controller controller, DatabaseManager manager, View view) {
+        this.controller = controller;
         this.manager = manager;
         this.view = view;
     }
@@ -32,7 +35,7 @@ public class ListTableNames implements Command {
         }
 
         if (tableNames.isEmpty()) {
-            view.writeMessage(String.format("There are no tables in the database <%s>\n", manager.getCurrentDatabaseName()));
+            view.writeMessage(String.format("There are no tables in the database <%s>\n", controller.getCurrentDatabaseName()));
             return;
         }
 

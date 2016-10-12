@@ -1,5 +1,6 @@
 package sqlcmd.controller.command;
 
+import sqlcmd.controller.Controller;
 import sqlcmd.exception.InterruptOperationException;
 import sqlcmd.model.DataSet;
 import sqlcmd.model.DatabaseManager;
@@ -11,17 +12,19 @@ import java.util.List;
 
 
 public class TableCreateRecord implements Command {
+    private Controller controller;
     private DatabaseManager manager;
     private View view;
 
-    public TableCreateRecord(DatabaseManager manager, View view) {
+    public TableCreateRecord(Controller controller, DatabaseManager manager, View view) {
+        this.controller = controller;
         this.manager = manager;
         this.view = view;
     }
 
     @Override
     public void execute() throws InterruptOperationException {
-        String tableName = manager.getCurrentTableName();
+        String tableName = controller.getCurrentTableName();
 
         printInfo(tableName);
         List<String> columnNames = getAvailableColumnNames(tableName);

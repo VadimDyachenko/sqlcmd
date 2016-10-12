@@ -1,5 +1,6 @@
 package sqlcmd.controller.command;
 
+import sqlcmd.controller.Controller;
 import sqlcmd.model.DatabaseManager;
 import sqlcmd.exception.InterruptOperationException;
 import sqlcmd.view.View;
@@ -7,10 +8,12 @@ import sqlcmd.view.View;
 import java.sql.SQLException;
 
 public class Connect implements Command {
+    private Controller controller;
     private DatabaseManager manager;
     private View view;
 
-    public Connect(DatabaseManager manager, View view) {
+    public Connect(Controller controller, DatabaseManager manager, View view) {
+        this.controller = controller;
         this.manager = manager;
         this.view = view;
     }
@@ -30,6 +33,7 @@ public class Connect implements Command {
                     manager.disconnect();
                 }
                 manager.connect(databaseName, login, password);
+                controller.setCurrentDatabaseName(databaseName);
                 view.writeMessage("Connection successful!\n");
                 break;
             } catch (SQLException e) {

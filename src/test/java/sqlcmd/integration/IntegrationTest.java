@@ -4,9 +4,12 @@ package sqlcmd.integration;
 import org.junit.Before;
 import org.junit.Test;
 import sqlcmd.SQLcmdMain;
+import sqlcmd.controller.Controller;
 import sqlcmd.model.DataSet;
 import sqlcmd.model.DatabaseManager;
 import sqlcmd.model.JDBCDatabaseManager;
+import sqlcmd.view.Console;
+import sqlcmd.view.View;
 
 
 import java.io.ByteArrayOutputStream;
@@ -43,22 +46,24 @@ public class IntegrationTest {
 
 
     @Before
-    public void setup() {
+    public void setUp() {
         in = new ConfigurableInputStream();
         out = new ByteArrayOutputStream();
         System.setIn(in);
         System.setOut(new PrintStream(out));
 
         DatabaseManager manager = new JDBCDatabaseManager();
+        View view = new Console();
+        Controller controller = new Controller(manager, view);
         try {
             manager.connect(DATABASE_NAME, USER_NAME, USER_PASSWORD);
         } catch (Exception e) {
             e.printStackTrace();
         }
-        manager.setCurrentTableName(TABLE_NAME);
+        controller.setCurrentTableName(TABLE_NAME);
 
         try {
-            manager.clearCurrentTable();
+            manager.clearCurrentTable(TABLE_NAME);
             DataSet inputData1 = new DataSet();
             inputData1.put("id", 1);
             inputData1.put("name", "Semen Petrov");

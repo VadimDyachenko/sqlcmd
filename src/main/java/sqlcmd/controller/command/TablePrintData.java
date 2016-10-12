@@ -1,5 +1,6 @@
 package sqlcmd.controller.command;
 
+import sqlcmd.controller.Controller;
 import sqlcmd.exception.InterruptOperationException;
 import sqlcmd.model.DataSet;
 import sqlcmd.model.DatabaseManager;
@@ -8,18 +9,20 @@ import sqlcmd.view.View;
 import java.sql.SQLException;
 
 public class TablePrintData implements Command {
+    private Controller controller;
     private DatabaseManager manager;
     private View view;
 
 
-    public TablePrintData(DatabaseManager manager, View view) {
+    public TablePrintData(Controller controller, DatabaseManager manager, View view) {
+        this.controller = controller;
         this.manager = manager;
         this.view = view;
     }
 
     @Override
     public void execute() throws InterruptOperationException {
-        String tableName = manager.getCurrentTableName();
+        String tableName = controller.getCurrentTableName();
         DataSet[] tableData = new DataSet[0];
         try {
             tableData = manager.getTableData(tableName);

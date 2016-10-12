@@ -3,6 +3,7 @@ package sqlcmd.controller.command;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
+import sqlcmd.controller.Controller;
 import sqlcmd.model.DatabaseManager;
 import sqlcmd.view.View;
 
@@ -17,12 +18,14 @@ public class ListTableNamesTest {
     private DatabaseManager manager;
     private View view;
     private Command command;
+    private Controller controller;
 
     @Before
-    public void setup() {
+    public void setUp() {
         manager = mock(DatabaseManager.class);
         view = mock(View.class);
-        command = new ListTableNames(manager, view);
+        controller = mock(Controller.class);
+        command = new ListTableNames(controller, manager, view);
     }
 
     @Test

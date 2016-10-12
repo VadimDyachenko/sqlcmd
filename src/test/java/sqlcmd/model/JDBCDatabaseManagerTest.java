@@ -3,6 +3,9 @@ package sqlcmd.model;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import sqlcmd.controller.Controller;
+import sqlcmd.view.Console;
+import sqlcmd.view.View;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
@@ -16,9 +19,14 @@ public class JDBCDatabaseManagerTest {
     private final ByteArrayOutputStream consoleOutputStream = new ByteArrayOutputStream();
     private DatabaseManager manager;
     private static final String TABLE_NAME ="users";
+    private Controller controller;
+    private View view;
+
     @Before
-    public void setupManager() {
+    public void setUp() {
         manager = new JDBCDatabaseManager();
+        view = new Console();
+        controller = new Controller(manager, view);
         try {
             manager.connect("sqlcmd", "javauser", "test");
         } catch (Exception e) {
@@ -30,10 +38,10 @@ public class JDBCDatabaseManagerTest {
     @After
     public void cleanUpStream() {
         System.setOut(null);
-        manager.setCurrentTableName(TABLE_NAME);
+        controller.setCurrentTableName(TABLE_NAME);
 
         try {
-            manager.clearCurrentTable();
+            manager.clearCurrentTable(TABLE_NAME);
             DataSet inputData1 = new DataSet();
             inputData1.put("id", 1);
             inputData1.put("name", "Semen Petrov");
@@ -85,10 +93,10 @@ public class JDBCDatabaseManagerTest {
     @Test
     public void testGetTableData(){
         //given
-        manager.setCurrentTableName(TABLE_NAME);
-        manager.changeTableLayer(true);
+        controller.setCurrentTableName(TABLE_NAME);
+        controller.changeTableLayer(true);
         try {
-            manager.clearCurrentTable();
+            manager.clearCurrentTable(TABLE_NAME);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -120,10 +128,10 @@ public class JDBCDatabaseManagerTest {
     @Test
     public void testUpdateTableData() {
         //given
-        manager.setCurrentTableName(TABLE_NAME);
+        controller.setCurrentTableName(TABLE_NAME);
 
         try {
-        manager.clearCurrentTable();
+        manager.clearCurrentTable(TABLE_NAME);
         DataSet inputData = new DataSet();
         inputData.put("id", 10);
         inputData.put("name", "Semen Petrov");
@@ -156,12 +164,12 @@ public class JDBCDatabaseManagerTest {
     @Test
     public void testClearTableData() {
         //given
-        manager.setCurrentTableName(TABLE_NAME);
-        manager.changeTableLayer(true);
+        controller.setCurrentTableName(TABLE_NAME);
+        controller.changeTableLayer(true);
 
         //when
         try {
-            manager.clearCurrentTable();
+            manager.clearCurrentTable(TABLE_NAME);
         } catch (SQLException e) {
             e.printStackTrace();
         }
