@@ -22,7 +22,6 @@ public class ExitTest {
     private Command command;
 
     @Before
-
     public void setup() {
         manager = mock(DatabaseManager.class);
         view = mock(View.class);
