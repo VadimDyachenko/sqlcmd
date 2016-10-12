@@ -20,7 +20,7 @@ public class Connect implements Command {
         view.writeMessage("Enter database name, login and password.\n" +
                 "Type 'exit' for exit program.\n");
 
-        while (true) {
+        do {
             String databaseName = getInputString("Please, enter database name:");
             String login = getInputString("Enter you login:");
             String password = getInputString("Enter you password:");
@@ -36,7 +36,7 @@ public class Connect implements Command {
                 view.writeMessage("Connection failed: " + e.getMessage());
                 view.writeMessage("Try again.");
             }
-        }
+        } while (!manager.isConnected());
     }
 
     private String getInputString(String message) throws InterruptOperationException {

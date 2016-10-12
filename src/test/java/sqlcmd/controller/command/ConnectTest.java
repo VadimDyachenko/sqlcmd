@@ -4,7 +4,6 @@ package sqlcmd.controller.command;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
-import sqlcmd.exception.InterruptOperationException;
 import sqlcmd.model.DatabaseManager;
 import sqlcmd.model.JDBCDatabaseManager;
 import sqlcmd.view.Console;
@@ -28,30 +27,26 @@ public class ConnectTest {
     }
 
     @Test
-    public void connectWithExceptionTest() throws Exception{
+    public void connectWithSQLExceptionTest() throws Exception {
         //given
         //when
-        when(view.readLine()).thenReturn("sqlcmd", "javauser", "test");
-        doThrow(new SQLException()).when(manager).connect("sqlcmd", "javauser", "test");
-//        doThrow(new SQLException()).when(manager).connect(anyString(), anyString(), anyString());
-
+        doThrow(new SQLException()).when(manager).connect(anyString(), anyString(), anyString());
+        when(manager.isConnected()).thenReturn(true);
         command.execute();
-        //than
+        //then
         shouldPrint("[Enter database name, login and password.\n" +
                 "Type 'exit' for exit program.\n" +
                 ", Please, enter database name:, " +
                 "Enter you login:, Enter you password:, " +
-                "Connection failed: null, Try again., " +
-                "Please, enter database name:, Enter you login:, Enter you password:, " +
-                "Connection successful!\n]");
+                "Connection failed: null, Try again.]");
     }
 
     @Test
-    public void connectTest() throws Exception{
+    public void connectTest() throws Exception {
         //given
         //when
         command.execute();
-        //than
+        //then
         shouldPrint("[Enter database name, login and password.\n" +
                 "Type 'exit' for exit program.\n" +
                 ", Please, enter database name:, Enter you login:, Enter you password:, " +
