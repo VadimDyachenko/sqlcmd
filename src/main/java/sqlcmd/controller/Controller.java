@@ -10,14 +10,15 @@ public class Controller {
 
     private DatabaseManager manager;
     private View view;
+    private CommandExecutor commandExecutor;
 
     public Controller(DatabaseManager manager, View view) {
         this.manager = manager;
         this.view = view;
+        commandExecutor = new CommandExecutor(manager, view);
     }
 
     public void run() {
-        CommandExecutor commandExecutor = new CommandExecutor(manager, view);
         view.writeMessage("Welcome to SQLCmd!\n");
         try {
             AvailableOperation availableOperation;

@@ -60,7 +60,6 @@ public class ExitTest {
         }
         try {
             command.execute();
-//            fail("Expected ExitException");
         } catch (Exception e) {
             e.getMessage();
         }

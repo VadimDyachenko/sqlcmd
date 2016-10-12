@@ -4,6 +4,8 @@ import sqlcmd.model.DatabaseManager;
 import sqlcmd.exception.InterruptOperationException;
 import sqlcmd.view.View;
 
+import java.sql.SQLException;
+
 public class Connect implements Command {
     private DatabaseManager manager;
     private View view;
@@ -30,8 +32,7 @@ public class Connect implements Command {
                 manager.connect(databaseName, login, password);
                 view.writeMessage("Connection successful!\n");
                 break;
-
-            } catch (Exception e) {
+            } catch (SQLException e) {
                 view.writeMessage("Connection failed: " + e.getMessage());
                 view.writeMessage("Try again.");
             }
