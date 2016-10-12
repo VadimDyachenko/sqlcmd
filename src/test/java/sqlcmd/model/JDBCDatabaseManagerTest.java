@@ -68,7 +68,7 @@ public class JDBCDatabaseManagerTest {
     }
 
     @Test
-    public void getTableColumnNames() {
+    public void testGetTableColumnNames() {
         //given
         //when
         List<String> columnNames = null;

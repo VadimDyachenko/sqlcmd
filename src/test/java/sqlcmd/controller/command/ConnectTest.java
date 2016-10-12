@@ -27,7 +27,19 @@ public class ConnectTest {
     }
 
     @Test
-    public void connectWithSQLExceptionTest() throws Exception {
+    public void testConnect() throws Exception {
+        //given
+        //when
+        command.execute();
+        //then
+        shouldPrint("[Enter database name, login and password.\n" +
+                "Type 'exit' for exit program.\n" +
+                ", Please, enter database name:, Enter you login:, Enter you password:, " +
+                "Connection successful!\n]");
+    }
+
+    @Test
+    public void testConnectWithSQLException() throws Exception {
         //given
         //when
         doThrow(new SQLException()).when(manager).connect(anyString(), anyString(), anyString());
@@ -40,19 +52,6 @@ public class ConnectTest {
                 "Enter you login:, Enter you password:, " +
                 "Connection failed: null, Try again.]");
     }
-
-    @Test
-    public void connectTest() throws Exception {
-        //given
-        //when
-        command.execute();
-        //then
-        shouldPrint("[Enter database name, login and password.\n" +
-                "Type 'exit' for exit program.\n" +
-                ", Please, enter database name:, Enter you login:, Enter you password:, " +
-                "Connection successful!\n]");
-    }
-
 
     private void shouldPrint(String expected) {
         ArgumentCaptor<String> captor = ArgumentCaptor.forClass(String.class);

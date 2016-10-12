@@ -2,16 +2,17 @@ package sqlcmd.controller.command;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Mockito;
 import org.mockito.ArgumentCaptor;
 import static junit.framework.TestCase.fail;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
 
+import sqlcmd.exception.ExitException;
 import sqlcmd.exception.InterruptOperationException;
 import sqlcmd.model.DatabaseManager;
 import sqlcmd.view.View;
 
+import java.sql.SQLException;
 
 
 public class ExitTest {
@@ -23,24 +24,21 @@ public class ExitTest {
     @Before
 
     public void setup() {
-        manager = Mockito.mock(DatabaseManager.class);
-        view = Mockito.mock(View.class);
+        manager = mock(DatabaseManager.class);
+        view = mock(View.class);
         command = new Exit(manager, view);
     }
 
     @Test
-    public void testExitYes() {
+    public void testExitYes() throws Exception{
         //given
         //when
-        try {
-            Mockito.when(view.readLine()).thenReturn("y");
-        } catch (InterruptOperationException e) {
-            e.printStackTrace();
-        }
+        when(view.readLine()).thenReturn("y");
+
         try {
             command.execute();
             fail("Expected ExitException");
-        } catch (Exception e) {
+        } catch (ExitException e) {
             e.getMessage();
         }
 
@@ -50,11 +48,31 @@ public class ExitTest {
     }
 
     @Test
+    public void testExitYesWhithSQLException() throws Exception{
+        //given
+        //when
+        when(view.readLine()).thenReturn("y");
+        when(manager.isConnected()).thenReturn(true);
+        doThrow(new SQLException()).when(manager).disconnect();
+        try {
+            command.execute();
+            fail("Expected ExitException");
+        } catch (Exception e) {
+            e.getMessage();
+        }
+
+        //then
+        shouldPrint("[Do you really want to exit? <y/n>, " +
+                "null, " +
+                "Thank you for using SQLCmd. Good luck.]");
+    }
+
+    @Test
     public void testExitNo() {
         //given
         //when
         try {
-            Mockito.when(view.readLine()).thenReturn("n");
+            when(view.readLine()).thenReturn("n");
         } catch (InterruptOperationException e) {
             e.printStackTrace();
         }
