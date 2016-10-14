@@ -38,7 +38,7 @@ public class Connect implements Command {
                 break;
             } catch (SQLException e) {
                 view.writeMessage("Connection failed: " + e.getMessage());
-                view.writeMessage("Try again.");
+                view.writeMessage("Try again or type <exit>.");
             }
         } while (!manager.isConnected());
     }

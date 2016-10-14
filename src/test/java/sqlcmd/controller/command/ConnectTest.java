@@ -53,7 +53,7 @@ public class ConnectTest {
                 "Type 'exit' for exit program.\n" +
                 ", Please, enter database name:, " +
                 "Enter you login:, Enter you password:, " +
-                "Connection failed: null, Try again.]");
+                "Connection failed: null, Try again or type <exit>.]");
     }
 
     private void shouldPrint(String expected) {

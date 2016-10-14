@@ -13,7 +13,7 @@ import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 public class JDBCDatabaseManagerTest {
     private final ByteArrayOutputStream consoleOutputStream = new ByteArrayOutputStream();
@@ -194,4 +194,18 @@ public class JDBCDatabaseManagerTest {
 
         System.out.print(availableTables);
     }
+
+//    @Test
+//    public void testDisconnect() {
+//        //given
+//        //when
+//        try {
+//            manager.connect("sqlcmd", "javauser", "test");
+//            manager.disconnect();
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        }
+//        //then
+//        assertFalse(manager.isConnected());
+//    }
 }
