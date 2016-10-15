@@ -1,55 +1,16 @@
 package sqlcmd.model;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 
-public class DataSet {
-    static class Data {
-        private String name;
-        private Object value;
+public interface DataSet {
+    void put(String name, Object value);
 
-        public Data(String name, Object value) {
-            this.name = name;
-            this.value = value;
-        }
+    List<Object> getValues();
 
-        public String getName() {
-            return name;
-        }
+    Set<String> getNames();
 
-        public Object getValue() {
-            return value;
-        }
-    }
+    Object get(String name);
 
-    private List<Data> data = new ArrayList<Data>();
-
-    public void put(String name, Object value) {
-        data.add(new Data(name, value));
-    }
-
-    public Object[] getValues() {
-        Object[] result = new Object[data.size()];
-        for (int i = 0; i < data.size(); i++) {
-            result[i] = data.get(i).getValue();
-        }
-        return result;
-    }
-
-    public String[] getNames() {
-        String[] result = new String[data.size()];
-        for (int i = 0; i < data.size(); i++) {
-            result[i] = data.get(i).getName();
-        }
-        return result;
-    }
-
-    @Override
-    public String toString() {
-        return "DataSet{" +
-                "names:" + Arrays.toString(getNames()) +
-                "values:" + Arrays.toString(getValues()) +
-                "}";
-    }
+    void updateFrom(DataSet newValue);
 }

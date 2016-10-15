@@ -62,10 +62,10 @@ public class JDBCDatabaseManager implements DatabaseManager {
             int size = getSize(tableName);
 
             ResultSetMetaData resultSetMetaData = resultSet.getMetaData();
-            DataSet[] result = new DataSet[size];
+            DataSet[] result = new DataSetImpl[size];
             int index = 0;
             while (resultSet.next()) {
-                DataSet dataSet = new DataSet();
+                DataSet dataSet = new DataSetImpl();
                 result[index++] = dataSet;
                 for (int i = 1; i <= resultSetMetaData.getColumnCount(); i++) {
                     dataSet.put(resultSetMetaData.getColumnName(i), resultSet.getObject(i));

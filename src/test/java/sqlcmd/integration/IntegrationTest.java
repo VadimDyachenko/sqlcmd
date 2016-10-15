@@ -6,6 +6,7 @@ import org.junit.Test;
 import sqlcmd.SQLcmdMain;
 import sqlcmd.controller.Controller;
 import sqlcmd.model.DataSet;
+import sqlcmd.model.DataSetImpl;
 import sqlcmd.model.DatabaseManager;
 import sqlcmd.model.JDBCDatabaseManager;
 import sqlcmd.view.Console;
@@ -64,17 +65,17 @@ public class IntegrationTest {
 
         try {
             manager.clearCurrentTable(TABLE_NAME);
-            DataSet inputData1 = new DataSet();
+            DataSet inputData1 = new DataSetImpl();
             inputData1.put("id", 1);
             inputData1.put("name", "Semen Petrov");
             inputData1.put("password", "qwert");
             manager.createTableRecord(TABLE_NAME, inputData1);
-            DataSet inputData2 = new DataSet();
+            DataSet inputData2 = new DataSetImpl();
             inputData2.put("id", 2);
             inputData2.put("name", "Bob Marley");
             inputData2.put("password", "pass1");
             manager.createTableRecord(TABLE_NAME, inputData2);
-            DataSet inputData3 = new DataSet();
+            DataSet inputData3 = new DataSetImpl();
             inputData3.put("id", 3);
             inputData3.put("name", "Coca Cola");
             inputData3.put("password", "pepsithebest");

@@ -3,6 +3,7 @@ package sqlcmd.controller.command;
 import sqlcmd.controller.Controller;
 import sqlcmd.exception.InterruptOperationException;
 import sqlcmd.model.DataSet;
+import sqlcmd.model.DataSetImpl;
 import sqlcmd.model.DatabaseManager;
 import sqlcmd.view.View;
 
@@ -40,7 +41,7 @@ public class TableCreateRecord implements Command {
                 view.writeMessage("Incorrect data. " + e.getMessage());
             }
         }
-        DataSet dataSet = new DataSet();
+        DataSet dataSet = new DataSetImpl();
         for (int index = 0; index < inputUserData.length; index += 2) {
             String columnName = inputUserData[index];
             String value = inputUserData[index + 1];

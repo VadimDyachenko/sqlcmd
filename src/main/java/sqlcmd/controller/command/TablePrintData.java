@@ -3,10 +3,12 @@ package sqlcmd.controller.command;
 import sqlcmd.controller.Controller;
 import sqlcmd.exception.InterruptOperationException;
 import sqlcmd.model.DataSet;
+import sqlcmd.model.DataSetImpl;
 import sqlcmd.model.DatabaseManager;
 import sqlcmd.view.View;
 
 import java.sql.SQLException;
+import java.util.*;
 
 public class TablePrintData implements Command {
     private Controller controller;
@@ -23,7 +25,7 @@ public class TablePrintData implements Command {
     @Override
     public void execute() throws InterruptOperationException {
         String tableName = controller.getCurrentTableName();
-        DataSet[] tableData = new DataSet[0];
+        DataSet[] tableData = new DataSetImpl[0];
         try {
             tableData = manager.getTableData(tableName);
         } catch (SQLException e) {
@@ -35,7 +37,7 @@ public class TablePrintData implements Command {
             return;
         }
 
-        int[] tableRowLength = getTableRowMaxLenght(tableData);
+        int[] tableRowLength = getTableRowMaxLength(tableData);
         printHeader(tableData[0], tableRowLength);
         for (DataSet aTableData : tableData) {
             printRow(aTableData, tableRowLength);
@@ -43,30 +45,34 @@ public class TablePrintData implements Command {
         view.writeMessage("\n");
     }
 
-    private int[] getTableRowMaxLenght(DataSet[] tableData) {
-        int[] result = new int[tableData[0].getNames().length];
-        for (int i = 0; i < result.length; i++) {
-            int length = tableData[0].getNames()[i].length();;
+    private int[] getTableRowMaxLength(DataSet[] tableData) {
+
+        int[] result = new int[tableData[0].getNames().size()];
+        int index = 0;
+        for (String key : tableData[0].getNames()) {
+            int length = key.length();
             for (DataSet data : tableData) {
-                int lengthValue = data.getValues()[i].toString().length();
+                int lengthValue = data.get(key).toString().length();
                 if (length < lengthValue) {
                     length = lengthValue;
                 }
             }
-            result[i] = length;
+            result[index] = length;
+            index++;
         }
         return result;
     }
 
     private void printHeader(DataSet dataSet, int[] rowLength) {
-        String[] columnNames = dataSet.getNames();
         StringBuilder sb = new StringBuilder();
         sb.append('|');
-        for (int i = 0; i < columnNames.length; i++) {
-            sb.append(columnNames[i]);
-            for (int j = (rowLength[i] - columnNames[i].length()); j > 0; j--) {
+        int index = 0;
+        for (String key : dataSet.getNames()) {
+            sb.append(key);
+            for (int i = (rowLength[index]- key.length()); i > 0; i--) {
                 sb.append(" ");
             }
+            index++;
             sb.append('|');
         }
         view.writeMessage(sb.toString());
@@ -75,16 +81,17 @@ public class TablePrintData implements Command {
 
 
     private void printRow(DataSet dataSet, int[] rowLength) {
-        Object[] columnValues = dataSet.getValues();
+
         StringBuilder sb = new StringBuilder();
         sb.append('|');
-
-        for (int i = 0; i < columnValues.length; i++) {
-            sb.append(columnValues[i]);
-            for (int j = (rowLength[i] - columnValues[i].toString().length()); j > 0; j--) {
+        int index = 0;
+        for (Object values : dataSet.getValues()) {
+            sb.append(values);
+            for (int i = (rowLength[index] - values.toString().length()); i > 0; i--){
                 sb.append(" ");
             }
             sb.append('|');
+            index++;
         }
         view.writeMessage(sb.toString());
     }
@@ -92,8 +99,8 @@ public class TablePrintData implements Command {
     private void printTableLine(int[] rowLength) {
         StringBuilder sb = new StringBuilder();
         sb.append("+");
-        for (int length : rowLength) {
-            for (int j = 0; j < length; j++) {
+        for (int index = 0; index < rowLength.length; index++) {
+            for (int i = 0; i < rowLength[index]; i++) {
                 sb.append("-");
             }
             sb.append("+");
