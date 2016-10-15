@@ -9,7 +9,9 @@ import sqlcmd.view.View;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
@@ -42,7 +44,7 @@ public class ListTableNamesTest {
     @Test
     public void testListTableNamesWithConnectionToDatabase() throws Exception {
         //given
-        List<String> tableNames = new ArrayList();
+        Set<String> tableNames = new LinkedHashSet<>();
         tableNames.add("id");
         tableNames.add("names");
         tableNames.add("password");
@@ -58,7 +60,7 @@ public class ListTableNamesTest {
     @Test
     public void testListTableNamesWithEmptyDatabase() throws Exception {
         //given
-        List<String> tableNames = new ArrayList();
+        Set<String> tableNames = new LinkedHashSet<>();
         //when
         when(manager.isConnected()).thenReturn(true);
         when(manager.getAllTableNames()).thenReturn(tableNames);

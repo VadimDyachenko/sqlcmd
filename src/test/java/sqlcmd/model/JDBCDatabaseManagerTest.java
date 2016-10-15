@@ -12,6 +12,7 @@ import java.io.PrintStream;
 import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 
 import static org.junit.Assert.*;
 
@@ -65,7 +66,7 @@ public class JDBCDatabaseManagerTest {
     @Test
     public void testGetAllTableNames() {
 
-        List<String> tableNames = null;
+        Set<String> tableNames = null;
         try {
             tableNames = manager.getAllTableNames();
         } catch (SQLException e) {
@@ -79,7 +80,7 @@ public class JDBCDatabaseManagerTest {
     public void testGetTableColumnNames() {
         //given
         //when
-        List<String> columnNames = null;
+        Set<String> columnNames = null;
         try {
             columnNames = manager.getTableColumnNames(TABLE_NAME);
         } catch (SQLException e) {
@@ -184,7 +185,7 @@ public class JDBCDatabaseManagerTest {
         assertEquals(0, users.length);
     }
 
-    private void printTableNames(List<String> tableNames)  {
+    private void printTableNames(Set<String> tableNames)  {
 
         String availableTables = "[";
         for (String name : tableNames) {
@@ -194,18 +195,4 @@ public class JDBCDatabaseManagerTest {
 
         System.out.print(availableTables);
     }
-
-//    @Test
-//    public void testDisconnect() {
-//        //given
-//        //when
-//        try {
-//            manager.connect("sqlcmd", "javauser", "test");
-//            manager.disconnect();
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        }
-//        //then
-//        assertFalse(manager.isConnected());
-//    }
 }

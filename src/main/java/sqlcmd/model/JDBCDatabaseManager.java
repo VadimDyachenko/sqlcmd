@@ -1,9 +1,7 @@
 package sqlcmd.model;
 
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 public class JDBCDatabaseManager implements DatabaseManager {
     private Connection connection;
@@ -25,10 +23,10 @@ public class JDBCDatabaseManager implements DatabaseManager {
 
 
     @Override
-    public List<String> getAllTableNames() throws SQLException {
+    public Set<String> getAllTableNames() throws SQLException {
         checkConnection();
 
-        List<String> resultTableNames = new LinkedList<>();
+        Set<String> resultTableNames = new LinkedHashSet<>();
 
         try (Statement statement = connection.createStatement();
              ResultSet resultSet = statement.executeQuery(
@@ -103,18 +101,18 @@ public class JDBCDatabaseManager implements DatabaseManager {
     }
 
     @Override
-    public List<String> getTableColumnNames(String tableName) throws SQLException {
+    public Set<String> getTableColumnNames(String tableName) throws SQLException {
         checkConnection();
-        List<String> resultList = new ArrayList<>();
+        Set<String> result = new LinkedHashSet<>();
         try (Statement statement = connection.createStatement();
              ResultSet resultSet = statement.executeQuery(
                      "SELECT column_name FROM information_schema.columns " +
                              "WHERE table_schema = 'public' and table_name = '" + tableName + "'")
         ) {
             while (resultSet.next()) {
-                resultList.add(resultSet.getString("column_name"));
+                result.add(resultSet.getString("column_name"));
             }
-            return resultList;
+            return result;
         }
     }
 

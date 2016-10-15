@@ -5,9 +5,7 @@ import sqlcmd.model.DatabaseManager;
 import sqlcmd.view.View;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 public class ListTableNames implements Command {
     private Controller controller;
@@ -27,7 +25,7 @@ public class ListTableNames implements Command {
             return;
         }
 
-        List<String> tableNames = new ArrayList<>();
+        Set<String> tableNames = new LinkedHashSet<>();
         try {
             tableNames = manager.getAllTableNames();
         } catch (SQLException e) {
@@ -42,13 +40,8 @@ public class ListTableNames implements Command {
         printResult(tableNames);
     }
 
-    private void printResult(List<String> tableNames) {
+    private void printResult(Set<String> tableNames) {
         view.writeMessage("Available tables:");
-        String availableTables = "[";
-        for (String name : tableNames) {
-            availableTables += name + ", ";
-        }
-        availableTables = availableTables.substring(0, availableTables.length() - 2) + "]\n";
-        view.writeMessage(availableTables);
+        view.writeMessage(tableNames.toString() + "\n");
     }
 }

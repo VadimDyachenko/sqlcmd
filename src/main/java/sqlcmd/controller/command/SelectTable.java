@@ -6,13 +6,8 @@ import sqlcmd.model.DatabaseManager;
 import sqlcmd.view.View;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
-/**
- * Created by vadim on 02.10.16.
- */
 public class SelectTable implements Command {
     private Controller controller;
     private DatabaseManager manager;
@@ -31,7 +26,7 @@ public class SelectTable implements Command {
             return;
         }
 
-        List<String> tableNames = getAvailableTableNames();
+        Set<String> tableNames = getAvailableTableNames();
 
         if (tableNames.isEmpty()) {
             view.writeMessage(String.format("There are no tables in the database <%s>\n", controller.getCurrentDatabaseName()));
@@ -54,8 +49,8 @@ public class SelectTable implements Command {
         }
     }
 
-    private List<String> getAvailableTableNames() {
-        List<String> result = new ArrayList<>();
+    private Set<String> getAvailableTableNames() {
+        Set<String> result = new LinkedHashSet<>();
         try {
             result = manager.getAllTableNames();
         } catch (SQLException e) {
@@ -64,13 +59,9 @@ public class SelectTable implements Command {
         return result;
     }
 
-    private void printAvailableTables(List<String> tableNames) {
-        String availableTables = "[";
-        for (String name : tableNames) {
-            availableTables += name + ", ";
-        }
-        availableTables = availableTables.substring(0, availableTables.length() - 2) + "]";
-        view.writeMessage(availableTables + "\n");
+    private void printAvailableTables(Set<String> tableNames) {
+
+        view.writeMessage(tableNames.toString() + "\n");
     }
 
 }

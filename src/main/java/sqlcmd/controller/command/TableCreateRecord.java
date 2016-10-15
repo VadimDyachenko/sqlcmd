@@ -7,8 +7,8 @@ import sqlcmd.model.DatabaseManager;
 import sqlcmd.view.View;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 
 public class TableCreateRecord implements Command {
@@ -27,10 +27,10 @@ public class TableCreateRecord implements Command {
         String tableName = controller.getCurrentTableName();
 
         printInfo(tableName);
-        List<String> columnNames = getAvailableColumnNames(tableName);
+        Set<String> columnNames = getAvailableColumnNames(tableName);
         printAvailableColumnNames(columnNames);
 
-        String[] inputUserData = new String[0];
+        String[] inputUserData;
         while (true) {
             try {
                 inputUserData = view.readLine().split("\\|");
@@ -56,8 +56,8 @@ public class TableCreateRecord implements Command {
 
     }
 
-    private List<String> getAvailableColumnNames(String tableName) {
-        List<String> columnNames = new ArrayList<>();
+    private Set<String> getAvailableColumnNames(String tableName) {
+        Set<String> columnNames = new LinkedHashSet<>();
         try {
             columnNames = manager.getTableColumnNames(tableName);
         } catch (SQLException e) {
@@ -66,7 +66,7 @@ public class TableCreateRecord implements Command {
         return columnNames;
     }
 
-    private void validateInputData(String[] data, List<String> columnNames) {
+    private void validateInputData(String[] data, Set<String> columnNames) {
         if (data.length % 2 != 0 || data.length / 2 != columnNames.size()) {
             throw new IllegalArgumentException("Invalid number of parameters");
         }
@@ -78,13 +78,7 @@ public class TableCreateRecord implements Command {
         view.writeMessage(String.format("Available column name for table <%s> :", tableName));
     }
 
-    private void printAvailableColumnNames(List<String> columnNames) {
-        String names = "[";
-        for (String columnName : columnNames) {
-            names += columnName + ", ";
-        }
-        names = names.substring(0, names.length() - 2);
-        names += "]";
-        view.writeMessage(names);
+    private void printAvailableColumnNames(Set<String> columnNames) {
+        view.writeMessage(columnNames.toString());
     }
 }

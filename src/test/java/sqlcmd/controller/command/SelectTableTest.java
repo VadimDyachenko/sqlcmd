@@ -7,8 +7,8 @@ import sqlcmd.controller.Controller;
 import sqlcmd.model.DatabaseManager;
 import sqlcmd.view.View;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
@@ -41,7 +41,7 @@ public class SelectTableTest {
     @Test
     public void testSelectTableWithEmptyDatabase() throws Exception {
         //given
-        List<String> tableNames = new ArrayList();
+        Set<String> tableNames = new LinkedHashSet<>();
         //when
         when(manager.isConnected()).thenReturn(true);
         when(manager.getAllTableNames()).thenReturn(tableNames);
@@ -50,22 +50,6 @@ public class SelectTableTest {
         //then
         shouldPrint("[There are no tables in the database <null>\n]");
     }
-
-//    @Test
-//    public void testSelectTableWithConnectionToDatabase() throws Exception {
-//        //given
-//        List<String> tableNames = new ArrayList();
-//        tableNames.add("users");
-//        tableNames.add("staff");
-//        tableNames.add("salary");
-//        //when
-//        when(manager.isConnected()).thenReturn(true);
-//        when(manager.getAllTableNames()).thenReturn(tableNames);
-//        command.execute();
-//
-//        //then
-//        shouldPrint("[Available tables:, [id, names, password]\n]");
-//    }
 
     private void shouldPrint(String expected) {
         ArgumentCaptor<String> captor = ArgumentCaptor.forClass(String.class);
