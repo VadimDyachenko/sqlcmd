@@ -37,42 +37,37 @@ public class TablePrintData implements Command {
             return;
         }
 
-        int[] tableRowLength = getTableRowMaxLength(tableData);
-        printHeader(tableData[0], tableRowLength);
+        Map<String, Integer> tableRowLength = getTableRowMaxLength(tableData);
+        printHeader(tableRowLength);
         for (DataSet aTableData : tableData) {
             printRow(aTableData, tableRowLength);
         }
         view.writeMessage("\n");
     }
 
-    private int[] getTableRowMaxLength(DataSet[] tableData) {
-
-        int[] result = new int[tableData[0].getNames().size()];
-        int index = 0;
+    private Map<String, Integer> getTableRowMaxLength(DataSet[] tableData) {
+        Map<String, Integer> result = new LinkedHashMap<>();
         for (String key : tableData[0].getNames()) {
-            int length = key.length();
+            Integer length = key.length();
             for (DataSet data : tableData) {
-                int lengthValue = data.get(key).toString().length();
+                Integer lengthValue = data.get(key).toString().length();
                 if (length < lengthValue) {
                     length = lengthValue;
                 }
             }
-            result[index] = length;
-            index++;
+            result.put(key, length);
         }
         return result;
     }
 
-    private void printHeader(DataSet dataSet, int[] rowLength) {
+    private void printHeader(Map<String, Integer> rowLength) {
         StringBuilder sb = new StringBuilder();
         sb.append('|');
-        int index = 0;
-        for (String key : dataSet.getNames()) {
+        for (String key : rowLength.keySet()) {
             sb.append(key);
-            for (int i = (rowLength[index]- key.length()); i > 0; i--) {
+            for (int i = (rowLength.get(key) - key.length()); i > 0; i--) {
                 sb.append(" ");
             }
-            index++;
             sb.append('|');
         }
         view.writeMessage(sb.toString());
@@ -80,27 +75,25 @@ public class TablePrintData implements Command {
     }
 
 
-    private void printRow(DataSet dataSet, int[] rowLength) {
+    private void printRow(DataSet dataSet, Map<String, Integer> rowLength) {
 
         StringBuilder sb = new StringBuilder();
         sb.append('|');
-        int index = 0;
-        for (Object values : dataSet.getValues()) {
-            sb.append(values);
-            for (int i = (rowLength[index] - values.toString().length()); i > 0; i--){
+        for (String key : rowLength.keySet()) {
+            sb.append(dataSet.get(key));
+            for (int i = (rowLength.get(key) - dataSet.get(key).toString().length()); i > 0; i--) {
                 sb.append(" ");
             }
             sb.append('|');
-            index++;
         }
         view.writeMessage(sb.toString());
     }
 
-    private void printTableLine(int[] rowLength) {
+    private void printTableLine(Map<String, Integer> rowLength) {
         StringBuilder sb = new StringBuilder();
         sb.append("+");
-        for (int index = 0; index < rowLength.length; index++) {
-            for (int i = 0; i < rowLength[index]; i++) {
+        for (String key : rowLength.keySet()) {
+            for (int i = 0; i < rowLength.get(key); i++) {
                 sb.append("-");
             }
             sb.append("+");
