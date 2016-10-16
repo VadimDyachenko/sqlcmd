@@ -2,6 +2,7 @@ package sqlcmd.controller;
 
 public enum AvailableOperation {
     CONNECT,
+    CONNECTION_STATUS,
     LIST_TABLE,
     SELECT_TABLE,
     TABLE_PRINT,

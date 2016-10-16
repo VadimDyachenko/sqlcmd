@@ -1,6 +1,6 @@
 package sqlcmd.controller.command;
 
-import sqlcmd.controller.Controller;
+import sqlcmd.controller.ConnectionStatusHelper;
 import sqlcmd.model.DatabaseManager;
 import sqlcmd.exception.InterruptOperationException;
 import sqlcmd.view.View;
@@ -8,12 +8,12 @@ import sqlcmd.view.View;
 import java.sql.SQLException;
 
 public class Connect implements Command {
-    private Controller controller;
     private DatabaseManager manager;
     private View view;
+    private ConnectionStatusHelper connectionStatusHelper;
 
-    public Connect(Controller controller, DatabaseManager manager, View view) {
-        this.controller = controller;
+    public Connect(ConnectionStatusHelper connectionStatusHelper, DatabaseManager manager, View view) {
+        this.connectionStatusHelper = connectionStatusHelper;
         this.manager = manager;
         this.view = view;
     }
@@ -33,7 +33,7 @@ public class Connect implements Command {
                     manager.disconnect();
                 }
                 manager.connect(databaseName, login, password);
-                controller.setCurrentDatabaseName(databaseName);
+                connectionStatusHelper.setCurrentDatabaseName(databaseName);
                 view.writeMessage("Connection successful!\n");
                 break;
             } catch (SQLException e) {

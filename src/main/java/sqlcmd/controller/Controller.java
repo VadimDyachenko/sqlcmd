@@ -8,17 +8,14 @@ import sqlcmd.view.View;
 
 public class Controller {
 
-    private DatabaseManager manager;
     private View view;
     private CommandExecutor commandExecutor;
-    private String currentDatabaseName;
-    private String currentTableName;
-    private boolean tableLayer = false;
+    private ConnectionStatusHelper connectionHelper;
 
     public Controller(DatabaseManager manager, View view) {
-        this.manager = manager;
         this.view = view;
-        commandExecutor = new CommandExecutor(this, manager, view);
+        connectionHelper = new ConnectionStatusHelper();
+        commandExecutor = new CommandExecutor(connectionHelper, manager, view);
     }
 
     public void run() {
@@ -40,12 +37,12 @@ public class Controller {
 
     private AvailableOperation askOperation() throws InterruptOperationException {
 
-        printCurrentConnectionAndTable();
+        commandExecutor.execute(AvailableOperation.CONNECTION_STATUS);
 
         view.writeMessage("Please choose an operation desired or type 'EXIT' for exiting");
 
         while (true) {
-            if (!tableLayer) {
+            if (!connectionHelper.getTableLevel()) {
                 printMainMenu();
             } else {
                 printTableMenu();
@@ -55,7 +52,7 @@ public class Controller {
 
             try {
                 Integer numOfChoice = Integer.parseInt(choice);
-                if (tableLayer) {
+                if (connectionHelper.getTableLevel()) {
                     return AvailableOperation.getTableOperation(numOfChoice);
                 } else {
                     return AvailableOperation.getMainOperation(numOfChoice);
@@ -63,15 +60,6 @@ public class Controller {
             } catch (IllegalArgumentException e) {
                 view.writeMessage("\nPlease choise correct number:");
             }
-        }
-    }
-
-    private void printCurrentConnectionAndTable() {
-        if (manager.isConnected() && !tableLayer) {
-            view.writeMessage(String.format("Connected to database: <%s>", currentDatabaseName));
-        } else if (manager.isConnected() && tableLayer) {
-            view.writeMessage(String.format("Connected to database: <%s>. Selected table: <%s>",
-                    currentDatabaseName, currentTableName));
         }
     }
 
@@ -92,26 +80,5 @@ public class Controller {
                         "4 - Clear table\n" +
                         "5 - Return to previous menu"
         );
-    }
-
-    public void changeTableLayer(boolean tableLayer) {
-        this.tableLayer = tableLayer;
-    }
-
-    public String getCurrentDatabaseName() {
-        return currentDatabaseName;
-    }
-
-    public String getCurrentTableName() {
-        return currentTableName;
-    }
-
-    public void setCurrentTableName(String currentTableName) {
-        this.currentTableName = currentTableName;
-        changeTableLayer(true);
-    }
-
-    public void setCurrentDatabaseName(String currentDatabaseName) {
-        this.currentDatabaseName = currentDatabaseName;
     }
 }

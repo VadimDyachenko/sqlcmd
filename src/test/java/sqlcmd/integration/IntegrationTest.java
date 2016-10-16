@@ -4,6 +4,7 @@ package sqlcmd.integration;
 import org.junit.Before;
 import org.junit.Test;
 import sqlcmd.SQLcmdMain;
+import sqlcmd.controller.ConnectionStatusHelper;
 import sqlcmd.controller.Controller;
 import sqlcmd.model.DataSet;
 import sqlcmd.model.DataSetImpl;
@@ -55,13 +56,13 @@ public class IntegrationTest {
 
         DatabaseManager manager = new JDBCDatabaseManager();
         View view = new Console();
-        Controller controller = new Controller(manager, view);
+        ConnectionStatusHelper connectionStatusHelper = new ConnectionStatusHelper();
         try {
             manager.connect(DATABASE_NAME, USER_NAME, USER_PASSWORD);
         } catch (Exception e) {
             e.printStackTrace();
         }
-        controller.setCurrentTableName(TABLE_NAME);
+        connectionStatusHelper.setCurrentTableName(TABLE_NAME);
 
         try {
             manager.clearCurrentTable(TABLE_NAME);

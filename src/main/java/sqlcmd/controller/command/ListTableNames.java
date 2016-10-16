@@ -1,6 +1,6 @@
 package sqlcmd.controller.command;
 
-import sqlcmd.controller.Controller;
+import sqlcmd.controller.ConnectionStatusHelper;
 import sqlcmd.model.DatabaseManager;
 import sqlcmd.view.View;
 
@@ -8,12 +8,12 @@ import java.sql.SQLException;
 import java.util.*;
 
 public class ListTableNames implements Command {
-    private Controller controller;
     private DatabaseManager manager;
     private View view;
+    private ConnectionStatusHelper connectionStatusHelper;
 
-    public ListTableNames(Controller controller, DatabaseManager manager, View view) {
-        this.controller = controller;
+    public ListTableNames(ConnectionStatusHelper connectionStatusHelper, DatabaseManager manager, View view) {
+        this.connectionStatusHelper = connectionStatusHelper;
         this.manager = manager;
         this.view = view;
     }
@@ -33,7 +33,7 @@ public class ListTableNames implements Command {
         }
 
         if (tableNames.isEmpty()) {
-            view.writeMessage(String.format("There are no tables in the database <%s>\n", controller.getCurrentDatabaseName()));
+            view.writeMessage(String.format("There are no tables in the database <%s>\n", connectionStatusHelper.getCurrentDatabaseName()));
             return;
         }
 

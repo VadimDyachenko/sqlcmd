@@ -1,6 +1,6 @@
 package sqlcmd.controller.command;
 
-import sqlcmd.controller.Controller;
+import sqlcmd.controller.ConnectionStatusHelper;
 import sqlcmd.exception.InterruptOperationException;
 import sqlcmd.model.DataSet;
 import sqlcmd.model.DataSetImpl;
@@ -13,19 +13,19 @@ import java.util.Set;
 
 
 public class TableCreateRecord implements Command {
-    private Controller controller;
     private DatabaseManager manager;
     private View view;
+    private ConnectionStatusHelper connectionStatusHelper;
 
-    public TableCreateRecord(Controller controller, DatabaseManager manager, View view) {
-        this.controller = controller;
+    public TableCreateRecord(ConnectionStatusHelper connectionStatusHelper, DatabaseManager manager, View view) {
+        this.connectionStatusHelper = connectionStatusHelper;
         this.manager = manager;
         this.view = view;
     }
 
     @Override
     public void execute() throws InterruptOperationException {
-        String tableName = controller.getCurrentTableName();
+        String tableName = connectionStatusHelper.getCurrentTableName();
 
         printInfo(tableName);
         Set<String> columnNames = getAvailableColumnNames(tableName);

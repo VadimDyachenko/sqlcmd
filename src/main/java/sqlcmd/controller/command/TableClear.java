@@ -1,6 +1,6 @@
 package sqlcmd.controller.command;
 
-import sqlcmd.controller.Controller;
+import sqlcmd.controller.ConnectionStatusHelper;
 import sqlcmd.exception.InterruptOperationException;
 import sqlcmd.model.DatabaseManager;
 import sqlcmd.view.View;
@@ -8,12 +8,12 @@ import sqlcmd.view.View;
 import java.sql.SQLException;
 
 public class TableClear implements Command {
-    private Controller controller;
+    private ConnectionStatusHelper connectionStatusHelper;
     private DatabaseManager manager;
     private View view;
 
-    public TableClear(Controller controller, DatabaseManager manager, View view) {
-        this.controller = controller;
+    public TableClear(ConnectionStatusHelper connectionStatusHelper, DatabaseManager manager, View view) {
+        this.connectionStatusHelper = connectionStatusHelper;
         this.manager = manager;
         this.view = view;
     }
@@ -21,12 +21,12 @@ public class TableClear implements Command {
     @Override
     public void execute() throws InterruptOperationException {
 
-        view.writeMessage(String.format("Do you really want to clear table <%s>? <y/n>", controller.getCurrentTableName()));
+        view.writeMessage(String.format("Do you really want to clear table <%s>? <y/n>", connectionStatusHelper.getCurrentTableName()));
         String answer = view.readLine();
 
         if (answer.trim().toLowerCase().equals("y")) {
             try {
-                manager.clearCurrentTable(controller.getCurrentTableName());
+                manager.clearCurrentTable(connectionStatusHelper.getCurrentTableName());
             } catch (SQLException e) {
                 view.writeMessage("Table not clear, " + e.getMessage());
             }

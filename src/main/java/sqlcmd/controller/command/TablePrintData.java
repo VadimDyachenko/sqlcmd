@@ -1,6 +1,6 @@
 package sqlcmd.controller.command;
 
-import sqlcmd.controller.Controller;
+import sqlcmd.controller.ConnectionStatusHelper;
 import sqlcmd.exception.InterruptOperationException;
 import sqlcmd.model.DataSet;
 import sqlcmd.model.DataSetImpl;
@@ -8,23 +8,24 @@ import sqlcmd.model.DatabaseManager;
 import sqlcmd.view.View;
 
 import java.sql.SQLException;
-import java.util.*;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 public class TablePrintData implements Command {
-    private Controller controller;
     private DatabaseManager manager;
     private View view;
+    private ConnectionStatusHelper connectionStatusHelper;
 
 
-    public TablePrintData(Controller controller, DatabaseManager manager, View view) {
-        this.controller = controller;
+    public TablePrintData(ConnectionStatusHelper connectionStatusHelper, DatabaseManager manager, View view) {
+        this.connectionStatusHelper = connectionStatusHelper;
         this.manager = manager;
         this.view = view;
     }
 
     @Override
     public void execute() throws InterruptOperationException {
-        String tableName = controller.getCurrentTableName();
+        String tableName = connectionStatusHelper.getCurrentTableName();
         DataSet[] tableData = new DataSetImpl[0];
         try {
             tableData = manager.getTableData(tableName);

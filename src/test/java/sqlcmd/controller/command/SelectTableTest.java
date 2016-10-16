@@ -3,7 +3,7 @@ package sqlcmd.controller.command;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
-import sqlcmd.controller.Controller;
+import sqlcmd.controller.ConnectionStatusHelper;
 import sqlcmd.model.DatabaseManager;
 import sqlcmd.view.View;
 
@@ -17,14 +17,13 @@ public class SelectTableTest {
     private DatabaseManager manager;
     private View view;
     private Command command;
-    private Controller controller;
 
     @Before
     public void setUp() throws Exception {
         manager = mock(DatabaseManager.class);
         view = mock(View.class);
-        controller = mock(Controller.class);
-        command = new SelectTable(controller, manager, view);
+        ConnectionStatusHelper connectionStatusHelper = mock(ConnectionStatusHelper.class);
+        command = new SelectTable(connectionStatusHelper, manager, view);
     }
 
     @Test

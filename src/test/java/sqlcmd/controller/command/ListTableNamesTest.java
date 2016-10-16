@@ -3,14 +3,12 @@ package sqlcmd.controller.command;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
-import sqlcmd.controller.Controller;
+import sqlcmd.controller.ConnectionStatusHelper;
 import sqlcmd.model.DatabaseManager;
 import sqlcmd.view.View;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.LinkedHashSet;
-import java.util.List;
 import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
@@ -20,14 +18,13 @@ public class ListTableNamesTest {
     private DatabaseManager manager;
     private View view;
     private Command command;
-    private Controller controller;
 
     @Before
     public void setUp() {
         manager = mock(DatabaseManager.class);
         view = mock(View.class);
-        controller = mock(Controller.class);
-        command = new ListTableNames(controller, manager, view);
+        ConnectionStatusHelper connectionStatusHelper = mock(ConnectionStatusHelper.class);
+        command = new ListTableNames(connectionStatusHelper, manager, view);
     }
 
     @Test

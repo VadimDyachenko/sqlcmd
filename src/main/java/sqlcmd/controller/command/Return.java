@@ -1,19 +1,18 @@
 package sqlcmd.controller.command;
 
-import sqlcmd.controller.Controller;
+import sqlcmd.controller.ConnectionStatusHelper;
 import sqlcmd.exception.InterruptOperationException;
-import sqlcmd.model.DatabaseManager;
 
 public class Return implements Command {
-    private Controller controller;
+    private ConnectionStatusHelper connectionStatusHelper;
 
-    public Return(Controller controller) {
-        this.controller = controller;
+    public Return(ConnectionStatusHelper connectionStatusHelper) {
+        this.connectionStatusHelper = connectionStatusHelper;
     }
 
     @Override
     public void execute() throws InterruptOperationException {
-        controller.changeTableLayer(false);
+        connectionStatusHelper.setTableLevel(false);
     }
 
 }

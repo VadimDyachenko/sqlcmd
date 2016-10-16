@@ -4,7 +4,7 @@ package sqlcmd.controller.command;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
-import sqlcmd.controller.Controller;
+import sqlcmd.controller.ConnectionStatusHelper;
 import sqlcmd.model.DatabaseManager;
 import sqlcmd.model.JDBCDatabaseManager;
 import sqlcmd.view.Console;
@@ -19,14 +19,13 @@ public class ConnectTest {
     private DatabaseManager manager;
     private View view;
     private Command command;
-    private Controller controller;
 
     @Before
     public void setup() {
         manager = mock(JDBCDatabaseManager.class);
         view = mock(Console.class);
-        controller = mock(Controller.class);
-        command = new Connect(controller, manager, view);
+        ConnectionStatusHelper connectionStatusHelper = mock(ConnectionStatusHelper.class);
+        command = new Connect(connectionStatusHelper, manager, view);
     }
 
     @Test

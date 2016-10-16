@@ -3,14 +3,11 @@ package sqlcmd.model;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import sqlcmd.controller.Controller;
-import sqlcmd.view.Console;
-import sqlcmd.view.View;
+import sqlcmd.controller.ConnectionStatusHelper;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.sql.SQLException;
-import java.util.Arrays;
 import java.util.Set;
 
 import static org.junit.Assert.*;
@@ -19,14 +16,12 @@ public class JDBCDatabaseManagerTest {
     private final ByteArrayOutputStream consoleOutputStream = new ByteArrayOutputStream();
     private DatabaseManager manager;
     private static final String TABLE_NAME ="users";
-    private Controller controller;
-    private View view;
+    private ConnectionStatusHelper connectionStatusHelper;
 
     @Before
     public void setUp() {
         manager = new JDBCDatabaseManager();
-        view = new Console();
-        controller = new Controller(manager, view);
+        connectionStatusHelper = new ConnectionStatusHelper();
         try {
             manager.connect("sqlcmd", "javauser", "test");
         } catch (Exception e) {
@@ -38,7 +33,7 @@ public class JDBCDatabaseManagerTest {
     @After
     public void cleanUpStream() {
         System.setOut(null);
-        controller.setCurrentTableName(TABLE_NAME);
+        connectionStatusHelper.setCurrentTableName(TABLE_NAME);
 
         try {
             manager.clearCurrentTable(TABLE_NAME);
@@ -93,8 +88,8 @@ public class JDBCDatabaseManagerTest {
     @Test
     public void testGetTableData(){
         //given
-        controller.setCurrentTableName(TABLE_NAME);
-        controller.changeTableLayer(true);
+        connectionStatusHelper .setCurrentTableName(TABLE_NAME);
+        connectionStatusHelper .setTableLevel(true);
         try {
             manager.clearCurrentTable(TABLE_NAME);
         } catch (SQLException e) {
@@ -122,13 +117,12 @@ public class JDBCDatabaseManagerTest {
         DataSet user = users[0];
         assertEquals("[id, name, password]", user.getNames().toString());
         assertEquals("[10, Semen Petrov, qwert]", user.getValues().toString());
-
     }
 
     @Test
     public void testUpdateTableData() {
         //given
-        controller.setCurrentTableName(TABLE_NAME);
+        connectionStatusHelper .setCurrentTableName(TABLE_NAME);
 
         try {
         manager.clearCurrentTable(TABLE_NAME);
@@ -164,8 +158,8 @@ public class JDBCDatabaseManagerTest {
     @Test
     public void testClearTableData() {
         //given
-        controller.setCurrentTableName(TABLE_NAME);
-        controller.changeTableLayer(true);
+        connectionStatusHelper .setCurrentTableName(TABLE_NAME);
+        connectionStatusHelper .setTableLevel(true);
 
         //when
         try {

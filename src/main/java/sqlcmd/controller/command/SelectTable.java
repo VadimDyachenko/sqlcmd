@@ -1,6 +1,6 @@
 package sqlcmd.controller.command;
 
-import sqlcmd.controller.Controller;
+import sqlcmd.controller.ConnectionStatusHelper;
 import sqlcmd.exception.InterruptOperationException;
 import sqlcmd.model.DatabaseManager;
 import sqlcmd.view.View;
@@ -9,12 +9,12 @@ import java.sql.SQLException;
 import java.util.*;
 
 public class SelectTable implements Command {
-    private Controller controller;
     private DatabaseManager manager;
     private View view;
+    private ConnectionStatusHelper connectionStatusHelper;
 
-    public SelectTable(Controller controller, DatabaseManager manager, View view) {
-        this.controller = controller;
+    public SelectTable(ConnectionStatusHelper connectionStatusHelper, DatabaseManager manager, View view) {
+        this.connectionStatusHelper = connectionStatusHelper;
         this.manager = manager;
         this.view = view;
     }
@@ -29,7 +29,7 @@ public class SelectTable implements Command {
         Set<String> tableNames = getAvailableTableNames();
 
         if (tableNames.isEmpty()) {
-            view.writeMessage(String.format("There are no tables in the database <%s>\n", controller.getCurrentDatabaseName()));
+            view.writeMessage(String.format("There are no tables in the database <%s>\n", connectionStatusHelper.getCurrentDatabaseName()));
             return;
         }
 
@@ -40,7 +40,8 @@ public class SelectTable implements Command {
         while (true) {
             String tableName = view.readLine();
             if (tableNames.contains(tableName)) {
-                controller.setCurrentTableName(tableName);
+                connectionStatusHelper.setCurrentTableName(tableName);
+                connectionStatusHelper.setTableLevel(true);
                 break;
             } else {
                 view.writeMessage("Enter correct table name. Available tables:");
