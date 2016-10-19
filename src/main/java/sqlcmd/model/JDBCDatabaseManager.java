@@ -47,9 +47,8 @@ public class JDBCDatabaseManager implements DatabaseManager {
         try (Statement statement = connection.createStatement()) {
             String columnName = getNameFormatted(users, "%s,");
             String values = getValuesFormatted(users, "'%s',");
-            statement.executeUpdate("INSERT INTO public." +
-                    tableName + "(" + columnName + ")" +
-                    "VALUES (" + values + ")");
+            statement.executeUpdate(
+                    String.format("INSERT INTO public.%s(%s)VALUES (%s)", tableName, columnName, values));
         }
     }
 
@@ -57,7 +56,7 @@ public class JDBCDatabaseManager implements DatabaseManager {
     public DataSet[] getTableData(String tableName) throws SQLException {
         checkConnection();
         try (Statement statement = connection.createStatement();
-             ResultSet resultSet = statement.executeQuery("SELECT * FROM public." + tableName)
+             ResultSet resultSet = statement.executeQuery(String.format("SELECT * FROM public.%s", tableName))
         ) {
             int size = getSize(tableName);
 
@@ -79,7 +78,7 @@ public class JDBCDatabaseManager implements DatabaseManager {
     public void updateTableRecord(String tableName, int id, DataSet newValue) throws SQLException {
         checkConnection();
         String tableNames = getNameFormatted(newValue, "%s = ?,");
-        String sql = "UPDATE public." + tableName + " SET " + tableNames + " WHERE id = ?";
+        String sql = String.format("UPDATE public.%s SET %s WHERE id = ?", tableName, tableNames);
 
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             int index = 1;
@@ -96,7 +95,7 @@ public class JDBCDatabaseManager implements DatabaseManager {
     public void clearCurrentTable(String tableName) throws SQLException {
         checkConnection();
         try (Statement statement = connection.createStatement()) {
-            statement.executeUpdate("DELETE FROM public." + tableName);
+            statement.executeUpdate(String.format("DELETE FROM public.%s", tableName));
         }
     }
 
@@ -106,8 +105,8 @@ public class JDBCDatabaseManager implements DatabaseManager {
         Set<String> result = new LinkedHashSet<>();
         try (Statement statement = connection.createStatement();
              ResultSet resultSet = statement.executeQuery(
-                     "SELECT column_name FROM information_schema.columns " +
-                             "WHERE table_schema = 'public' and table_name = '" + tableName + "'")
+                     String.format("SELECT column_name FROM information_schema.columns WHERE table_schema = 'public' " +
+                             "and table_name = '%s'", tableName))
         ) {
             while (resultSet.next()) {
                 result.add(resultSet.getString("column_name"));
@@ -141,7 +140,7 @@ public class JDBCDatabaseManager implements DatabaseManager {
 
     private int getSize(String tableName) throws SQLException {
         Statement statement = connection.createStatement();
-        ResultSet resultSet = statement.executeQuery("SELECT count(*) FROM public." + tableName);
+        ResultSet resultSet = statement.executeQuery(String.format("SELECT count(*) FROM public.%s", tableName));
         resultSet.next();
         int size = resultSet.getInt("count");
         resultSet.close();
