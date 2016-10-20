@@ -98,5 +98,4 @@ public class DBSelectTableTest {
         verify(view, atLeastOnce()).writeMessage(captor.capture());
         assertEquals(expected, captor.getAllValues().toString());
     }
-
 }

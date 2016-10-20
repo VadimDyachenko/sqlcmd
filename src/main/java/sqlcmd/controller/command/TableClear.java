@@ -28,6 +28,7 @@ public class TableClear implements Command {
                 manager.clearCurrentTable(currentTableName);
             } catch (SQLException e) {
                 view.writeMessage("Table not clear, " + e.getMessage());
+                return;
             }
             view.writeMessage("Table clear successful.\n");
         }
