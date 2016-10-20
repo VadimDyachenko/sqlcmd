@@ -1,6 +1,5 @@
 package sqlcmd.controller;
 
-import sqlcmd.controller.command.CommandExecutor;
 import sqlcmd.exception.ExitException;
 import sqlcmd.model.DatabaseManager;
 import sqlcmd.exception.InterruptOperationException;
@@ -21,10 +20,9 @@ public class Controller {
     public void run() {
         view.writeMessage("Welcome to SQLCmd!\n");
         try {
-            AvailableOperation availableOperation;
             do {
-                availableOperation = askOperation();
-                commandExecutor.execute(availableOperation);
+                AvailableCommand command = askCommand();
+                commandExecutor.execute(command);
             }
             while (true);
         } catch (ExitException e1) {
@@ -35,14 +33,14 @@ public class Controller {
         }
     }
 
-    private AvailableOperation askOperation() throws InterruptOperationException {
+    private AvailableCommand askCommand() throws InterruptOperationException {
 
-        commandExecutor.execute(AvailableOperation.CONNECTION_STATUS);
+        commandExecutor.execute(AvailableCommand.PRINT_CURRENT_CONNECTION_STATUS);
 
         view.writeMessage("Please choose an operation desired or type 'EXIT' for exiting");
 
         while (true) {
-            if (!connectionHelper.getTableLevel()) {
+            if (!connectionHelper.isTableLevel()) {
                 printMainMenu();
             } else {
                 printTableMenu();
@@ -52,10 +50,10 @@ public class Controller {
 
             try {
                 Integer numOfChoice = Integer.parseInt(choice);
-                if (connectionHelper.getTableLevel()) {
-                    return AvailableOperation.getTableOperation(numOfChoice);
+                if (connectionHelper.isTableLevel()) {
+                    return AvailableCommand.getTableCommand(numOfChoice);
                 } else {
-                    return AvailableOperation.getMainOperation(numOfChoice);
+                    return AvailableCommand.getMainCommand(numOfChoice);
                 }
             } catch (IllegalArgumentException e) {
                 view.writeMessage("\nPlease choise correct number:");
@@ -65,7 +63,7 @@ public class Controller {
 
     private void printMainMenu() {
         view.writeMessage(
-                        "1 - Connect to database\n" +
+                "1 - DBConnect to database\n" +
                         "2 - List all table names\n" +
                         "3 - Select table to work\n" +
                         "4 - Exit"
@@ -74,7 +72,7 @@ public class Controller {
 
     private void printTableMenu() {
         view.writeMessage(
-                        "1 - Print table data\n" +
+                "1 - Print table data\n" +
                         "2 - Create table record\n" +
                         "3 - Update table record\n" +
                         "4 - Clear table\n" +

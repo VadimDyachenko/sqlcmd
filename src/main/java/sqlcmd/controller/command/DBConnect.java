@@ -7,12 +7,12 @@ import sqlcmd.view.View;
 
 import java.sql.SQLException;
 
-public class Connect implements Command {
+public class DBConnect implements Command {
     private DatabaseManager manager;
     private View view;
     private ConnectionStatusHelper connectionStatusHelper;
 
-    public Connect(ConnectionStatusHelper connectionStatusHelper, DatabaseManager manager, View view) {
+    public DBConnect(ConnectionStatusHelper connectionStatusHelper, DatabaseManager manager, View view) {
         this.connectionStatusHelper = connectionStatusHelper;
         this.manager = manager;
         this.view = view;

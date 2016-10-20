@@ -33,7 +33,7 @@ public class IntegrationTest {
 
     private static final String MAIN_MENU =
             "Please choose an operation desired or type 'EXIT' for exiting\n" +
-                    "1 - Connect to database\n" +
+                    "1 - DBConnect to database\n" +
                     "2 - List all table names\n" +
                     "3 - Select table to work\n" +
                     "4 - Exit\n";
@@ -130,7 +130,7 @@ public class IntegrationTest {
                 "\n" +
                 MAIN_MENU +
                 // input - 2
-                "No one connection to database. Select \"Connect to database\" first.\n" +
+                "No one connection to database. Select \"DBConnect to database\" first.\n" +
                 "\n" +
                 MAIN_MENU +
                 //input - exit
@@ -149,7 +149,7 @@ public class IntegrationTest {
                 "\n" +
                 MAIN_MENU +
                 // input - 3
-                "No one connection to database. Select \"Connect to database\" first.\n" +
+                "No one connection to database. Select \"DBConnect to database\" first.\n" +
                 "\n" +
                 MAIN_MENU +
                 //input - exit
@@ -170,7 +170,7 @@ public class IntegrationTest {
                 // input - 0
                 "\n" +
                 "Please choise correct number:\n" +
-                "1 - Connect to database\n" +
+                "1 - DBConnect to database\n" +
                 "2 - List all table names\n" +
                 "3 - Select table to work\n" +
                 "4 - Exit\n" +

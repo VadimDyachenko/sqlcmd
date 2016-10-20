@@ -8,12 +8,12 @@ import sqlcmd.view.View;
 import java.sql.SQLException;
 import java.util.*;
 
-public class SelectTable implements Command {
+public class DBSelectTable implements Command {
     private DatabaseManager manager;
     private View view;
     private ConnectionStatusHelper connectionStatusHelper;
 
-    public SelectTable(ConnectionStatusHelper connectionStatusHelper, DatabaseManager manager, View view) {
+    public DBSelectTable(ConnectionStatusHelper connectionStatusHelper, DatabaseManager manager, View view) {
         this.connectionStatusHelper = connectionStatusHelper;
         this.manager = manager;
         this.view = view;
@@ -22,7 +22,7 @@ public class SelectTable implements Command {
     @Override
     public void execute() throws InterruptOperationException {
         if (!manager.isConnected()) {
-            view.writeMessage("No one connection to database. Select \"Connect to database\" first.\n");
+            view.writeMessage("No one connection to database. Select \"DBConnect to database\" first.\n");
             return;
         }
 

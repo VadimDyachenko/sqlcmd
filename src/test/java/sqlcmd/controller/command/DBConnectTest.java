@@ -15,7 +15,7 @@ import java.sql.SQLException;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
 
-public class ConnectTest {
+public class DBConnectTest {
     private DatabaseManager manager;
     private View view;
     private Command command;
@@ -25,7 +25,7 @@ public class ConnectTest {
         manager = mock(JDBCDatabaseManager.class);
         view = mock(Console.class);
         ConnectionStatusHelper connectionStatusHelper = mock(ConnectionStatusHelper.class);
-        command = new Connect(connectionStatusHelper, manager, view);
+        command = new DBConnect(connectionStatusHelper, manager, view);
     }
 
     @Test

@@ -22,10 +22,10 @@ public class ConnectionStatus implements Command {
         String currentDatabaseName = connectionStatusHelper.getCurrentDatabaseName();
         String currentTableName = connectionStatusHelper.getCurrentTableName();
 
-        if (manager.isConnected() && connectionStatusHelper.getTableLevel()) {
+        if (manager.isConnected() && connectionStatusHelper.isTableLevel()) {
             view.writeMessage(String.format("Connected to database: <%s>. Selected table: <%s>",
                     currentDatabaseName, currentTableName));
-        } else if (manager.isConnected() && !connectionStatusHelper.getTableLevel()){
+        } else if (manager.isConnected() && !connectionStatusHelper.isTableLevel()){
             view.writeMessage(String.format("Connected to database: <%s>", currentDatabaseName));
         }
     }

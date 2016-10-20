@@ -25,6 +25,6 @@ public class ReturnTest {
         //when
         command.execute();
         //then
-        assertFalse(connectionStatusHelper.getTableLevel());
+        assertFalse(connectionStatusHelper.isTableLevel());
     }
 }

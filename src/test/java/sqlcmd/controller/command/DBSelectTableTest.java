@@ -7,13 +7,14 @@ import sqlcmd.controller.ConnectionStatusHelper;
 import sqlcmd.model.DatabaseManager;
 import sqlcmd.view.View;
 
+import java.sql.SQLException;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
-public class SelectTableTest {
+public class DBSelectTableTest {
     private DatabaseManager manager;
     private View view;
     private Command command;
@@ -23,7 +24,7 @@ public class SelectTableTest {
         manager = mock(DatabaseManager.class);
         view = mock(View.class);
         ConnectionStatusHelper connectionStatusHelper = mock(ConnectionStatusHelper.class);
-        command = new SelectTable(connectionStatusHelper, manager, view);
+        command = new DBSelectTable(connectionStatusHelper, manager, view);
     }
 
     @Test
@@ -34,7 +35,7 @@ public class SelectTableTest {
         command.execute();
 
         //then
-        shouldPrint("[No one connection to database. Select \"Connect to database\" first.\n]");
+        shouldPrint("[No one connection to database. Select \"DBConnect to database\" first.\n]");
     }
 
     @Test
@@ -48,6 +49,17 @@ public class SelectTableTest {
 
         //then
         shouldPrint("[There are no tables in the database <null>\n]");
+    }
+
+    @Test
+    public void testGetAvailableTableNamesWithSQLException() throws Exception{
+        //given
+        //when
+        when(manager.isConnected()).thenReturn(true);
+        when(manager.getAllTableNames()).thenThrow(new SQLException());
+        command.execute();
+        //then
+        shouldPrint("[Failure, because null, There are no tables in the database <null>\n]");
     }
 
     private void shouldPrint(String expected) {

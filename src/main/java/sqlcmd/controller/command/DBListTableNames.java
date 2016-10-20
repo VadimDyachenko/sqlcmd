@@ -7,12 +7,12 @@ import sqlcmd.view.View;
 import java.sql.SQLException;
 import java.util.*;
 
-public class ListTableNames implements Command {
+public class DBListTableNames implements Command {
     private DatabaseManager manager;
     private View view;
     private ConnectionStatusHelper connectionStatusHelper;
 
-    public ListTableNames(ConnectionStatusHelper connectionStatusHelper, DatabaseManager manager, View view) {
+    public DBListTableNames(ConnectionStatusHelper connectionStatusHelper, DatabaseManager manager, View view) {
         this.connectionStatusHelper = connectionStatusHelper;
         this.manager = manager;
         this.view = view;
@@ -21,7 +21,7 @@ public class ListTableNames implements Command {
     @Override
     public void execute() {
         if (!manager.isConnected()) {
-            view.writeMessage("No one connection to database. Select \"Connect to database\" first.\n");
+            view.writeMessage("No one connection to database. Select \"DBConnect to database\" first.\n");
             return;
         }
 

@@ -14,7 +14,7 @@ import java.util.Set;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
 
-public class ListTableNamesTest {
+public class DBListTableNamesTest {
     private DatabaseManager manager;
     private View view;
     private Command command;
@@ -24,7 +24,7 @@ public class ListTableNamesTest {
         manager = mock(DatabaseManager.class);
         view = mock(View.class);
         ConnectionStatusHelper connectionStatusHelper = mock(ConnectionStatusHelper.class);
-        command = new ListTableNames(connectionStatusHelper, manager, view);
+        command = new DBListTableNames(connectionStatusHelper, manager, view);
     }
 
     @Test
@@ -35,7 +35,7 @@ public class ListTableNamesTest {
         command.execute();
 
         //then
-        shouldPrint("[No one connection to database. Select \"Connect to database\" first.\n]");
+        shouldPrint("[No one connection to database. Select \"DBConnect to database\" first.\n]");
     }
 
     @Test

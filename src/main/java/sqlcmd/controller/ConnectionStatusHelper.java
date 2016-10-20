@@ -2,13 +2,13 @@ package sqlcmd.controller;
 
 /**
  * Этот класс предназначен для хранения имени базы данных и имени таблицы,
- * с которой работаем в текущей позииции меню класса Controller
+ * с которой мы работаем в текущей позиции меню класса Controller
  */
 
 public class ConnectionStatusHelper {
     private String currentDatabaseName = "";
     private String currentTableName = "";
-    private boolean tableLevel;
+    private boolean tableLevel = false;
 
     public String getCurrentDatabaseName() {
         return currentDatabaseName;
@@ -30,7 +30,7 @@ public class ConnectionStatusHelper {
         this.tableLevel = tableLevel;
     }
 
-    public boolean getTableLevel() {
+    public boolean isTableLevel() {
         return tableLevel;
     }
 }
