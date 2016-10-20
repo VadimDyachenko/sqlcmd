@@ -62,6 +62,37 @@ public class DBSelectTableTest {
         shouldPrint("[Failure, because null, There are no tables in the database <null>\n]");
     }
 
+    @Test
+    public void testSelectTableExecuteWithNormalParameters() throws Exception{
+        //given
+        Set<String> availableTables = new LinkedHashSet<>();
+        availableTables.add("users");
+        availableTables.add("staff");
+        //when
+        when(manager.isConnected()).thenReturn(true);
+        when(manager.getAllTableNames()).thenReturn(availableTables);
+        when(view.readLine()).thenReturn("users");
+        command.execute();
+        //then
+        shouldPrint("[Enter table name. Available tables:, [users, staff]\n]");
+    }
+
+    @Test
+    public void testSelectTableExecuteWithWrongParameters() throws Exception{
+        //given
+        Set<String> availableTables = new LinkedHashSet<>();
+        availableTables.add("users");
+        availableTables.add("staff");
+        //when
+        when(manager.isConnected()).thenReturn(true);
+        when(manager.getAllTableNames()).thenReturn(availableTables);
+        when(view.readLine()).thenReturn("bla-bla", "users");
+        command.execute();
+        //then
+        shouldPrint("[Enter table name. Available tables:, [users, staff]\n," +
+                " Enter correct table name. Available tables:, [users, staff]\n]");
+    }
+
     private void shouldPrint(String expected) {
         ArgumentCaptor<String> captor = ArgumentCaptor.forClass(String.class);
         verify(view, atLeastOnce()).writeMessage(captor.capture());

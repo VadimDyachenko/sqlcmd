@@ -20,13 +20,12 @@ public class TableClear implements Command {
 
     @Override
     public void execute() throws InterruptOperationException {
-
-        view.writeMessage(String.format("Do you really want to clear table <%s>? <y/n>", connectionStatusHelper.getCurrentTableName()));
+        String currentTableName = connectionStatusHelper.getCurrentTableName();
+        view.writeMessage(String.format("Do you really want to clear table <%s>? <y/n>", currentTableName));
         String answer = view.readLine();
-
         if (answer.trim().toLowerCase().equals("y")) {
             try {
-                manager.clearCurrentTable(connectionStatusHelper.getCurrentTableName());
+                manager.clearCurrentTable(currentTableName);
             } catch (SQLException e) {
                 view.writeMessage("Table not clear, " + e.getMessage());
             }

@@ -29,7 +29,8 @@ public class DBSelectTable implements Command {
         Set<String> tableNames = getAvailableTableNames();
 
         if (tableNames.isEmpty()) {
-            view.writeMessage(String.format("There are no tables in the database <%s>\n", connectionStatusHelper.getCurrentDatabaseName()));
+            view.writeMessage(String.format("There are no tables in the database <%s>\n",
+                    connectionStatusHelper.getCurrentDatabaseName()));
             return;
         }
 
@@ -37,7 +38,7 @@ public class DBSelectTable implements Command {
 
         printAvailableTables(tableNames);
 
-        while (true) {
+        do {
             String tableName = view.readLine();
             if (tableNames.contains(tableName)) {
                 connectionStatusHelper.setCurrentTableName(tableName);
@@ -47,7 +48,7 @@ public class DBSelectTable implements Command {
                 view.writeMessage("Enter correct table name. Available tables:");
                 printAvailableTables(tableNames);
             }
-        }
+        }  while (true);
     }
 
     private Set<String> getAvailableTableNames() {
