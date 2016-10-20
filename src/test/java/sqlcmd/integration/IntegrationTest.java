@@ -32,14 +32,14 @@ public class IntegrationTest {
     private static final String TABLE_NAME = "users";
 
     private static final String MAIN_MENU =
-            "Please choose an operation desired or type 'EXIT' for exiting\n" +
-                    "1 - DBConnect to database\n" +
+                    "Please choose an operation desired or type 'EXIT' for exiting\n" +
+                    "1 - Connect to database\n" +
                     "2 - List all table names\n" +
                     "3 - Select table to work\n" +
                     "4 - Exit\n";
 
     private static final String TABLE_MENU =
-            "Please choose an operation desired or type 'EXIT' for exiting\n" +
+                    "Please choose an operation desired or type 'EXIT' for exiting\n" +
                     "1 - Print table data\n" +
                     "2 - Create table record\n" +
                     "3 - Update table record\n" +
@@ -157,7 +157,7 @@ public class IntegrationTest {
     }
 
     @Test
-    public void testUnsupportedChoise() {
+    public void testUnsupportedChoiceInMainMenu() {
         //given
         in.addLine("0");
         in.addLine("exit");
@@ -169,11 +169,11 @@ public class IntegrationTest {
                 MAIN_MENU +
                 // input - 0
                 "\n" +
-                "Please choise correct number:\n" +
-                "1 - DBConnect to database\n" +
+                "Please choice correct number:\n" +
+                "1 - Connect to database\n" +
                 "2 - List all table names\n" +
                 "3 - Select table to work\n" +
-                "4 - Exit\n" +
+                "4 - Exit\n"+
                 //input - exit
                 "Terminated. Thank you for using SQLCmd. Good luck.\n", getData());
     }

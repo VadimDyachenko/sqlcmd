@@ -56,14 +56,14 @@ public class Controller {
                     return AvailableCommand.getMainCommand(numOfChoice);
                 }
             } catch (IllegalArgumentException e) {
-                view.writeMessage("\nPlease choise correct number:");
+                view.writeMessage("\nPlease choice correct number:");
             }
         }
     }
 
     private void printMainMenu() {
         view.writeMessage(
-                "1 - DBConnect to database\n" +
+                        "1 - Connect to database\n" +
                         "2 - List all table names\n" +
                         "3 - Select table to work\n" +
                         "4 - Exit"
@@ -72,7 +72,7 @@ public class Controller {
 
     private void printTableMenu() {
         view.writeMessage(
-                "1 - Print table data\n" +
+                        "1 - Print table data\n" +
                         "2 - Create table record\n" +
                         "3 - Update table record\n" +
                         "4 - Clear table\n" +
