@@ -29,6 +29,9 @@ public class TableCreateRecord implements Command {
 
         printInfo(tableName);
         Set<String> columnNames = getAvailableColumnNames(tableName);
+        if (columnNames.isEmpty()) {
+            return;
+        }
         printAvailableColumnNames(columnNames);
 
         String[] inputUserData;
@@ -50,7 +53,7 @@ public class TableCreateRecord implements Command {
         try {
             manager.createTableRecord(tableName, dataSet);
             view.writeMessage(String.format(
-                    "Record %s was createTableRecord successful in table <%s>\n", dataSet, tableName));
+                    "Record %s was create successful in table <%s>\n", dataSet, tableName));
         } catch (SQLException e) {
             view.writeMessage("Failure, because " + e.getMessage());
         }

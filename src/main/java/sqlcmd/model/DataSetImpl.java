@@ -37,14 +37,14 @@ public class DataSetImpl implements DataSet {
 
     @Override
     public String toString() {
-        String result = "DataSet{";
+        String result ="{";
         Set<String> columnNames = getNames();
         Iterator<String> itr = columnNames.iterator();
         while (itr.hasNext()) {
             String columnName = itr.next();
-            result += columnName + "= " + get(columnName);
+            result += columnName + ":" + get(columnName);
             if (itr.hasNext()) {
-                result += ";";
+                result += ", ";
             }
         }
         result += "}";

@@ -78,7 +78,7 @@ public class DBSelectTableTest {
     }
 
     @Test
-    public void testSelectTableExecuteWithWrongParameters() throws Exception{
+    public void testSelectTableExecuteWithWrongParameters() throws Exception {
         //given
         Set<String> availableTables = new LinkedHashSet<>();
         availableTables.add("users");
@@ -92,6 +92,7 @@ public class DBSelectTableTest {
         shouldPrint("[Enter table name. Available tables:, [users, staff]\n," +
                 " Enter correct table name. Available tables:, [users, staff]\n]");
     }
+
 
     private void shouldPrint(String expected) {
         ArgumentCaptor<String> captor = ArgumentCaptor.forClass(String.class);
