@@ -44,9 +44,9 @@
             </resource>
             <resource>
                 <directory>src/main/resources</directory>
-                <!--<excludes>-->
-                    <!--<exclude>**/*.properties</exclude>-->
-                <!--</excludes>-->
+                <excludes>
+                    <exclude>**/*.properties</exclude>
+                </excludes>
                 <filtering>true</filtering>
             </resource>
         </resources>
@@ -65,11 +65,6 @@
                 <artifactId>maven-jar-plugin</artifactId>
                 <version>3.0.2</version>
                     <configuration>
-                        <archive>
-                            <manifest>
-                                <mainClass>ua.vadim.sqlcmd.SQLcmdMain</mainClass>
-                            </manifest>
-                        </archive>
                         <outputDirectory>production</outputDirectory>
                     </configuration>
             </plugin>
@@ -86,7 +81,7 @@
                         <configuration>
                             <transformers>
                                 <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                                    <mainClass>ua.vadim.sqlcmd.SQLcmdMain</mainClass>
+                                    <mainClass>SQLcmd.SQLcmdMain</mainClass>
                                 </transformer>
                             </transformers>
                         </configuration>
