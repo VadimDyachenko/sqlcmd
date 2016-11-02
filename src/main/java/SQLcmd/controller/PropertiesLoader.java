@@ -3,6 +3,7 @@ package SQLcmd.controller;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Properties;
 
 public class PropertiesLoader {
@@ -15,7 +16,7 @@ public class PropertiesLoader {
         try (FileInputStream fileInputStream = new FileInputStream(file)) {
             properties.load(fileInputStream);
         } catch (IOException e) {
-            //NOP
+             //NOP
         }
     }
 

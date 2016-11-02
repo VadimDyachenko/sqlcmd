@@ -5,7 +5,6 @@ import java.util.*;
 
 public class JDBCPostgreDatabaseManager implements DatabaseManager {
     private Connection connection;
-    private final String DATABASE_HOST = "//192.168.1.5:5432/";
 
 //    static {
 //        try {
@@ -24,13 +23,13 @@ public class JDBCPostgreDatabaseManager implements DatabaseManager {
 //    }
 
     @Override
-    public void connect(String serverIP, String serverPort, String databaseName, String user, String password) throws SQLException {
+    public void connect(String driver, String serverIP, String serverPort, String databaseName, String user, String password) throws SQLException {
         try {
             Class.forName("org.postgresql.Driver");
         } catch (ClassNotFoundException e) {
             e.getMessage();
         }
-        String url =  String.format("jdbc:postgresql://%s:%s/%s", serverIP, serverPort, databaseName);
+        String url =  String.format("%s%s:%s/%s", driver, serverIP, serverPort, databaseName);
         connection = DriverManager.getConnection( url, user, password);
     }
 

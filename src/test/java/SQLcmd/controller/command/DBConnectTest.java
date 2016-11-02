@@ -44,7 +44,8 @@ public class DBConnectTest {
     public void testConnectWithSQLException() throws Exception {
         //given
         //when
-        doThrow(new SQLException()).when(manager).connect(runParameters.getServerIP(), runParameters.getServerPort(), anyString(), anyString(), anyString());
+        doThrow(new SQLException()).when(manager).connect(anyString(), anyString(), anyString(),
+                                                            anyString(), anyString(), anyString());
         when(manager.isConnected()).thenReturn(true);
         command.execute();
         //then

@@ -1,5 +1,6 @@
 package SQLcmd.model;
 
+import SQLcmd.controller.PropertiesLoader;
 import SQLcmd.controller.RunParameters;
 import org.junit.After;
 import org.junit.Before;
@@ -21,9 +22,14 @@ public class JDBCDatabaseManagerTest {
     @Before
     public void setUp() {
         manager = new JDBCPostgreDatabaseManager();
-        runParameters = new RunParameters("","","","","","","");
+        runParameters = new PropertiesLoader().getParameters();
         try {
-            manager.connect(runParameters.getServerIP(), runParameters.getServerPort(), "sqlcmd", "javauser", "test");
+            manager.connect(runParameters.getDriver(),
+                            runParameters.getServerIP(),
+                            runParameters.getServerPort(),
+                            runParameters.getDatabaseName(),
+                            runParameters.getUserName(),
+                            runParameters.getPassword());
         } catch (Exception e) {
             e.printStackTrace();
         }

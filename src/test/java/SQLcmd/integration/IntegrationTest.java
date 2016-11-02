@@ -1,6 +1,7 @@
 package SQLcmd.integration;
 
 
+import SQLcmd.controller.PropertiesLoader;
 import org.junit.Before;
 import org.junit.Test;
 import SQLcmd.SQLcmdMain;
@@ -53,10 +54,14 @@ public class IntegrationTest {
         System.setOut(new PrintStream(out));
 
         DatabaseManager manager = new JDBCPostgreDatabaseManager();
-        View view = new Console();
-        RunParameters runParameters = new RunParameters("","","","","","","");
+        RunParameters runParameters = new PropertiesLoader().getParameters();
         try {
-            manager.connect(runParameters.getServerIP(), runParameters.getServerPort(), DATABASE_NAME, USER_NAME, USER_PASSWORD);
+            manager.connect(runParameters.getDriver(),
+                    runParameters.getServerIP(),
+                    runParameters.getServerPort(),
+                    runParameters.getDatabaseName(),
+                    runParameters.getUserName(),
+                    runParameters.getPassword());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -94,7 +99,7 @@ public class IntegrationTest {
 
         //then
         assertEquals("Welcome to SQLCmd!\n" +
-                "\n" +
+                "\nNo any database connected.\n" +
                 MAIN_MENU +
                 // input - 4
                 "Do you really want to exit? <y/n>\n" +
@@ -117,7 +122,7 @@ public class IntegrationTest {
     }
 
     @Test
-    public void testListWithoutConnect() {
+    public void testListWithoutConnection() {
         //given
         in.addLine("2");
         in.addLine("exit");
@@ -125,11 +130,11 @@ public class IntegrationTest {
         SQLcmdMain.main(new String[0]);
         //then
         assertEquals("Welcome to SQLCmd!\n" +
-                "\n" +
+                "\nNo any database connected.\n" +
                 MAIN_MENU +
                 // input - 2
                 "No one connection to database. Select \"DBConnect to database\" first.\n" +
-                "\n" +
+                "\nNo any database connected.\n" +
                 MAIN_MENU +
                 //input - exit
                 "Terminated. Thank you for using SQLCmd. Good luck.\n", getData());
@@ -180,26 +185,17 @@ public class IntegrationTest {
     public void testConnect() {
         //given
         in.addLine("1");
-        in.addLine(DATABASE_NAME);
-        in.addLine(USER_NAME);
-        in.addLine(USER_PASSWORD);
         in.addLine("exit");
         //when
         SQLcmdMain.main(new String[0]);
         //then
         assertEquals("Welcome to SQLCmd!\n" +
-                "\n" +
+                "\nNo any database connected.\n" +
                 MAIN_MENU +
                 // input - 1
-                "Enter database name, login and password.\n" +
-                "Type 'exit' for exit program.\n" +
-                "\n" +
-                "Please, enter database name:\n" +
-                "Enter you login:\n" +
-                "Enter you password:\n" +
                 "Connection successful!\n" +
                 "\n" +
-                "Connected to database: <" + DATABASE_NAME + ">\n" +
+                "Connected to database: <" + DATABASE_NAME + ">.\n" +
                 MAIN_MENU +
                 //input - exit
                 "Terminated. Thank you for using SQLCmd. Good luck.\n", getData());
@@ -286,9 +282,6 @@ public class IntegrationTest {
     public void testSelectTableWithConnect() {
         //given
         in.addLine("1");
-        in.addLine(DATABASE_NAME);
-        in.addLine(USER_NAME);
-        in.addLine(USER_PASSWORD);
         in.addLine("3");
         in.addLine(TABLE_NAME);
         in.addLine("exit");
@@ -296,22 +289,13 @@ public class IntegrationTest {
         SQLcmdMain.main(new String[0]);
         //then
         assertEquals("Welcome to SQLCmd!\n" +
-                "\n" +
+                "\nNo any database connected.\n" +
                 MAIN_MENU +
                 // input - 1
-                "Enter database name, login and password.\n" +
-                "Type 'exit' for exit program.\n" +
-                "\n" +
-                "Please, enter database name:\n" +
-                //input - DATABASE_NAME
-                "Enter you login:\n" +
-                //input - javauser
-                "Enter you password:\n" +
-                //input - test +
                 "Connection successful!\n" +
                 "\n" +
                 //input - 3
-                "Connected to database: <" + DATABASE_NAME + ">\n" +
+                "Connected to database: <" + DATABASE_NAME + ">.\n" +
                 MAIN_MENU +
                 "Enter table name. Available tables:\n" +
                 "[users, staff]\n" +

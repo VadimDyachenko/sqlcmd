@@ -11,7 +11,6 @@ public class RunParameters {
     private boolean tableLevel = false;
     private String interfaceLanguage = "EN";
 
-
     public RunParameters(String serverIP, String serverPort,
                          String databaseName, String driver,
                          String userName, String password,
@@ -21,9 +20,12 @@ public class RunParameters {
         this.databaseName = databaseName;
         this.driver = driver;
         this.userName = userName;
-
         this.password = password;
         this.interfaceLanguage = interfaceLanguage;
+    }
+
+    public String getDriver() {
+        return driver;
     }
 
     public String getServerIP() {
