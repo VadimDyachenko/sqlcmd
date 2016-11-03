@@ -9,6 +9,12 @@ public interface DatabaseManager {
 
     void disconnect() throws SQLException;
 
+    void createDatabase(String databaseName) throws SQLException;
+
+    void dropDatabase(String databaseName) throws SQLException;
+
+    void createTable(String createTableQuery) throws SQLException;
+
     Set<String> getAllTableNames() throws SQLException;
 
     DataSet[] getTableData(String tableName) throws SQLException;
@@ -22,4 +28,5 @@ public interface DatabaseManager {
     Set<String> getTableColumnNames(String tableName) throws SQLException;
 
     boolean isConnected();
+
 }

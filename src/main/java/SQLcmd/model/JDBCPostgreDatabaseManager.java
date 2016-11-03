@@ -41,6 +41,27 @@ public class JDBCPostgreDatabaseManager implements DatabaseManager {
     }
 
     @Override
+    public void createDatabase(String databaseName) throws SQLException{
+        try (Statement statement = connection.createStatement()){
+            statement.executeUpdate(String.format("CREATE DATABASE %s;", databaseName));
+        }
+    }
+
+    @Override
+    public void dropDatabase(String databaseName) throws SQLException {
+        try (Statement statement = connection.createStatement()){
+            statement.executeUpdate(String.format("DROP DATABASE IF EXISTS %s;", databaseName));
+        }
+    }
+
+    @Override
+    public void createTable(String createTableQuery) throws SQLException {
+        try (Statement statement = connection.createStatement()){
+            statement.executeUpdate(String.format("CREATE TABLE public.%s;", createTableQuery));
+        }
+    }
+
+    @Override
     public Set<String> getAllTableNames() throws SQLException {
         checkConnection();
 

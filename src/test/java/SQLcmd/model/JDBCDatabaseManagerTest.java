@@ -4,6 +4,7 @@ import SQLcmd.controller.PropertiesLoader;
 import SQLcmd.controller.RunParameters;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.io.ByteArrayOutputStream;
@@ -15,14 +16,46 @@ import static org.junit.Assert.*;
 
 public class JDBCDatabaseManagerTest {
     private final ByteArrayOutputStream consoleOutputStream = new ByteArrayOutputStream();
-    private DatabaseManager manager;
-    private static final String TABLE_NAME ="users";
-    private RunParameters runParameters;
+    private static DatabaseManager manager;
+    private static RunParameters runParameters;
+    private static final String TEST_TABLE = "testTableUsers";
+    private static final String TEST_DATABASE = "testDBsqlcmd2016";
+    private static final String CREATE_TABLE_QUERY = TEST_TABLE + " (id SERIAL PRIMARY KEY," +
+            " name VARCHAR (25) UNIQUE NOT NULL," +
+            " password VARCHAR (25)";
+
+    @BeforeClass
+    public static void beforeClassSetUp(){
+        runParameters = new PropertiesLoader().getParameters();
+        manager = new JDBCPostgreDatabaseManager();
+        try {
+            manager.connect(runParameters.getDriver(),
+                            runParameters.getServerIP(),
+                            runParameters.getServerPort(),
+                            "",
+                            runParameters.getUserName(),
+                            runParameters.getPassword());
+            manager.dropDatabase(TEST_DATABASE);
+            manager.createDatabase(TEST_DATABASE);
+            manager.disconnect();
+            manager.connect(runParameters.getDriver(),
+                            runParameters.getServerIP(),
+                            runParameters.getServerPort(),
+                            TEST_DATABASE,
+                            runParameters.getUserName(),
+                            runParameters.getPassword());
+            manager.createTable(CREATE_TABLE_QUERY);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
+    }
 
     @Before
     public void setUp() {
-        manager = new JDBCPostgreDatabaseManager();
-        runParameters = new PropertiesLoader().getParameters();
+//        manager = new JDBCPostgreDatabaseManager();
+//        runParameters = new PropertiesLoader().getParameters();
         try {
             manager.connect(runParameters.getDriver(),
                             runParameters.getServerIP(),
@@ -32,32 +65,32 @@ public class JDBCDatabaseManagerTest {
                             runParameters.getPassword());
         } catch (Exception e) {
             e.printStackTrace();
+            System.setOut(new PrintStream(consoleOutputStream));
         }
-        System.setOut(new PrintStream(consoleOutputStream));
     }
 
     @After
     public void cleanUpStream() {
         System.setOut(null);
-        runParameters.setTableName(TABLE_NAME);
+        runParameters.setTableName(TEST_TABLE);
 
         try {
-            manager.clearCurrentTable(TABLE_NAME);
+            manager.clearCurrentTable(TEST_TABLE);
             DataSet inputData1 = new DataSetImpl();
             inputData1.put("id", 1);
             inputData1.put("name", "Semen Petrov");
             inputData1.put("password", "qwert");
-            manager.createTableRecord(TABLE_NAME, inputData1);
+            manager.createTableRecord(TEST_TABLE, inputData1);
             DataSet inputData2 = new DataSetImpl();
             inputData2.put("id", 2);
             inputData2.put("name", "Bob Marley");
             inputData2.put("password", "pass1");
-            manager.createTableRecord(TABLE_NAME, inputData2);
+            manager.createTableRecord(TEST_TABLE, inputData2);
             DataSet inputData3 = new DataSetImpl();
             inputData3.put("id", 3);
             inputData3.put("name", "Coca Cola");
             inputData3.put("password", "pepsithebest");
-            manager.createTableRecord(TABLE_NAME, inputData3);
+            manager.createTableRecord(TEST_TABLE, inputData3);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -82,7 +115,7 @@ public class JDBCDatabaseManagerTest {
         //when
         Set<String> columnNames = null;
         try {
-            columnNames = manager.getTableColumnNames(TABLE_NAME);
+            columnNames = manager.getTableColumnNames(TEST_TABLE);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -94,10 +127,10 @@ public class JDBCDatabaseManagerTest {
     @Test
     public void testGetTableData(){
         //given
-        runParameters.setTableName(TABLE_NAME);
+        runParameters.setTableName(TEST_TABLE);
         runParameters.setTableLevel(true);
         try {
-            manager.clearCurrentTable(TABLE_NAME);
+            manager.clearCurrentTable(TEST_TABLE);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -107,14 +140,14 @@ public class JDBCDatabaseManagerTest {
         inputData.put("name", "Semen Petrov");
         inputData.put("password", "qwert");
         try {
-            manager.createTableRecord(TABLE_NAME, inputData);
+            manager.createTableRecord(TEST_TABLE, inputData);
         } catch (SQLException e) {
             e.printStackTrace();
         }
         //then
         DataSet[] users = new DataSetImpl[0];
         try {
-            users = manager.getTableData(TABLE_NAME);
+            users = manager.getTableData(TEST_TABLE);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -128,21 +161,21 @@ public class JDBCDatabaseManagerTest {
     @Test
     public void testUpdateTableData() {
         //given
-        runParameters.setTableName(TABLE_NAME);
+        runParameters.setTableName(TEST_TABLE);
 
         try {
-        manager.clearCurrentTable(TABLE_NAME);
+        manager.clearCurrentTable(TEST_TABLE);
         DataSet inputData = new DataSetImpl();
         inputData.put("id", 10);
         inputData.put("name", "Semen Petrov");
         inputData.put("password", "qwert");
-        manager.createTableRecord(TABLE_NAME, inputData);
+        manager.createTableRecord(TEST_TABLE, inputData);
 
         //when
         DataSet newValue = new DataSetImpl();
         newValue.put("password", "abcde");
         newValue.put("name", "Bob Marley");
-            manager.updateTableRecord(TABLE_NAME, 10, newValue);
+            manager.updateTableRecord(TEST_TABLE, 10, newValue);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -150,7 +183,7 @@ public class JDBCDatabaseManagerTest {
         //then
         DataSet[] users = new DataSetImpl[0];
         try {
-            users = manager.getTableData(TABLE_NAME);
+            users = manager.getTableData(TEST_TABLE);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -164,12 +197,12 @@ public class JDBCDatabaseManagerTest {
     @Test
     public void testClearTableData() {
         //given
-        runParameters.setTableName(TABLE_NAME);
+        runParameters.setTableName(TEST_TABLE);
         runParameters.setTableLevel(true);
 
         //when
         try {
-            manager.clearCurrentTable(TABLE_NAME);
+            manager.clearCurrentTable(TEST_TABLE);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -177,7 +210,7 @@ public class JDBCDatabaseManagerTest {
         //then
         DataSet[] users = new DataSetImpl[0];
         try {
-            users = manager.getTableData(TABLE_NAME);
+            users = manager.getTableData(TEST_TABLE);
         } catch (SQLException e) {
             e.printStackTrace();
         }
