@@ -13,9 +13,9 @@ public class SQLcmdMain {
     static Properties properties = new Properties();
 
     public static void main(String[] args) {
-        DatabaseManager manager = new JDBCPostgreDatabaseManager();
-        View view = new Console();
-        Controller controller = new Controller(manager, view);
+//        DatabaseManager manager = new JDBCPostgreDatabaseManager();
+//        View view = new Console();
+        Controller controller = new Controller();
         controller.run();
     }
 }

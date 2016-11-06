@@ -5,7 +5,7 @@ import java.util.Set;
 
 public interface DatabaseManager {
 
-    void connect(String driver, String serverIP, String serverPort, String database, String user, String password) throws SQLException;
+    void connect(String database, String user, String password) throws SQLException;
 
     void disconnect() throws SQLException;
 

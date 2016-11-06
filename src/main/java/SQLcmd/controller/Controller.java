@@ -3,6 +3,8 @@ package SQLcmd.controller;
 import SQLcmd.exception.InterruptOperationException;
 import SQLcmd.exception.ExitException;
 import SQLcmd.model.DatabaseManager;
+import SQLcmd.model.JDBCPostgreDatabaseManager;
+import SQLcmd.view.Console;
 import SQLcmd.view.View;
 
 public class Controller {
@@ -12,14 +14,9 @@ public class Controller {
     private RunParameters runParameters;
     private DatabaseManager manager;
 
-    public Controller(DatabaseManager manager, View view) {
-        this.view = view;
-        this.manager = manager;
-    }
 
     public void run() {
-        runParameters = new PropertiesLoader().getParameters();
-        commandExecutor = new CommandExecutor(runParameters, manager, view);
+        setUp();
         view.writeMessage("Welcome to SQLCmd!\n");
         try {
             do {
@@ -79,5 +76,14 @@ public class Controller {
                         "4 - Clear table\n" +
                         "5 - Return to previous menu"
         );
+    }
+
+    private void setUp() {
+        runParameters = new PropertiesLoader().getParameters();
+        view = new Console();
+        manager = new JDBCPostgreDatabaseManager(runParameters.getDriver(),
+                                                runParameters.getServerIP(),
+                                                runParameters.getServerPort());
+        commandExecutor = new CommandExecutor(runParameters, manager, view);
     }
 }

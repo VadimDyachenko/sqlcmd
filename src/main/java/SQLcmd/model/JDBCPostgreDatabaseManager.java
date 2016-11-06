@@ -1,36 +1,26 @@
 package SQLcmd.model;
 
+import SQLcmd.controller.PropertiesLoader;
+
 import java.sql.*;
 import java.util.*;
 
 public class JDBCPostgreDatabaseManager implements DatabaseManager {
+    private final String url;
     private Connection connection;
 
-//    static {
-//        try {
-//            Class.forName("org.postgresql.Driver");
-//        } catch (ClassNotFoundException e) {
-//            try {
-//                DriverManager.registerDriver(new org.postgresql.Driver());
-//            } catch (SQLException e1) {
-//                try {
-//                    throw new SQLException("Couldn't register driver in case -", e1);
-//                } catch (SQLException e2) {
-//                    e2.printStackTrace();
-//                }
-//            }
-//        }
-//    }
+    public JDBCPostgreDatabaseManager(String driver, String serverIP, String serverPort) {
+        this.url = driver + serverIP + ":" + serverPort + "/";
+    }
 
     @Override
-    public void connect(String driver, String serverIP, String serverPort, String databaseName, String user, String password) throws SQLException {
+    public void connect(String databaseName, String user, String password) throws SQLException {
         try {
             Class.forName("org.postgresql.Driver");
         } catch (ClassNotFoundException e) {
             e.getMessage();
         }
-        String url =  String.format("%s%s:%s/%s", driver, serverIP, serverPort, databaseName);
-        connection = DriverManager.getConnection( url, user, password);
+        connection = DriverManager.getConnection(url + databaseName, user, password);
     }
 
     @Override

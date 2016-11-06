@@ -10,8 +10,6 @@ import SQLcmd.model.DataSet;
 import SQLcmd.model.DataSetImpl;
 import SQLcmd.model.DatabaseManager;
 import SQLcmd.model.JDBCPostgreDatabaseManager;
-import SQLcmd.view.Console;
-import SQLcmd.view.View;
 
 
 import java.io.ByteArrayOutputStream;
@@ -23,8 +21,8 @@ import static org.junit.Assert.assertEquals;
 
 public class IntegrationTest {
 
-    private ConfigurableInputStream in;
-    private ByteArrayOutputStream out;
+    private ConfigurableInputStream consoleInputStream;
+    private ByteArrayOutputStream consoleOutputStream;
     private static final String DATABASE_NAME = "sqlcmd";
     private static final String EMPTY_DATABASE_NAME = "postgres";
     private static final String USER_NAME = "javauser";
@@ -48,17 +46,16 @@ public class IntegrationTest {
 
     @Before
     public void setUp() {
-        in = new ConfigurableInputStream();
-        out = new ByteArrayOutputStream();
-        System.setIn(in);
-        System.setOut(new PrintStream(out));
-
-        DatabaseManager manager = new JDBCPostgreDatabaseManager();
+        consoleInputStream = new ConfigurableInputStream();
+        consoleOutputStream = new ByteArrayOutputStream();
+        System.setIn(consoleInputStream);
+        System.setOut(new PrintStream(consoleOutputStream));
         RunParameters runParameters = new PropertiesLoader().getParameters();
+        DatabaseManager manager = new JDBCPostgreDatabaseManager(runParameters.getDriver(),
+                                                                runParameters.getServerIP(),
+                                                                runParameters.getServerPort());
         try {
-            manager.connect(runParameters.getDriver(),
-                    runParameters.getServerIP(),
-                    runParameters.getServerPort(),
+            manager.connect(
                     runParameters.getDatabaseName(),
                     runParameters.getUserName(),
                     runParameters.getPassword());
@@ -92,8 +89,8 @@ public class IntegrationTest {
     @Test
     public void testExit() {
         //given
-        in.addLine("4");
-        in.addLine("y");
+        consoleInputStream.addLine("4");
+        consoleInputStream.addLine("y");
         //when
         SQLcmdMain.main(new String[0]);
 
@@ -110,7 +107,7 @@ public class IntegrationTest {
     @Test
     public void testTerminatedExit() {
         //given
-        in.addLine("exit");
+        consoleInputStream.addLine("exit");
         //when
         SQLcmdMain.main(new String[0]);
         //then
@@ -124,8 +121,8 @@ public class IntegrationTest {
     @Test
     public void testListWithoutConnection() {
         //given
-        in.addLine("2");
-        in.addLine("exit");
+        consoleInputStream.addLine("2");
+        consoleInputStream.addLine("exit");
         //when
         SQLcmdMain.main(new String[0]);
         //then
@@ -143,8 +140,8 @@ public class IntegrationTest {
     @Test
     public void testSelectTableWithoutConnect() {
         //given
-        in.addLine("3");
-        in.addLine("exit");
+        consoleInputStream.addLine("3");
+        consoleInputStream.addLine("exit");
         //when
         SQLcmdMain.main(new String[0]);
         //then
@@ -162,8 +159,8 @@ public class IntegrationTest {
     @Test
     public void testUnsupportedChoiceInMainMenu() {
         //given
-        in.addLine("0");
-        in.addLine("exit");
+        consoleInputStream.addLine("0");
+        consoleInputStream.addLine("exit");
         //when
         SQLcmdMain.main(new String[0]);
         //then
@@ -184,8 +181,8 @@ public class IntegrationTest {
     @Test
     public void testConnect() {
         //given
-        in.addLine("1");
-        in.addLine("exit");
+        consoleInputStream.addLine("1");
+        consoleInputStream.addLine("exit");
         //when
         SQLcmdMain.main(new String[0]);
         //then
@@ -204,12 +201,12 @@ public class IntegrationTest {
     @Test
     public void testListWithConnect() {
         //given
-        in.addLine("1");
-        in.addLine(DATABASE_NAME);
-        in.addLine(USER_NAME);
-        in.addLine(USER_PASSWORD);
-        in.addLine("2");
-        in.addLine("exit");
+        consoleInputStream.addLine("1");
+        consoleInputStream.addLine(DATABASE_NAME);
+        consoleInputStream.addLine(USER_NAME);
+        consoleInputStream.addLine(USER_PASSWORD);
+        consoleInputStream.addLine("2");
+        consoleInputStream.addLine("exit");
         //when
         SQLcmdMain.main(new String[0]);
         //then
@@ -243,12 +240,12 @@ public class IntegrationTest {
     @Test
     public void testListWithConnectToEmptyDatabase() {
         //given
-        in.addLine("1");
-        in.addLine(EMPTY_DATABASE_NAME);
-        in.addLine(USER_NAME);
-        in.addLine(USER_PASSWORD);
-        in.addLine("2");
-        in.addLine("exit");
+        consoleInputStream.addLine("1");
+        consoleInputStream.addLine(EMPTY_DATABASE_NAME);
+        consoleInputStream.addLine(USER_NAME);
+        consoleInputStream.addLine(USER_PASSWORD);
+        consoleInputStream.addLine("2");
+        consoleInputStream.addLine("exit");
         //when
         SQLcmdMain.main(new String[0]);
         //then
@@ -270,7 +267,7 @@ public class IntegrationTest {
                 //input - 2
                 "Connected to database: <" + EMPTY_DATABASE_NAME + ">\n" +
                 MAIN_MENU +
-                "There are no tables in the database <" + EMPTY_DATABASE_NAME + ">\n" +
+                "There are no tables consoleInputStream the database <" + EMPTY_DATABASE_NAME + ">\n" +
                 "\n" +
                 "Connected to database: <" + EMPTY_DATABASE_NAME + ">\n" +
                 MAIN_MENU +
@@ -281,10 +278,10 @@ public class IntegrationTest {
     @Test
     public void testSelectTableWithConnect() {
         //given
-        in.addLine("1");
-        in.addLine("3");
-        in.addLine(TABLE_NAME);
-        in.addLine("exit");
+        consoleInputStream.addLine("1");
+        consoleInputStream.addLine("3");
+        consoleInputStream.addLine(TABLE_NAME);
+        consoleInputStream.addLine("exit");
         //when
         SQLcmdMain.main(new String[0]);
         //then
@@ -310,12 +307,12 @@ public class IntegrationTest {
     @Test
     public void testSelectTableToEmptyDatabase() {
         //given
-        in.addLine("1");
-        in.addLine(EMPTY_DATABASE_NAME);
-        in.addLine(USER_NAME);
-        in.addLine(USER_PASSWORD);
-        in.addLine("3");
-        in.addLine("exit");
+        consoleInputStream.addLine("1");
+        consoleInputStream.addLine(EMPTY_DATABASE_NAME);
+        consoleInputStream.addLine(USER_NAME);
+        consoleInputStream.addLine(USER_PASSWORD);
+        consoleInputStream.addLine("3");
+        consoleInputStream.addLine("exit");
         //when
         SQLcmdMain.main(new String[0]);
         //then
@@ -337,7 +334,7 @@ public class IntegrationTest {
                 //input - 3
                 "Connected to database: <" + EMPTY_DATABASE_NAME + ">\n" +
                 MAIN_MENU +
-                "There are no tables in the database <" + EMPTY_DATABASE_NAME + ">\n" +
+                "There are no tables consoleInputStream the database <" + EMPTY_DATABASE_NAME + ">\n" +
                 "\n" +
                 "Connected to database: <" + EMPTY_DATABASE_NAME + ">\n" +
                 MAIN_MENU +
@@ -348,14 +345,14 @@ public class IntegrationTest {
     @Test
     public void testPrintTableWithConnect() {
         //given
-        in.addLine("1");
-        in.addLine(DATABASE_NAME);
-        in.addLine(USER_NAME);
-        in.addLine(USER_PASSWORD);
-        in.addLine("3");
-        in.addLine(TABLE_NAME);
-        in.addLine("1");
-        in.addLine("exit");
+        consoleInputStream.addLine("1");
+        consoleInputStream.addLine(DATABASE_NAME);
+        consoleInputStream.addLine(USER_NAME);
+        consoleInputStream.addLine(USER_PASSWORD);
+        consoleInputStream.addLine("3");
+        consoleInputStream.addLine(TABLE_NAME);
+        consoleInputStream.addLine("1");
+        consoleInputStream.addLine("exit");
         //when
         SQLcmdMain.main(new String[0]);
         //then
@@ -400,13 +397,13 @@ public class IntegrationTest {
     @Test
     public void testSelectIncorrectTableName() {
         //given
-        in.addLine("1");
-        in.addLine(DATABASE_NAME);
-        in.addLine(USER_NAME);
-        in.addLine(USER_PASSWORD);
-        in.addLine("3");
-        in.addLine("usersa");
-        in.addLine("exit");
+        consoleInputStream.addLine("1");
+        consoleInputStream.addLine(DATABASE_NAME);
+        consoleInputStream.addLine(USER_NAME);
+        consoleInputStream.addLine(USER_PASSWORD);
+        consoleInputStream.addLine("3");
+        consoleInputStream.addLine("usersa");
+        consoleInputStream.addLine("exit");
         //when
         SQLcmdMain.main(new String[0]);
         //then
@@ -441,15 +438,15 @@ public class IntegrationTest {
     @Test
     public void testClearTable() {
         //given
-        in.addLine("1");
-        in.addLine(DATABASE_NAME);
-        in.addLine(USER_NAME);
-        in.addLine(USER_PASSWORD);
-        in.addLine("3");
-        in.addLine("users");
-        in.addLine("4");
-        in.addLine("y");
-        in.addLine("exit");
+        consoleInputStream.addLine("1");
+        consoleInputStream.addLine(DATABASE_NAME);
+        consoleInputStream.addLine(USER_NAME);
+        consoleInputStream.addLine(USER_PASSWORD);
+        consoleInputStream.addLine("3");
+        consoleInputStream.addLine("users");
+        consoleInputStream.addLine("4");
+        consoleInputStream.addLine("y");
+        consoleInputStream.addLine("exit");
         //when
         SQLcmdMain.main(new String[0]);
         //then
@@ -489,15 +486,15 @@ public class IntegrationTest {
     @Test
     public void testClearTableWithCancell() {
         //given
-        in.addLine("1");
-        in.addLine(DATABASE_NAME);
-        in.addLine(USER_NAME);
-        in.addLine(USER_PASSWORD);
-        in.addLine("3");
-        in.addLine("users");
-        in.addLine("4");
-        in.addLine("n");
-        in.addLine("exit");
+        consoleInputStream.addLine("1");
+        consoleInputStream.addLine(DATABASE_NAME);
+        consoleInputStream.addLine(USER_NAME);
+        consoleInputStream.addLine(USER_PASSWORD);
+        consoleInputStream.addLine("3");
+        consoleInputStream.addLine("users");
+        consoleInputStream.addLine("4");
+        consoleInputStream.addLine("n");
+        consoleInputStream.addLine("exit");
         //when
         SQLcmdMain.main(new String[0]);
         //then
@@ -535,14 +532,14 @@ public class IntegrationTest {
     @Test
     public void testReturn() {
         //given
-        in.addLine("1");
-        in.addLine(DATABASE_NAME);
-        in.addLine(USER_NAME);
-        in.addLine(USER_PASSWORD);
-        in.addLine("3");
-        in.addLine("users");
-        in.addLine("5");
-        in.addLine("exit");
+        consoleInputStream.addLine("1");
+        consoleInputStream.addLine(DATABASE_NAME);
+        consoleInputStream.addLine(USER_NAME);
+        consoleInputStream.addLine(USER_PASSWORD);
+        consoleInputStream.addLine("3");
+        consoleInputStream.addLine("users");
+        consoleInputStream.addLine("5");
+        consoleInputStream.addLine("exit");
         //when
         SQLcmdMain.main(new String[0]);
         //then
@@ -579,15 +576,15 @@ public class IntegrationTest {
     @Test
     public void testConnectToAnotherDatabase() {
         //given
-        in.addLine("1");
-        in.addLine(DATABASE_NAME);
-        in.addLine(USER_NAME);
-        in.addLine(USER_PASSWORD);
-        in.addLine("1");
-        in.addLine(EMPTY_DATABASE_NAME);
-        in.addLine(USER_NAME);
-        in.addLine(USER_PASSWORD);
-        in.addLine("exit");
+        consoleInputStream.addLine("1");
+        consoleInputStream.addLine(DATABASE_NAME);
+        consoleInputStream.addLine(USER_NAME);
+        consoleInputStream.addLine(USER_PASSWORD);
+        consoleInputStream.addLine("1");
+        consoleInputStream.addLine(EMPTY_DATABASE_NAME);
+        consoleInputStream.addLine(USER_NAME);
+        consoleInputStream.addLine(USER_PASSWORD);
+        consoleInputStream.addLine("exit");
         //when
         SQLcmdMain.main(new String[0]);
         //then
@@ -627,8 +624,8 @@ public class IntegrationTest {
 
     public String getData() {
         try {
-            String result = new String(out.toByteArray(), "UTF-8");
-            out.reset();
+            String result = new String(consoleOutputStream.toByteArray(), "UTF-8");
+            consoleOutputStream.reset();
             return result.replaceAll(System.lineSeparator(), "\n");
         } catch (UnsupportedEncodingException e) {
             return e.getMessage();

@@ -23,9 +23,6 @@ public class DBConnect implements Command {
         try {
             if (!manager.isConnected()) {
                 manager.connect(
-                        runParameters.getDriver(),
-                        runParameters.getServerIP(),
-                        runParameters.getServerPort(),
                         runParameters.getDatabaseName(),
                         runParameters.getUserName(),
                         runParameters.getPassword());
@@ -50,10 +47,7 @@ public class DBConnect implements Command {
             String password = getInputString("Enter you password:");
             try {
                 manager.disconnect();
-                manager.connect(runParameters.getDriver(),
-                        runParameters.getServerIP(),
-                        runParameters.getServerPort(),
-                        databaseName, login, password);
+                manager.connect(databaseName, login, password);
                 runParameters.setDatabaseName(databaseName);
                 view.writeMessage("Connection successful!\n");
                 break;
