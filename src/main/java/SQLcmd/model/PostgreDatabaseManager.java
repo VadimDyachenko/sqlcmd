@@ -5,11 +5,11 @@ import SQLcmd.controller.PropertiesLoader;
 import java.sql.*;
 import java.util.*;
 
-public class JDBCPostgreDatabaseManager implements DatabaseManager {
+public class PostgreDatabaseManager implements DatabaseManager {
     private final String url;
     private Connection connection;
 
-    public JDBCPostgreDatabaseManager(String driver, String serverIP, String serverPort) {
+    public PostgreDatabaseManager(String driver, String serverIP, String serverPort) {
         this.url = driver + serverIP + ":" + serverPort + "/";
     }
 

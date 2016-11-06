@@ -11,7 +11,7 @@ import java.util.Set;
 
 import static org.junit.Assert.*;
 
-public class JDBCDatabaseManagerTest {
+public class PostgreDatabaseManagerTest {
     private ByteArrayOutputStream consoleOutputStream;
     private static DatabaseManager manager;
     private static RunParameters runParameters;
@@ -25,7 +25,7 @@ public class JDBCDatabaseManagerTest {
     public static void beforeAllTestSetUp() {
         runParameters = new PropertiesLoader().getParameters();
 
-        manager = new JDBCPostgreDatabaseManager(runParameters.getDriver(),
+        manager = new PostgreDatabaseManager(runParameters.getDriver(),
                 runParameters.getServerIP(),
                 runParameters.getServerPort());
         try {
@@ -44,7 +44,7 @@ public class JDBCDatabaseManagerTest {
     @AfterClass
     public static void afterAllTestsClear() {
 
-//        manager = new JDBCPostgreDatabaseManager(runParameters.getDriver(),
+//        manager = new PostgreDatabaseManager(runParameters.getDriver(),
 //                runParameters.getServerIP(),
 //                runParameters.getServerPort());
         try {

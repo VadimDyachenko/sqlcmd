@@ -3,7 +3,7 @@ package SQLcmd.controller;
 import SQLcmd.exception.InterruptOperationException;
 import SQLcmd.exception.ExitException;
 import SQLcmd.model.DatabaseManager;
-import SQLcmd.model.JDBCPostgreDatabaseManager;
+import SQLcmd.model.PostgreDatabaseManager;
 import SQLcmd.view.Console;
 import SQLcmd.view.View;
 
@@ -81,7 +81,7 @@ public class Controller {
     private void setUp() {
         runParameters = new PropertiesLoader().getParameters();
         view = new Console();
-        manager = new JDBCPostgreDatabaseManager(runParameters.getDriver(),
+        manager = new PostgreDatabaseManager(runParameters.getDriver(),
                                                 runParameters.getServerIP(),
                                                 runParameters.getServerPort());
         commandExecutor = new CommandExecutor(runParameters, manager, view);

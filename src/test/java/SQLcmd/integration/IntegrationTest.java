@@ -9,7 +9,7 @@ import SQLcmd.controller.RunParameters;
 import SQLcmd.model.DataSet;
 import SQLcmd.model.DataSetImpl;
 import SQLcmd.model.DatabaseManager;
-import SQLcmd.model.JDBCPostgreDatabaseManager;
+import SQLcmd.model.PostgreDatabaseManager;
 
 
 import java.io.ByteArrayOutputStream;
@@ -51,7 +51,7 @@ public class IntegrationTest {
         System.setIn(consoleInputStream);
         System.setOut(new PrintStream(consoleOutputStream));
         RunParameters runParameters = new PropertiesLoader().getParameters();
-        DatabaseManager manager = new JDBCPostgreDatabaseManager(runParameters.getDriver(),
+        DatabaseManager manager = new PostgreDatabaseManager(runParameters.getDriver(),
                                                                 runParameters.getServerIP(),
                                                                 runParameters.getServerPort());
         try {
