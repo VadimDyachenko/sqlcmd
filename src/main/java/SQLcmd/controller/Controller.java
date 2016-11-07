@@ -1,6 +1,5 @@
 package SQLcmd.controller;
 
-import SQLcmd.exception.InterruptOperationException;
 import SQLcmd.exception.ExitException;
 import SQLcmd.model.DatabaseManager;
 import SQLcmd.model.PostgreDatabaseManager;
@@ -26,13 +25,10 @@ public class Controller {
             while (true);
         } catch (ExitException e1) {
             //NOP
-        } catch (InterruptOperationException e2) {
-            view.writeMessage("Terminated. Thank you for using SQLCmd. Good luck.");
-            //System.exit(0);  <--- закомментировано из-за тестов.
         }
     }
 
-    private AvailableCommand askCommand() throws InterruptOperationException {
+    private AvailableCommand askCommand() {
 
         commandExecutor.execute(AvailableCommand.PRINT_CURRENT_CONNECTION_STATUS);
 

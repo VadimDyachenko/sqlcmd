@@ -1,7 +1,6 @@
 package SQLcmd.controller.command;
 
 import SQLcmd.controller.RunParameters;
-import SQLcmd.exception.InterruptOperationException;
 import SQLcmd.model.DatabaseManager;
 import SQLcmd.view.View;
 
@@ -19,7 +18,7 @@ public class DBConnect implements Command {
     }
 
     @Override
-    public void execute() throws InterruptOperationException {
+    public void execute() {
         try {
             if (!manager.isConnected()) {
                 manager.connect(
@@ -37,7 +36,7 @@ public class DBConnect implements Command {
         }
     }
 
-    private void connectToAnotherDatabase() throws InterruptOperationException {
+    private void connectToAnotherDatabase() {
         view.writeMessage("Enter database name, login and password.\n" +
                 "Type 'exit' for exit program.\n");
 
@@ -58,7 +57,7 @@ public class DBConnect implements Command {
         } while (!manager.isConnected());
     }
 
-    private String getInputString(String message) throws InterruptOperationException {
+    private String getInputString(String message) {
         view.writeMessage(message);
         return view.readLine();
     }

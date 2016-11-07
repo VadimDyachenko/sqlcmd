@@ -1,7 +1,6 @@
 package SQLcmd.controller.command;
 
 import SQLcmd.controller.RunParameters;
-import SQLcmd.exception.InterruptOperationException;
 import SQLcmd.model.DatabaseManager;
 import SQLcmd.view.View;
 
@@ -20,7 +19,7 @@ public class DBSelectTable implements Command {
     }
 
     @Override
-    public void execute() throws InterruptOperationException {
+    public void execute() {
         if (!manager.isConnected()) {
             view.writeMessage("No one connection to database. Select \"DBConnect to database\" first.\n");
             return;

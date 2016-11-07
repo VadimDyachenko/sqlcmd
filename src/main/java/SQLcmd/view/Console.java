@@ -1,7 +1,5 @@
 package SQLcmd.view;
 
-import SQLcmd.exception.InterruptOperationException;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -15,15 +13,12 @@ public class Console implements View {
     }
 
     @Override
-    public String readLine() throws InterruptOperationException {
+    public String readLine() {
         String result = "";
         try {
             result = reader.readLine();
-            if ("exit".equalsIgnoreCase(result)) {
-                throw new InterruptOperationException();
-            }
         } catch (IOException e) {
-            e.printStackTrace();
+            e.printStackTrace(); //TODO причесать обработку исключения
         }
         return result;
     }

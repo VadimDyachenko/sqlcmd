@@ -1,7 +1,6 @@
 package SQLcmd.controller.command;
 
 import SQLcmd.controller.RunParameters;
-import SQLcmd.exception.InterruptOperationException;
 import SQLcmd.model.DatabaseManager;
 import SQLcmd.view.View;
 
@@ -18,7 +17,7 @@ public class ConnectionStatus implements Command {
     }
 
     @Override
-    public void execute() throws InterruptOperationException {
+    public void execute() {
         if (!manager.isConnected()) {
             view.writeMessage("No any database connected.");
             return;

@@ -1,7 +1,6 @@
 package SQLcmd.controller.command;
 
 import SQLcmd.controller.RunParameters;
-import SQLcmd.exception.InterruptOperationException;
 import SQLcmd.model.DataSetImpl;
 import SQLcmd.model.DatabaseManager;
 import SQLcmd.model.DataSet;
@@ -24,7 +23,7 @@ public class TableCreateRecord implements Command {
     }
 
     @Override
-    public void execute() throws InterruptOperationException {
+    public void execute() {
         String tableName = runParameters.getTableName();
         printHelpInfo(tableName);
 

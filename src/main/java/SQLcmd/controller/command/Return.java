@@ -1,7 +1,6 @@
 package SQLcmd.controller.command;
 
 import SQLcmd.controller.RunParameters;
-import SQLcmd.exception.InterruptOperationException;
 
 public class Return implements Command {
     private RunParameters runParameters;
@@ -11,7 +10,7 @@ public class Return implements Command {
     }
 
     @Override
-    public void execute() throws InterruptOperationException {
+    public void execute() {
         runParameters.setTableLevel(false);
     }
 

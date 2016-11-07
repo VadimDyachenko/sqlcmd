@@ -2,7 +2,6 @@ package SQLcmd.controller.command;
 
 import SQLcmd.exception.ExitException;
 import SQLcmd.model.DatabaseManager;
-import SQLcmd.exception.InterruptOperationException;
 import SQLcmd.view.View;
 
 import java.sql.SQLException;
@@ -18,7 +17,7 @@ public class Exit implements Command {
     }
 
     @Override
-    public void execute() throws InterruptOperationException {
+    public void execute() {
         view.writeMessage("Do you really want to exit? <y/n>");
 
         String answer = view.readLine();
@@ -29,11 +28,9 @@ public class Exit implements Command {
                     manager.disconnect();
                 }
             } catch (SQLException e) {
-                view.writeMessage(e.getMessage());
-            } finally {
-            view.writeMessage("Thank you for using SQLCmd. Good luck.");
-//          System.exit(0);  // <-- For normal use
-            throw new ExitException(); // <-- For integration test
+                view.writeMessage(e.getMessage());          //TODO причесать этот блок
+                view.writeMessage("Thank you for using SQLCmd. Good luck.");
+                throw new ExitException();
             }
         }
     }

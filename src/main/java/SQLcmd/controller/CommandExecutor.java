@@ -1,7 +1,6 @@
 package SQLcmd.controller;
 
 import SQLcmd.controller.command.*;
-import SQLcmd.exception.InterruptOperationException;
 import SQLcmd.model.DatabaseManager;
 import SQLcmd.view.View;
 
@@ -25,7 +24,7 @@ final class CommandExecutor {
         commandMap.put(AvailableCommand.PRINT_CURRENT_CONNECTION_STATUS, new ConnectionStatus(runParameters, manager, view));
     }
 
-    public void execute(AvailableCommand command) throws InterruptOperationException {
+    public void execute(AvailableCommand command) {
         commandMap.get(command).execute();
     }
 }

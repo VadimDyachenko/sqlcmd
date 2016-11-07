@@ -1,7 +1,6 @@
 package SQLcmd.controller.command;
 
 import SQLcmd.controller.RunParameters;
-import SQLcmd.exception.InterruptOperationException;
 import SQLcmd.model.DatabaseManager;
 import SQLcmd.view.View;
 
@@ -19,7 +18,7 @@ public class TableClear implements Command {
     }
 
     @Override
-    public void execute() throws InterruptOperationException {
+    public void execute() {
         String currentTableName = runParameters.getTableName();
         view.writeMessage(String.format("Do you really want to clear table <%s>? <y/n>", currentTableName));
         String answer = view.readLine();

@@ -1,11 +1,11 @@
 package SQLcmd.controller.command;
 
-import SQLcmd.exception.InterruptOperationException;
 import SQLcmd.model.DatabaseManager;
 import SQLcmd.view.View;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
+
 import static junit.framework.TestCase.fail;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
@@ -29,7 +29,7 @@ public class ExitTest {
     }
 
     @Test
-    public void testExitYes() throws Exception{
+    public void testExitYes() throws Exception {
         //given
         //when
         when(view.readLine()).thenReturn("y");
@@ -47,7 +47,7 @@ public class ExitTest {
     }
 
     @Test
-    public void testExitYesWhithSQLException() throws Exception{
+    public void testExitYesWhithSQLException() throws Exception {
         //given
         //when
         when(view.readLine()).thenReturn("y");
@@ -70,16 +70,8 @@ public class ExitTest {
     public void testExitNo() {
         //given
         //when
-        try {
-            when(view.readLine()).thenReturn("n");
-        } catch (InterruptOperationException e) {
-            e.printStackTrace();
-        }
-        try {
-            command.execute();
-        } catch (Exception e) {
-            e.getMessage();
-        }
+        when(view.readLine()).thenReturn("n");
+        command.execute();
 
         //then
         shouldPrint("[Do you really want to exit? <y/n>]");

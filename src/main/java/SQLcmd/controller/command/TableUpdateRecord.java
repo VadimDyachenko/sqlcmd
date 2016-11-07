@@ -1,7 +1,6 @@
 package SQLcmd.controller.command;
 
 import SQLcmd.controller.RunParameters;
-import SQLcmd.exception.InterruptOperationException;
 import SQLcmd.model.DatabaseManager;
 import SQLcmd.view.View;
 
@@ -17,9 +16,10 @@ public class TableUpdateRecord implements Command {
     }
 
     @Override
-    public void execute() throws InterruptOperationException {
+    public void execute() {
         String tableName = runParameters.getTableName();
         printHelpInfo(tableName);
+        //TODO дописать команду
 
     }
 

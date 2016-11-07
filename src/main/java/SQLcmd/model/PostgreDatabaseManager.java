@@ -1,7 +1,5 @@
 package SQLcmd.model;
 
-import SQLcmd.controller.PropertiesLoader;
-
 import java.sql.*;
 import java.util.*;
 
@@ -11,15 +9,15 @@ public class PostgreDatabaseManager implements DatabaseManager {
 
     public PostgreDatabaseManager(String driver, String serverIP, String serverPort) {
         this.url = driver + serverIP + ":" + serverPort + "/";
-    }
-
-    @Override
-    public void connect(String databaseName, String user, String password) throws SQLException {
         try {
             Class.forName("org.postgresql.Driver");
         } catch (ClassNotFoundException e) {
             e.getMessage();
         }
+    }
+
+    @Override
+    public void connect(String databaseName, String user, String password) throws SQLException {
         connection = DriverManager.getConnection(url + databaseName, user, password);
     }
 

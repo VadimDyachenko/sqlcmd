@@ -1,7 +1,6 @@
 package SQLcmd.controller.command;
 
 import SQLcmd.controller.RunParameters;
-import SQLcmd.exception.InterruptOperationException;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -19,7 +18,7 @@ public class ReturnTest {
     }
 
     @Test
-    public void testReturn() throws InterruptOperationException {
+    public void testReturn() {
         //given
         runParameters.setTableLevel(true);
         //when
