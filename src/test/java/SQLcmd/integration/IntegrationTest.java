@@ -1,6 +1,5 @@
 package SQLcmd.integration;
 
-
 import SQLcmd.controller.PropertiesLoader;
 import org.junit.Before;
 import org.junit.Test;
@@ -622,7 +621,7 @@ public class IntegrationTest {
                 "Terminated. Thank you for using SQLCmd. Good luck.\n", getData());
     }
 
-    public String getData() {
+    private String getData() {
         try {
             String result = new String(consoleOutputStream.toByteArray(), "UTF-8");
             consoleOutputStream.reset();
