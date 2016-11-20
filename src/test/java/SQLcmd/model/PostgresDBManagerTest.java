@@ -2,6 +2,7 @@ package SQLcmd.model;
 
 import SQLcmd.controller.PropertiesLoader;
 import SQLcmd.controller.RunParameters;
+import SQLcmd.exception.ExitException;
 import org.junit.*;
 
 import java.io.ByteArrayOutputStream;
@@ -11,7 +12,7 @@ import java.util.Set;
 
 import static org.junit.Assert.*;
 
-public class PostgreDatabaseManagerTest {
+public class PostgresDBManagerTest {
     private ByteArrayOutputStream consoleOutputStream;
     private static DatabaseManager manager;
     private static RunParameters runParameters;
@@ -22,10 +23,10 @@ public class PostgreDatabaseManagerTest {
             " password VARCHAR (25) NOT NULL)";
 
     @BeforeClass
-    public static void beforeAllTestSetUp() {
+    public static void beforeAllTestSetUp() throws ExitException {
         runParameters = new PropertiesLoader().getParameters();
 
-        manager = new PostgreDatabaseManager(runParameters.getDriver(),
+        manager = new PostgresDBManager(runParameters.getDriver(),
                 runParameters.getServerIP(),
                 runParameters.getServerPort());
         try {
@@ -44,7 +45,7 @@ public class PostgreDatabaseManagerTest {
     @AfterClass
     public static void afterAllTestsClear() {
 
-//        manager = new PostgreDatabaseManager(runParameters.getDriver(),
+//        manager = new PostgresDBManager(runParameters.getDriver(),
 //                runParameters.getServerIP(),
 //                runParameters.getServerPort());
         try {

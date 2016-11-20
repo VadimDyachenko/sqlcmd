@@ -1,6 +1,7 @@
 package SQLcmd.controller.command;
 
 import SQLcmd.controller.RunParameters;
+import SQLcmd.exception.ExitException;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -18,7 +19,7 @@ public class ReturnTest {
     }
 
     @Test
-    public void testReturn() {
+    public void testReturn() throws ExitException{
         //given
         runParameters.setTableLevel(true);
         //when

@@ -1,6 +1,7 @@
 package SQLcmd.controller;
 
 import SQLcmd.controller.command.*;
+import SQLcmd.exception.ExitException;
 import SQLcmd.model.DatabaseManager;
 import SQLcmd.view.View;
 
@@ -24,7 +25,7 @@ final class CommandExecutor {
         commandMap.put(AvailableCommand.PRINT_CURRENT_CONNECTION_STATUS, new ConnectionStatus(runParameters, manager, view));
     }
 
-    public void execute(AvailableCommand command) {
+    public void execute(AvailableCommand command) throws ExitException{
         commandMap.get(command).execute();
     }
 }

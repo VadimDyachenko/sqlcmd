@@ -1,7 +1,7 @@
 package SQLcmd.controller.command;
 
+import SQLcmd.exception.ExitException;
+
 public interface Command {
-
-    void execute();
-
+    void execute() throws ExitException;
 }

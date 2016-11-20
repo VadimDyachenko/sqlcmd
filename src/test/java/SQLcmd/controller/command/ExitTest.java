@@ -66,7 +66,7 @@ public class ExitTest {
     }
 
     @Test
-    public void testExitNo() {
+    public void testExitNo() throws ExitException {
         //given
         //when
         when(view.readLine()).thenReturn("n");

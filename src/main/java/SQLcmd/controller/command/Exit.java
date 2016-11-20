@@ -16,7 +16,7 @@ public class Exit implements Command {
     }
 
     @Override
-    public void execute() {
+    public void execute() throws ExitException{
         view.writeMessage("Do you really want to exit? <y/n>");
 
         String answer = view.readLine();

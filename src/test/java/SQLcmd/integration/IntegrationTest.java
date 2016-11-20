@@ -1,6 +1,7 @@
 package SQLcmd.integration;
 
 import SQLcmd.controller.PropertiesLoader;
+import SQLcmd.exception.ExitException;
 import org.junit.Before;
 import org.junit.Test;
 import SQLcmd.SQLcmdMain;
@@ -8,7 +9,7 @@ import SQLcmd.controller.RunParameters;
 import SQLcmd.model.DataSet;
 import SQLcmd.model.DataSetImpl;
 import SQLcmd.model.DatabaseManager;
-import SQLcmd.model.PostgreDatabaseManager;
+import SQLcmd.model.PostgresDBManager;
 
 
 import java.io.ByteArrayOutputStream;
@@ -44,13 +45,13 @@ public class IntegrationTest {
                     "5 - Return to previous menu\n";
 
     @Before
-    public void setUp() {
+    public void setUp() throws ExitException {
         consoleInputStream = new ConfigurableInputStream();
         consoleOutputStream = new ByteArrayOutputStream();
         System.setIn(consoleInputStream);
         System.setOut(new PrintStream(consoleOutputStream));
         RunParameters runParameters = new PropertiesLoader().getParameters();
-        DatabaseManager manager = new PostgreDatabaseManager(runParameters.getDriver(),
+        DatabaseManager manager = new PostgresDBManager(runParameters.getDriver(),
                                                                 runParameters.getServerIP(),
                                                                 runParameters.getServerPort());
         try {

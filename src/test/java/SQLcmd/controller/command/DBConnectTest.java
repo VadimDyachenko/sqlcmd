@@ -3,7 +3,7 @@ package SQLcmd.controller.command;
 
 import SQLcmd.controller.RunParameters;
 import SQLcmd.model.DatabaseManager;
-import SQLcmd.model.PostgreDatabaseManager;
+import SQLcmd.model.PostgresDBManager;
 import SQLcmd.view.Console;
 import org.junit.Before;
 import org.junit.Test;
@@ -22,7 +22,7 @@ public class DBConnectTest {
 
     @Before
     public void setup() {
-        manager = mock(PostgreDatabaseManager.class);
+        manager = mock(PostgresDBManager.class);
         view = mock(Console.class);
         RunParameters runParameters = mock(RunParameters.class);
         command = new DBConnect(runParameters, manager, view);

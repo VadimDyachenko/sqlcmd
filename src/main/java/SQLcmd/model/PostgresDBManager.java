@@ -3,11 +3,11 @@ package SQLcmd.model;
 import java.sql.*;
 import java.util.*;
 
-public class PostgreDatabaseManager implements DatabaseManager {
+public class PostgresDBManager implements DatabaseManager {
     private final String url;
     private Connection connection;
 
-    public PostgreDatabaseManager(String driver, String serverIP, String serverPort) {
+    public PostgresDBManager(String driver, String serverIP, String serverPort) {
         this.url = driver + serverIP + ":" + serverPort + "/";
         try {
             Class.forName("org.postgresql.Driver");

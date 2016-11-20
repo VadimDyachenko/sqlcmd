@@ -1,9 +1,11 @@
 package SQLcmd.controller;
 
+import SQLcmd.exception.ExitException;
+import SQLcmd.exception.UnsupportedLanguageException;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.Properties;
 
 public class PropertiesLoader {
@@ -16,11 +18,11 @@ public class PropertiesLoader {
         try (FileInputStream fileInputStream = new FileInputStream(file)) {
             properties.load(fileInputStream);
         } catch (IOException e) {
-             //NOP
+            //NOP
         }
     }
 
-    public RunParameters getParameters() {
+    public RunParameters getParameters() throws ExitException {
         return new RunParameters(
                 getServerIP(),
                 getServerPort(),
@@ -31,6 +33,7 @@ public class PropertiesLoader {
                 getInterfaceLanguage()
         );
     }
+
     private String getServerIP() {
         return properties.getProperty("database.server.ip");
     }
@@ -55,7 +58,15 @@ public class PropertiesLoader {
         return properties.getProperty("database.user.password");
     }
 
-    private String getInterfaceLanguage() {
-        return properties.getProperty("sqlcmd.lang");
+    private String getInterfaceLanguage() throws ExitException{
+        String interfaceLanguage = properties.getProperty("sqlcmd.language");
+        try {
+            if (interfaceLanguage.equalsIgnoreCase("EN") || interfaceLanguage.equalsIgnoreCase("RU")) {
+                return interfaceLanguage;
+            } else throw new UnsupportedLanguageException();
+        } catch (UnsupportedLanguageException e) {
+            System.out.println(e.getMessage()); //TODO выбросить обработку сообщений выше
+            throw new ExitException();
+        }
     }
 }
