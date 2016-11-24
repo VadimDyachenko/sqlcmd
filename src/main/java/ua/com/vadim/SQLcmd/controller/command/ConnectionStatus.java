@@ -4,8 +4,11 @@ import ua.com.vadim.SQLcmd.controller.RunParameters;
 import ua.com.vadim.SQLcmd.model.DatabaseManager;
 import ua.com.vadim.SQLcmd.view.View;
 
+import java.util.ResourceBundle;
+
 public class ConnectionStatus implements Command {
 
+    private final ResourceBundle res;
     private DatabaseManager manager;
     private View view;
     private RunParameters runParameters;
@@ -14,19 +17,21 @@ public class ConnectionStatus implements Command {
         this.runParameters = runParameters;
         this.manager = manager;
         this.view = view;
+        res = ResourceBundle.getBundle(runParameters.getLanguageResourcePath() + "connectionStatus");
     }
 
     @Override
     public void execute() {
         if (!manager.isConnected()) {
-            view.writeMessage("No any database connected.");
+            view.writeMessage(res.getString("connection.status.without.connection"));
             return;
         }
 
-        String message = String.format("Connected to database: <%s>.", runParameters.getDatabaseName());
+        String message = String.format(res.getString("connection.status.database"), runParameters.getDatabaseName());
         if (runParameters.isTableLevel()) {
-            message += String.format(" Selected table: <%s>", runParameters.getTableName());
+            message += String.format(res.getString("connection.status.table"), runParameters.getTableName());
         }
+        message += "\n";
         view.writeMessage(message);
     }
 }
