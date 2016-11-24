@@ -81,7 +81,7 @@
                         <configuration>
                             <transformers>
                                 <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                                    <mainClass>SQLcmd.SQLcmdMain</mainClass>
+                                    <mainClass>ua.com.vadim.SQLcmd.SQLcmdMain</mainClass>
                                 </transformer>
                             </transformers>
                         </configuration>
