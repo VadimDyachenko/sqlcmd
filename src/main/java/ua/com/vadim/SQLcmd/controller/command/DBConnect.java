@@ -52,7 +52,7 @@ public class DBConnect implements Command {
                 break;
             } catch (SQLException e) {
                 view.writeMessage("Connection failed: " + e.getMessage());
-                view.writeMessage("Try again or type <exit>.");
+                view.writeMessage("Try again or type <break> for return to previous menu.");
             }
         } while (!manager.isConnected());
     }

@@ -42,6 +42,6 @@ public class DBListTableNames implements Command {
 
     private void printResult(Set<String> tableNames) {
         view.writeMessage("Available tables:");
-        view.writeMessage(tableNames.toString() + "\n");
+        view.writeMessage(tableNames.toString());
     }
 }

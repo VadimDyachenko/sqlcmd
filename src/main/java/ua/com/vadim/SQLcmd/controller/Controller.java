@@ -21,6 +21,7 @@ public class Controller {
             setUp();
             view.writeMessage(res.getString("common.welcome"));
             do {
+                commandExecutor.execute(AvailableCommand.PRINT_CURRENT_CONNECTION_STATUS);
                 AvailableCommand command = askCommand();
                 commandExecutor.execute(command);
             }
@@ -30,20 +31,17 @@ public class Controller {
         }
     }
 
-    private AvailableCommand askCommand() throws ExitException {
-        commandExecutor.execute(AvailableCommand.PRINT_CURRENT_CONNECTION_STATUS);
-        view.writeMessage(res.getString("common.choise.operation"));
+    private AvailableCommand askCommand() {
+        view.writeMessage(res.getString("common.choice.operation"));
         while (true) {
             try {
                 printMenu();
-                String choice = view.readLine();
-                Integer numOfChoice = Integer.parseInt(choice);
-                return runParameters.isTableLevel()
-                        ? AvailableCommand.getTableCommand(numOfChoice)
-                        : AvailableCommand.getMainCommand(numOfChoice);
+                Integer numOfChoice = Integer.parseInt(view.readLine());
+                if (runParameters.isTableLevel()) return AvailableCommand.getTableCommand(numOfChoice);
+                else return AvailableCommand.getMainCommand(numOfChoice);
 
             } catch (IllegalArgumentException e) {
-                view.writeMessage(res.getString("common.choise.correct"));
+                view.writeMessage(res.getString("common.choice.correct"));
             }
         }
     }
@@ -65,14 +63,18 @@ public class Controller {
     }
 
     private void setUp() {
-        view = new Console();
         runParameters = new PropertiesLoader().getParameters();
         setLocale();
+        view = new Console();
         res = ResourceBundle.getBundle(runParameters.getLanguageResourcePath() + "common");
         DatabaseManager manager = new PostgresDBManager(runParameters.getDriver(),
-                                                        runParameters.getServerIP(),
-                                                        runParameters.getServerPort());
+                runParameters.getServerIP(),
+                runParameters.getServerPort());
         commandExecutor = new CommandExecutor(runParameters, manager, view);
+        tryConnectToDefaultDatabase();
+    }
+
+    private void tryConnectToDefaultDatabase() {
     }
 
     private void setLocale() {

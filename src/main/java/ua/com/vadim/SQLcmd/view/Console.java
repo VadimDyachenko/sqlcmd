@@ -14,6 +14,7 @@ public class Console implements View {
         System.out.println(convertEncoding(message));
     }
 
+
     @Override
     public String readLine() {
         String result = "";
@@ -25,12 +26,16 @@ public class Console implements View {
         return result;
     }
 
+    @Override
+    public void writeData(String message) {
+        System.out.println(message);
+    }
 
     /**
      * Этот метод-костыль используется для перекодировки символов сообщений прочитанных из файлов .properties
      * классом ResourceBundle.getBundle() Читать напрямую русские символы мне не удалось.
      * @param message
-     * @return converted message
+     * @return конвертированная строка из ISO-8859-1 в UTF-8
      */
 
     private String convertEncoding(String message) {
