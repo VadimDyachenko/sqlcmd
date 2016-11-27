@@ -28,7 +28,7 @@ public class Controller {
             }
             while (true);
         } catch (ExitException e) {
-            //NOP
+            view.writeMessage(res.getString("common.the.end"));
         }
     }
 

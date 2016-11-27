@@ -2,6 +2,7 @@ package ua.com.vadim.SQLcmd.controller.command;
 
 import ua.com.vadim.SQLcmd.controller.RunParameters;
 import ua.com.vadim.SQLcmd.exception.BreakException;
+import ua.com.vadim.SQLcmd.exception.ExitException;
 import ua.com.vadim.SQLcmd.model.DatabaseManager;
 import ua.com.vadim.SQLcmd.view.View;
 
@@ -42,7 +43,7 @@ public class DBConnect implements Command {
                 runParameters.getPassword());
     }
 
-    private void connectWithNewParameters() {
+    private void connectWithNewParameters() throws ExitException{
         view.writeMessage(res.getString("dbconnect.enter.connection.parameters"));
         try {
             manager.disconnect();
@@ -58,7 +59,7 @@ public class DBConnect implements Command {
         }
     }
 
-    private String getInputString(String message) {
+    private String getInputString(String message) throws ExitException {
         view.writeMessage(message);
         return view.readLine();
     }
