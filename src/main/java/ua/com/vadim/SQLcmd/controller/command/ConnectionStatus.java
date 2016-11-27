@@ -32,7 +32,7 @@ public class ConnectionStatus implements Command {
         if (runParameters.isTableLevel()) {
             message += String.format(res.getString("connection.status.table"), runParameters.getTableName());
         }
-//        message += "\n";
+        message += "\n";
         view.writeMessage(message);
     }
 }

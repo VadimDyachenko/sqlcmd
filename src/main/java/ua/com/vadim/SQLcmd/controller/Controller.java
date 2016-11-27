@@ -20,6 +20,7 @@ public class Controller {
         try {
             setUp();
             view.writeMessage(res.getString("common.welcome"));
+            tryDBconnectWhithDefaultParameters();
             do {
                 commandExecutor.execute(AvailableCommand.PRINT_CURRENT_CONNECTION_STATUS);
                 AvailableCommand command = askCommand();
@@ -71,10 +72,11 @@ public class Controller {
                 runParameters.getServerIP(),
                 runParameters.getServerPort());
         commandExecutor = new CommandExecutor(runParameters, manager, view);
-        tryConnectToDefaultDatabase();
     }
 
-    private void tryConnectToDefaultDatabase() {
+    private void tryDBconnectWhithDefaultParameters() {
+        view.writeMessage(res.getString("common.try.connect.default.parameters"));
+        commandExecutor.execute(AvailableCommand.DB_CONNECT);
     }
 
     private void setLocale() {

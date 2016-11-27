@@ -1,12 +1,15 @@
 package ua.com.vadim.SQLcmd.controller.command;
 
 import ua.com.vadim.SQLcmd.controller.RunParameters;
+import ua.com.vadim.SQLcmd.exception.BreakException;
 import ua.com.vadim.SQLcmd.model.DatabaseManager;
 import ua.com.vadim.SQLcmd.view.View;
 
 import java.sql.SQLException;
+import java.util.ResourceBundle;
 
 public class DBConnect implements Command {
+    private final ResourceBundle res;
     private DatabaseManager manager;
     private View view;
     private RunParameters runParameters;
@@ -15,46 +18,44 @@ public class DBConnect implements Command {
         this.runParameters = runParameters;
         this.manager = manager;
         this.view = view;
+        res = ResourceBundle.getBundle(runParameters.getLanguageResourcePath() + "dbconnect");
     }
 
     @Override
-    public void execute() {
+    public void execute() throws BreakException {
         try {
-            if (!manager.isConnected()) {
-                manager.connect(
-                        runParameters.getDatabaseName(),
-                        runParameters.getUserName(),
-                        runParameters.getPassword());
-                view.writeMessage("Connection successful!\n");
+            if (manager.isConnected()) {
+                connectWithNewParameters();
             } else {
-                connectToAnotherDatabase();
+                connectDefaultParameters();
             }
         } catch (SQLException e) {
-            view.writeMessage("Connection failed: " + e.getMessage());
-            view.writeMessage("Try again or type <exit>.");
-            connectToAnotherDatabase();
+            view.writeMessage(res.getString("dbconnect.failed") + " " + e.getMessage());
+            connectWithNewParameters();
         }
     }
 
-    private void connectToAnotherDatabase() {
-        view.writeMessage("Enter database name, login and password.\n" +
-                "Type 'exit' for exit program.\n");
+    private void connectDefaultParameters() throws SQLException {
+        manager.connect(
+                runParameters.getDatabaseName(),
+                runParameters.getUserName(),
+                runParameters.getPassword());
+    }
 
-        do {
-            String databaseName = getInputString("Enter database name:");
-            String login = getInputString("Enter you login:");
-            String password = getInputString("Enter you password:");
-            try {
-                manager.disconnect();
+    private void connectWithNewParameters() {
+        view.writeMessage(res.getString("dbconnect.enter.connection.parameters"));
+        try {
+            manager.disconnect();
+            do {
+                String databaseName = getInputString(res.getString("dbconnect.enter.database.name"));
+                String login = getInputString(res.getString("dbconnect.enter.login"));
+                String password = getInputString(res.getString("dbconnect.enter.password"));
                 manager.connect(databaseName, login, password);
                 runParameters.setDatabaseName(databaseName);
-                view.writeMessage("Connection successful!\n");
-                break;
-            } catch (SQLException e) {
-                view.writeMessage("Connection failed: " + e.getMessage());
-                view.writeMessage("Try again or type <break> for return to previous menu.");
-            }
-        } while (!manager.isConnected());
+            } while (!manager.isConnected());
+        } catch (SQLException e) {
+            view.writeMessage(res.getString("dbconnect.failed") + " " + e.getMessage());
+        }
     }
 
     private String getInputString(String message) {
