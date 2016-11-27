@@ -4,6 +4,7 @@ import ua.com.vadim.SQLcmd.exception.ExitException;
 import ua.com.vadim.SQLcmd.model.DatabaseManager;
 import ua.com.vadim.SQLcmd.model.PostgresDBManager;
 import ua.com.vadim.SQLcmd.view.Console;
+import ua.com.vadim.SQLcmd.view.UTF8Control;
 import ua.com.vadim.SQLcmd.view.View;
 
 import java.util.Locale;
@@ -67,7 +68,7 @@ public class Controller {
         runParameters = new PropertiesLoader().getParameters();
         setLocale();
         view = new Console();
-        res = ResourceBundle.getBundle(runParameters.getLanguageResourcePath() + "common");
+        res = ResourceBundle.getBundle(runParameters.getLanguageResourcePath() + "common", new UTF8Control());
         DatabaseManager manager = new PostgresDBManager(runParameters.getDriver(),
                 runParameters.getServerIP(),
                 runParameters.getServerPort());

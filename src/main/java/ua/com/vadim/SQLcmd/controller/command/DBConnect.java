@@ -4,6 +4,7 @@ import ua.com.vadim.SQLcmd.controller.RunParameters;
 import ua.com.vadim.SQLcmd.exception.BreakException;
 import ua.com.vadim.SQLcmd.exception.ExitException;
 import ua.com.vadim.SQLcmd.model.DatabaseManager;
+import ua.com.vadim.SQLcmd.view.UTF8Control;
 import ua.com.vadim.SQLcmd.view.View;
 
 import java.sql.SQLException;
@@ -19,7 +20,7 @@ public class DBConnect implements Command {
         this.runParameters = runParameters;
         this.manager = manager;
         this.view = view;
-        res = ResourceBundle.getBundle(runParameters.getLanguageResourcePath() + "dbconnect");
+        res = ResourceBundle.getBundle(runParameters.getLanguageResourcePath() + "dbconnect", new UTF8Control());
     }
 
     @Override

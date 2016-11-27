@@ -13,9 +13,8 @@ public class Console implements View {
 
     @Override
     public void writeMessage(String message) {
-        System.out.println(convertEncoding(message));
+        System.out.println(message);
     }
-
 
     @Override
     public String readLine() throws ExitException {
@@ -26,29 +25,8 @@ public class Console implements View {
                 throw new ExitException();
             }
         } catch (IOException e) {
-            e.printStackTrace(); //TODO причесать обработку исключения
-        }
-        return result;
-    }
-
-    @Override
-    public void writeData(String message) {
-        System.out.println(message);
-    }
-
-    /**
-     * Этот метод-костыль используется для перекодировки символов сообщений прочитанных из файлов .properties
-     * классом ResourceBundle.getBundle() Читать напрямую русские символы мне не удалось.
-     * @param message
-     * @return конвертированная строка из ISO-8859-1 в UTF-8
-     */
-
-    private String convertEncoding(String message) {
-        try {
-            return new String(message.getBytes("ISO-8859-1"), "UTF-8");
-        } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
-        return "";
+        return result;
     }
 }
