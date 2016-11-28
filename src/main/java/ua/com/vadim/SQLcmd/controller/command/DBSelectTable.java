@@ -2,12 +2,14 @@ package ua.com.vadim.SQLcmd.controller.command;
 
 import ua.com.vadim.SQLcmd.controller.RunParameters;
 import ua.com.vadim.SQLcmd.model.DatabaseManager;
+import ua.com.vadim.SQLcmd.view.UTF8Control;
 import ua.com.vadim.SQLcmd.view.View;
 
 import java.sql.SQLException;
 import java.util.*;
 
 public class DBSelectTable implements Command {
+    private ResourceBundle res;
     private RunParameters runParameters;
     private DatabaseManager manager;
     private View view;
@@ -16,27 +18,30 @@ public class DBSelectTable implements Command {
         this.runParameters = runParameters;
         this.manager = manager;
         this.view = view;
+        res = ResourceBundle.getBundle(runParameters.getLanguageResourcePath() + "DBSelectTable", new UTF8Control());
     }
 
     @Override
     public void execute() {
-        if (!manager.isConnected()) {
-            view.writeMessage("No one connection to database. Select \"DBConnect to database\" first.\n");
-            return;
+        if (manager.isConnected()) {
+            selectTable();
+        } else {
+            view.writeMessage(res.getString("dbselect.no.connection"));
         }
+    }
 
+    private void selectTable() {
         Set<String> tableNames = getAvailableTableNames();
-
         if (tableNames.isEmpty()) {
-            view.writeMessage(String.format("There are no tables in the database <%s>\n",
-                    runParameters.getDatabaseName()));
-            return;
+            view.writeMessage(res.getString("dbselect.no.tables"));
+        } else {
+            setTable(tableNames);
         }
+    }
 
-        view.writeMessage("Enter table name. Available tables:");
-
+    private void setTable(Set<String> tableNames) {
+        view.writeMessage(res.getString("dbselect.enter.name.tables"));
         printAvailableTables(tableNames);
-
         do {
             String tableName = view.readLine();
             if (tableNames.contains(tableName)) {
@@ -44,10 +49,10 @@ public class DBSelectTable implements Command {
                 runParameters.setTableLevel(true);
                 break;
             } else {
-                view.writeMessage("Enter correct table name. Available tables:");
+                view.writeMessage(res.getString("dbselect.enter.correct.name.tables"));
                 printAvailableTables(tableNames);
             }
-        }  while (true);
+        } while (true);
     }
 
     private Set<String> getAvailableTableNames() {
@@ -55,14 +60,12 @@ public class DBSelectTable implements Command {
         try {
             result = manager.getAllTableNames();
         } catch (SQLException e) {
-            view.writeMessage("Failure, because " + e.getMessage());
+            view.writeMessage(res.getString("dbselect.failure") + e.getMessage());
         }
         return result;
     }
 
     private void printAvailableTables(Set<String> tableNames) {
-
-        view.writeMessage(tableNames.toString() + "\n");
+        view.writeMessage(tableNames.toString());
     }
-
 }
