@@ -2,12 +2,14 @@ package ua.com.vadim.SQLcmd.controller.command;
 
 import ua.com.vadim.SQLcmd.controller.RunParameters;
 import ua.com.vadim.SQLcmd.model.DatabaseManager;
+import ua.com.vadim.SQLcmd.view.UTF8Control;
 import ua.com.vadim.SQLcmd.view.View;
 
 import java.sql.SQLException;
 import java.util.*;
 
 public class DBListTableNames implements Command {
+    private ResourceBundle res;
     private DatabaseManager manager;
     private View view;
     private RunParameters runParameters;
@@ -16,12 +18,13 @@ public class DBListTableNames implements Command {
         this.runParameters = runParameters;
         this.manager = manager;
         this.view = view;
+        res = ResourceBundle.getBundle(runParameters.getLanguageResourcePath() + "DBListTableNames", new UTF8Control());
     }
 
     @Override
     public void execute() {
         if (!manager.isConnected()) {
-            view.writeMessage("No one connection to database. Select \"DBConnect to database\" first.\n");
+            view.writeMessage(res.getString("dblist.no.connection"));
             return;
         }
 
@@ -29,19 +32,18 @@ public class DBListTableNames implements Command {
         try {
             tableNames = manager.getAllTableNames();
         } catch (SQLException e) {
-            view.writeMessage("Failure, because " + e.getMessage());
+            view.writeMessage(res.getString("dblist.failure") + e.getMessage());
         }
 
         if (tableNames.isEmpty()) {
-            view.writeMessage(String.format("There are no tables in the database <%s>\n", runParameters.getDatabaseName()));
+            view.writeMessage(res.getString("dblist.no.tables"));
             return;
         }
-
         printResult(tableNames);
     }
 
     private void printResult(Set<String> tableNames) {
-        view.writeMessage("Available tables:");
-        view.writeMessage(tableNames.toString());
+        view.writeMessage(res.getString("dblist.available.tables"));
+        view.writeMessage(tableNames.toString() + "\n");
     }
 }

@@ -25,6 +25,7 @@ public class PostgresDBManager implements DatabaseManager {
     public void disconnect() throws SQLException {
         if (connection != null) {
             connection.close();
+            connection = null;
         }
     }
 
@@ -143,7 +144,7 @@ public class PostgresDBManager implements DatabaseManager {
 
     @Override
     public boolean isConnected() {
-        return connection != null;
+        return (connection != null);
     }
 
     private String getNameFormatted(DataSet newValue, String format) {

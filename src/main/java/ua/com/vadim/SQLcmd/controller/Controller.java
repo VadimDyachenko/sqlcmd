@@ -1,7 +1,6 @@
 package ua.com.vadim.SQLcmd.controller;
 
 import ua.com.vadim.SQLcmd.exception.ExitException;
-import ua.com.vadim.SQLcmd.exception.UnsupportedLanguageException;
 import ua.com.vadim.SQLcmd.model.DatabaseManager;
 import ua.com.vadim.SQLcmd.model.PostgresDBManager;
 import ua.com.vadim.SQLcmd.view.UTF8Control;
@@ -74,7 +73,6 @@ public class Controller {
         localeSelector = new LocaleSelector(runParameters, view);
         localeSelector.setDefaultLocale();
         res = ResourceBundle.getBundle(runParameters.getLanguageResourcePath() + "common", new UTF8Control());
-
         DatabaseManager manager = new PostgresDBManager(runParameters.getDriver(),
                 runParameters.getServerIP(),
                 runParameters.getServerPort());

@@ -9,7 +9,7 @@ import java.util.ResourceBundle;
 
 public class ConnectionStatus implements Command {
 
-    private final ResourceBundle res;
+    private ResourceBundle res;
     private DatabaseManager manager;
     private View view;
     private RunParameters runParameters;
@@ -27,9 +27,10 @@ public class ConnectionStatus implements Command {
             view.writeMessage(res.getString("connection.status.without.connection"));
             return;
         }
-
+        //TODO причесать вывод подключения к базе и таблице
         String message = String.format(res.getString("connection.status.database"), runParameters.getDatabaseName());
         message += " ";
+
         if (runParameters.isTableLevel()) {
             message += String.format(res.getString("connection.status.table"), runParameters.getTableName());
         }

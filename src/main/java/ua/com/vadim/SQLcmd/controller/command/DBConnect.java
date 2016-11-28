@@ -1,7 +1,6 @@
 package ua.com.vadim.SQLcmd.controller.command;
 
 import ua.com.vadim.SQLcmd.controller.RunParameters;
-import ua.com.vadim.SQLcmd.exception.BreakException;
 import ua.com.vadim.SQLcmd.exception.ExitException;
 import ua.com.vadim.SQLcmd.model.DatabaseManager;
 import ua.com.vadim.SQLcmd.view.UTF8Control;
@@ -11,7 +10,7 @@ import java.sql.SQLException;
 import java.util.ResourceBundle;
 
 public class DBConnect implements Command {
-    private final ResourceBundle res;
+    private ResourceBundle res;
     private DatabaseManager manager;
     private View view;
     private RunParameters runParameters;
@@ -24,7 +23,7 @@ public class DBConnect implements Command {
     }
 
     @Override
-    public void execute() throws BreakException {
+    public void execute() {
         try {
             if (manager.isConnected()) {
                 connectWithNewParameters();
@@ -44,21 +43,21 @@ public class DBConnect implements Command {
                 runParameters.getPassword());
     }
 
-    private void connectWithNewParameters() throws ExitException{
+    private void connectWithNewParameters() throws ExitException {
         view.writeMessage(res.getString("dbconnect.enter.connection.parameters"));
-        try {
-            manager.disconnect();
-            do {
+        do {
+            try {
+                manager.disconnect();
                 String databaseName = getInputString(res.getString("dbconnect.enter.database.name"));
                 String login = getInputString(res.getString("dbconnect.enter.login"));
                 String password = getInputString(res.getString("dbconnect.enter.password"));
                 manager.connect(databaseName, login, password);
                 runParameters.setDatabaseName(databaseName);
-
-            } while (!manager.isConnected());
-        } catch (SQLException e) {
-            view.writeMessage(res.getString("dbconnect.failed") + " " + e.getMessage());
-        }
+            } catch (SQLException e) {
+                view.writeMessage(res.getString("dbconnect.failed") + " " + e.getMessage());
+                view.writeMessage(res.getString("dbconnect.try.again"));
+            }
+        } while (!manager.isConnected());
     }
 
     private String getInputString(String message) throws ExitException {
