@@ -12,10 +12,8 @@ public class DBListTableNames implements Command {
     private ResourceBundle res;
     private DatabaseManager manager;
     private View view;
-    private RunParameters runParameters;
 
     public DBListTableNames(RunParameters runParameters, DatabaseManager manager, View view) {
-        this.runParameters = runParameters;
         this.manager = manager;
         this.view = view;
         res = ResourceBundle.getBundle(runParameters.getLanguageResourcePath() + "DBListTableNames", new UTF8Control());
@@ -23,27 +21,34 @@ public class DBListTableNames implements Command {
 
     @Override
     public void execute() {
-        if (!manager.isConnected()) {
+        if (manager.isConnected()) {
+            listTableNames();
+        } else {
             view.writeMessage(res.getString("dblist.no.connection"));
-            return;
         }
+    }
 
+    private void listTableNames() {
+        Set<String> tableNames = getTableNames();
+        if (tableNames.isEmpty()) {
+            view.writeMessage(res.getString("dblist.no.tables"));
+        } else {
+            printResult(tableNames);
+        }
+    }
+
+    private Set<String> getTableNames() {
         Set<String> tableNames = new LinkedHashSet<>();
         try {
             tableNames = manager.getAllTableNames();
         } catch (SQLException e) {
             view.writeMessage(res.getString("dblist.failure") + e.getMessage());
         }
-
-        if (tableNames.isEmpty()) {
-            view.writeMessage(res.getString("dblist.no.tables"));
-            return;
-        }
-        printResult(tableNames);
+        return tableNames;
     }
 
     private void printResult(Set<String> tableNames) {
         view.writeMessage(res.getString("dblist.available.tables"));
-        view.writeMessage(tableNames.toString() + "\n");
+        view.writeMessage(tableNames.toString());
     }
 }
