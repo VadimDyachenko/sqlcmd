@@ -5,9 +5,7 @@ import ua.com.vadim.SQLcmd.exception.ExitException;
 import ua.com.vadim.SQLcmd.model.DatabaseManager;
 import ua.com.vadim.SQLcmd.view.View;
 
-import java.io.UnsupportedEncodingException;
 import java.sql.SQLException;
-import java.util.Locale;
 import java.util.ResourceBundle;
 
 public class Exit implements Command {
@@ -29,11 +27,11 @@ public class Exit implements Command {
             try {
                 manager.disconnect();
             } catch (SQLException e) {
-                view.writeMessage(e.getMessage());          //TODO причесать этот блок
+               //NOP
             }
             view.writeMessage(res.getString("exit.end"));
             throw new ExitException();
-        } else {/*NOP*/}
+        }
     }
 
 }
