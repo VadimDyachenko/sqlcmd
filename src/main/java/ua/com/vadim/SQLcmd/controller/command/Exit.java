@@ -16,7 +16,7 @@ public class Exit implements Command {
     public Exit(RunParameters runParameters, DatabaseManager manager, View view) {
         this.manager = manager;
         this.view = view;
-        res = ResourceBundle.getBundle(runParameters.getLanguageResourcePath() + "exit");
+        res = ResourceBundle.getBundle(runParameters.getLanguageResourcePath() + "Exit");
     }
 
     @Override
@@ -33,5 +33,4 @@ public class Exit implements Command {
             throw new ExitException();
         }
     }
-
 }
