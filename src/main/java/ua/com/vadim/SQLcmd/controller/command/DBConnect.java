@@ -19,7 +19,7 @@ public class DBConnect implements Command {
         this.runParameters = runParameters;
         this.manager = manager;
         this.view = view;
-        res = ResourceBundle.getBundle(runParameters.getLanguageResourcePath() + "dbconnect", new UTF8Control());
+        res = ResourceBundle.getBundle(runParameters.getLanguageResourcePath() + "DBConnect", new UTF8Control());
     }
 
     @Override
