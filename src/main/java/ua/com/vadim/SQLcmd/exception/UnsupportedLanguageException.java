@@ -1,6 +1,6 @@
 package ua.com.vadim.SQLcmd.exception;
 
-public class UnsupportedLanguageException extends RuntimeException {
+public class UnsupportedLanguageException extends Exception {
     public UnsupportedLanguageException() {
     }
 

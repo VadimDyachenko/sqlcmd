@@ -54,6 +54,7 @@ public class DBConnect implements Command {
                 String password = getInputString(res.getString("dbconnect.enter.password"));
                 manager.connect(databaseName, login, password);
                 runParameters.setDatabaseName(databaseName);
+
             } while (!manager.isConnected());
         } catch (SQLException e) {
             view.writeMessage(res.getString("dbconnect.failed") + " " + e.getMessage());

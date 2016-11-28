@@ -1,13 +1,12 @@
 package ua.com.vadim.SQLcmd.controller;
 
 import ua.com.vadim.SQLcmd.exception.ExitException;
+import ua.com.vadim.SQLcmd.exception.UnsupportedLanguageException;
 import ua.com.vadim.SQLcmd.model.DatabaseManager;
 import ua.com.vadim.SQLcmd.model.PostgresDBManager;
-import ua.com.vadim.SQLcmd.view.Console;
 import ua.com.vadim.SQLcmd.view.UTF8Control;
 import ua.com.vadim.SQLcmd.view.View;
 
-import java.util.Locale;
 import java.util.ResourceBundle;
 
 public class Controller {
@@ -16,6 +15,11 @@ public class Controller {
     private CommandExecutor commandExecutor;
     private RunParameters runParameters;
     private ResourceBundle res;
+    private LocaleSelector localeSelector;
+
+    public Controller(View view) {
+        this.view = view;
+    }
 
     public void run() {
         try {
@@ -32,6 +36,7 @@ public class Controller {
             view.writeMessage(res.getString("common.the.end"));
         }
     }
+
 
     private AvailableCommand askCommand() {
         view.writeMessage(res.getString("common.choice.operation"));
@@ -64,11 +69,12 @@ public class Controller {
         view.writeMessage(res.getString("common.table.menu"));
     }
 
-    private void setUp() {
+    private void setUp() throws ExitException {
         runParameters = new PropertiesLoader().getParameters();
-        setLocale();
-        view = new Console();
+        localeSelector = new LocaleSelector(runParameters, view);
+        localeSelector.setDefaultLocale();
         res = ResourceBundle.getBundle(runParameters.getLanguageResourcePath() + "common", new UTF8Control());
+
         DatabaseManager manager = new PostgresDBManager(runParameters.getDriver(),
                 runParameters.getServerIP(),
                 runParameters.getServerPort());
@@ -78,14 +84,5 @@ public class Controller {
     private void tryDBconnectWhithDefaultParameters() {
         view.writeMessage(res.getString("common.try.connect.default.parameters"));
         commandExecutor.execute(AvailableCommand.DB_CONNECT);
-    }
-
-    private void setLocale() {
-        if (runParameters.getInterfaceLanguage().equals("ru")) { //TODO вынести поддерживаемые локали в контейнер и делать проверки по содержанию ключа в контейнере
-            Locale ruLocale = new Locale("ru", "RU");
-            Locale.setDefault(ruLocale);
-        } else {
-            Locale.setDefault(Locale.ENGLISH);
-        }
     }
 }

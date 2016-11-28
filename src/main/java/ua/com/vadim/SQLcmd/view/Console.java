@@ -5,7 +5,6 @@ import ua.com.vadim.SQLcmd.exception.ExitException;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
 
 public class Console implements View {
 

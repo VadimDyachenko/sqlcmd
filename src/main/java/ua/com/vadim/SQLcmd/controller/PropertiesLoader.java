@@ -1,7 +1,7 @@
 package ua.com.vadim.SQLcmd.controller;
 
 import ua.com.vadim.SQLcmd.exception.ExitException;
-import ua.com.vadim.SQLcmd.exception.UnsupportedLanguageException;
+
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -58,16 +58,7 @@ public class PropertiesLoader {
         return properties.getProperty("database.user.password");
     }
 
-    private String getInterfaceLanguage() throws ExitException{
-        String interfaceLanguage = properties.getProperty("sqlcmd.language");
-        try {
-            //TODO вынести поддерживаемые языки в отдельный контейнер, исправить проверку поддерживаемых языков
-            if (interfaceLanguage.equalsIgnoreCase("en") || interfaceLanguage.equalsIgnoreCase("ru")) {
-                return interfaceLanguage.toLowerCase();
-            } else throw new UnsupportedLanguageException();
-        } catch (UnsupportedLanguageException e) {
-            System.out.println(e.getMessage()); //TODO выбросить обработку сообщений выше
-            throw new ExitException();
-        }
+    private String getInterfaceLanguage() {
+        return properties.getProperty("sqlcmd.language").toLowerCase();
     }
 }
