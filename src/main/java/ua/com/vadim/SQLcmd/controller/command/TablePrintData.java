@@ -29,24 +29,30 @@ public class TablePrintData implements Command {
     @Override
     public void execute() {
         String tableName = runParameters.getTableName();
+        DataSet[] tableData = getTableData(tableName);
+        if (tableData.length == 0) {
+            view.writeMessage(String.format(res.getString("table.print.data.empty"), tableName));
+        } else {
+            printData(tableData);
+        }
+    }
+
+    private void printData(DataSet[] tableData) {
+        Map<String, Integer> tableRowLength = getTableRowMaxLength(tableData);
+        printHeader(tableRowLength);
+        for (DataSet aTableData : tableData) {
+            printRow(aTableData, tableRowLength);
+        }
+    }
+
+    private DataSet[] getTableData(String tableName) {
         DataSet[] tableData = new DataSetImpl[0];
         try {
             tableData = manager.getTableData(tableName);
         } catch (SQLException e) {
             view.writeMessage(res.getString("table.print.data.failed") + e.getMessage());
         }
-
-        if (tableData.length == 0) {
-            view.writeMessage(String.format(res.getString("table.print.data.empty"), tableName));
-            return;
-        }
-
-        Map<String, Integer> tableRowLength = getTableRowMaxLength(tableData);
-        printHeader(tableRowLength);
-        for (DataSet aTableData : tableData) {
-            printRow(aTableData, tableRowLength);
-        }
-        view.writeMessage("\n");
+        return tableData;
     }
 
     private Map<String, Integer> getTableRowMaxLength(DataSet[] tableData) {
@@ -64,6 +70,11 @@ public class TablePrintData implements Command {
         return result;
     }
 
+    /**
+     * Method output column names in the format: |xxxx |yyy    |zz|
+     * the width of the recording between "|" equal to the length of the longest entry in this column
+     * @param rowLength
+     */
     private void printHeader(Map<String, Integer> rowLength) {
         StringBuilder sb = new StringBuilder();
         sb.append('|');
@@ -78,9 +89,13 @@ public class TablePrintData implements Command {
         printTableLine(rowLength);
     }
 
-
+    /**
+     * Method output entry in the format: |xxxx |yyy    |zz|
+     * the width of the recording between "|" equal to the length of the longest entry in this column
+     * @param dataSet
+     * @param rowLength
+     */
     private void printRow(DataSet dataSet, Map<String, Integer> rowLength) {
-
         StringBuilder sb = new StringBuilder();
         sb.append('|');
         for (String key : rowLength.keySet()) {
@@ -93,6 +108,12 @@ public class TablePrintData implements Command {
         view.writeMessage(sb.toString());
     }
 
+    /**
+     * Method output line: +-----+----+---+------+
+     * The number of "+" depends on the number of columns in the table
+     * the width of the line between "+" is the length of the longest entry in the column
+     * @param rowLength
+     */
     private void printTableLine(Map<String, Integer> rowLength) {
         StringBuilder sb = new StringBuilder();
         sb.append("+");
