@@ -4,13 +4,16 @@ import ua.com.vadim.SQLcmd.controller.RunParameters;
 import ua.com.vadim.SQLcmd.model.DataSet;
 import ua.com.vadim.SQLcmd.model.DataSetImpl;
 import ua.com.vadim.SQLcmd.model.DatabaseManager;
+import ua.com.vadim.SQLcmd.view.UTF8Control;
 import ua.com.vadim.SQLcmd.view.View;
 
 import java.sql.SQLException;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.ResourceBundle;
 
 public class TablePrintData implements Command {
+    private ResourceBundle res;
     private DatabaseManager manager;
     private View view;
     private RunParameters runParameters;
@@ -20,6 +23,7 @@ public class TablePrintData implements Command {
         this.runParameters = runParameters;
         this.manager = manager;
         this.view = view;
+        res = ResourceBundle.getBundle(runParameters.getLanguageResourcePath() + "TablePrintData", new UTF8Control());
     }
 
     @Override
@@ -29,11 +33,11 @@ public class TablePrintData implements Command {
         try {
             tableData = manager.getTableData(tableName);
         } catch (SQLException e) {
-            view.writeMessage("Failure, because " + e.getMessage());
+            view.writeMessage(res.getString("table.print.data.failed") + e.getMessage());
         }
 
         if (tableData.length == 0) {
-            view.writeMessage(String.format("Table <%s> is empty.\n", tableName));
+            view.writeMessage(String.format(res.getString("table.print.data.empty"), tableName));
             return;
         }
 
