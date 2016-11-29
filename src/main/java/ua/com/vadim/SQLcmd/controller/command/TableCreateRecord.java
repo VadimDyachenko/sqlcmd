@@ -4,14 +4,16 @@ import ua.com.vadim.SQLcmd.controller.RunParameters;
 import ua.com.vadim.SQLcmd.model.DataSetImpl;
 import ua.com.vadim.SQLcmd.model.DatabaseManager;
 import ua.com.vadim.SQLcmd.model.DataSet;
+import ua.com.vadim.SQLcmd.view.UTF8Control;
 import ua.com.vadim.SQLcmd.view.View;
 
 import java.sql.SQLException;
 import java.util.LinkedHashSet;
+import java.util.ResourceBundle;
 import java.util.Set;
 
-
 public class TableCreateRecord implements Command {
+    private ResourceBundle res;
     private DatabaseManager manager;
     private View view;
     private RunParameters runParameters;
@@ -20,29 +22,35 @@ public class TableCreateRecord implements Command {
         this.runParameters = runParameters;
         this.manager = manager;
         this.view = view;
+        res = ResourceBundle.getBundle(runParameters.getLanguageResourcePath() + "TableCreateRecord", new UTF8Control());
     }
 
     @Override
     public void execute() {
         String tableName = runParameters.getTableName();
-        printHelpInfo(tableName);
-
         Set<String> columnNames = getAvailableColumnNames(tableName);
         if (columnNames.isEmpty()) {
-            return;
+            view.writeMessage(String.format(res.getString("table.create.empty.table"), tableName));
+        } else {
+            printHelpInfo();
+            printAvailableColumnNames(columnNames);
+            createRecord(tableName, inputRecordData(columnNames));
         }
-        printAvailableColumnNames(tableName, columnNames);
+    }
 
-        String[] inputUserData;
-        while (true) {
+    private String[] inputRecordData(Set<String> columnNames) {
+        do {
             try {
-                inputUserData = view.readLine().split("\\|");
+                String[] inputUserData = view.readLine().split("\\|");
                 validateInputData(inputUserData, columnNames);
-                break;
+                return inputUserData;
             } catch (IllegalArgumentException e) {
-                view.writeMessage("Incorrect data. " + e.getMessage());
+                view.writeMessage(res.getString("table.create.incorrect.data") + e.getMessage());
             }
-        }
+        } while (true);
+    }
+
+    private void createRecord(String tableName, String[] inputUserData) {
         DataSet dataSet = new DataSetImpl();
         for (int index = 0; index < inputUserData.length; index += 2) {
             String columnName = inputUserData[index];
@@ -51,12 +59,10 @@ public class TableCreateRecord implements Command {
         }
         try {
             manager.createTableRecord(tableName, dataSet);
-            view.writeMessage(String.format(
-                    "Record %s was create successful in table <%s>\n", dataSet, tableName));
+            view.writeMessage(String.format(res.getString("table.create.successful"), dataSet));
         } catch (SQLException e) {
-            view.writeMessage("Failure, because " + e.getMessage());
+            view.writeMessage(res.getString("table.create.record.failed") + e.getMessage());
         }
-
     }
 
     private Set<String> getAvailableColumnNames(String tableName) {
@@ -64,24 +70,22 @@ public class TableCreateRecord implements Command {
         try {
             columnNames = manager.getTableColumnNames(tableName);
         } catch (SQLException e) {
-            view.writeMessage("Failure, because " + e.getMessage());
+            view.writeMessage(res.getString("table.create.record.failed") + e.getMessage());
         }
         return columnNames;
     }
 
     private void validateInputData(String[] data, Set<String> columnNames) {
         if (data.length % 2 != 0 || data.length / 2 != columnNames.size()) {
-            throw new IllegalArgumentException("Invalid number of parameters");
+            throw new IllegalArgumentException(res.getString("table.create.record.invalid.number"));
         }
     }
 
-    private void printHelpInfo(String tableName) {
-        view.writeMessage("Enter data to create table record.\n" +
-                "Input format: ColumnName1|Value1|ColumnName2|Value2| ... |ColumnNameN|ValueN\n");
+    private void printHelpInfo() {
+        view.writeMessage(res.getString("table.create.record.help"));
     }
 
-    private void printAvailableColumnNames(String tableName, Set<String> columnNames) {
-        view.writeMessage(String.format("Available column name for table <%s> :", tableName));
-        view.writeMessage(columnNames.toString());
+    private void printAvailableColumnNames(Set<String> columnNames) {
+        view.writeMessage(String.format(res.getString("table.create.available.column"), columnNames.toString()));
     }
 }
