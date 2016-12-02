@@ -44,10 +44,6 @@ public class PostgresDBManagerTest {
 
     @AfterClass
     public static void afterAllTestsClear() {
-
-//        manager = new PostgresDBManager(runParameters.getDriver(),
-//                runParameters.getServerIP(),
-//                runParameters.getServerPort());
         try {
             manager.connect(runParameters.getDatabaseName(), runParameters.getUserName(), runParameters.getPassword());
             manager.dropDatabase(TEST_DATABASE);

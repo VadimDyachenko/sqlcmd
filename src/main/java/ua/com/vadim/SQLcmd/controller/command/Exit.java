@@ -3,6 +3,7 @@ package ua.com.vadim.SQLcmd.controller.command;
 import ua.com.vadim.SQLcmd.controller.RunParameters;
 import ua.com.vadim.SQLcmd.exception.ExitException;
 import ua.com.vadim.SQLcmd.model.DatabaseManager;
+import ua.com.vadim.SQLcmd.view.UTF8Control;
 import ua.com.vadim.SQLcmd.view.View;
 
 import java.sql.SQLException;
@@ -16,7 +17,7 @@ public class Exit implements Command {
     public Exit(RunParameters runParameters, DatabaseManager manager, View view) {
         this.manager = manager;
         this.view = view;
-        res = ResourceBundle.getBundle(runParameters.getLanguageResourcePath() + "Exit");
+        res = ResourceBundle.getBundle(runParameters.getLanguageResourcePath() + "Exit", new UTF8Control());
     }
 
     @Override
@@ -29,8 +30,7 @@ public class Exit implements Command {
             } catch (SQLException e) {
                //NOP
             }
-            view.writeMessage(res.getString("exit.end"));
             throw new ExitException();
-        }
+        } else return;
     }
 }

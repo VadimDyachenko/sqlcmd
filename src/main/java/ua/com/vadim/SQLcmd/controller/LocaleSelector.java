@@ -30,7 +30,7 @@ class LocaleSelector {
             setLocale(locale);
         } catch (UnsupportedLanguageException e) {
             view.writeMessage("Unsupported language parameter in sqlcmd.properties file.");
-            view.writeMessage("Exit the program and change it to one of available variant: " +
+            view.writeMessage("Exit the program and change it to available variant: " +
                     supportedLocale.keySet().toString());
             view.writeMessage("Current interface language setting to [en]\n");
         }
