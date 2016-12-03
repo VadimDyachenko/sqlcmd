@@ -45,18 +45,16 @@ public class DBConnect implements Command {
 
     private void connectWithNewParameters() throws ExitException {
         view.writeMessage(res.getString("dbconnect.enter.connection.parameters"));
-        do {
-            try {
-                manager.disconnect();
-                String databaseName = getInputString(res.getString("dbconnect.enter.database.name"));
-                String login = getInputString(res.getString("dbconnect.enter.login"));
-                String password = getInputString(res.getString("dbconnect.enter.password"));
-                manager.connect(databaseName, login, password);
-                runParameters.setDatabaseName(databaseName);
-            } catch (SQLException e) {
-                view.writeMessage(res.getString("dbconnect.failed") + " " + e.getMessage());
-                view.writeMessage(res.getString("dbconnect.try.again"));
-            }
+        do try {
+            manager.disconnect();
+            String databaseName = getInputString(res.getString("dbconnect.enter.database.name"));
+            String login = getInputString(res.getString("dbconnect.enter.login"));
+            String password = getInputString(res.getString("dbconnect.enter.password"));
+            manager.connect(databaseName, login, password);
+            runParameters.setDatabaseName(databaseName);
+        } catch (SQLException e) {
+            view.writeMessage(res.getString("dbconnect.failed") + " " + e.getMessage());
+            view.writeMessage(res.getString("dbconnect.try.again"));
         } while (!manager.isConnected());
     }
 

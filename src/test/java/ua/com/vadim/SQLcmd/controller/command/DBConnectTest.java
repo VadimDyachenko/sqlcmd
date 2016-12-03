@@ -1,16 +1,21 @@
 package ua.com.vadim.SQLcmd.controller.command;
 
 
+import org.junit.BeforeClass;
+import ua.com.vadim.SQLcmd.controller.PropertiesLoader;
 import ua.com.vadim.SQLcmd.controller.RunParameters;
+import ua.com.vadim.SQLcmd.exception.ExitException;
 import ua.com.vadim.SQLcmd.model.DatabaseManager;
 import ua.com.vadim.SQLcmd.model.PostgresDBManager;
 import ua.com.vadim.SQLcmd.view.Console;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
+import ua.com.vadim.SQLcmd.view.UTF8Control;
 import ua.com.vadim.SQLcmd.view.View;
 
 import java.sql.SQLException;
+import java.util.ResourceBundle;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
@@ -19,40 +24,71 @@ public class DBConnectTest {
     private DatabaseManager manager;
     private View view;
     private Command command;
+    private static RunParameters runParameters;
+    private static ResourceBundle res;
+    private String normalRunMessages;
+
+    @BeforeClass
+    public static void beforeAllTestSetUp() throws ExitException {
+        runParameters = new PropertiesLoader().getParameters();
+        res = ResourceBundle.getBundle(runParameters.getLanguageResourcePath() + "DBConnect", new UTF8Control());
+    }
 
     @Before
     public void setup() {
         manager = mock(PostgresDBManager.class);
         view = mock(Console.class);
-        RunParameters runParameters = mock(RunParameters.class);
         command = new DBConnect(runParameters, manager, view);
+        String m1 = res.getString("dbconnect.enter.connection.parameters");
+        String m2 = res.getString("dbconnect.enter.database.name");
+        String m3 = res.getString("dbconnect.enter.login");
+        String m4 = res.getString("dbconnect.enter.password");
+        normalRunMessages = String.format("%s, %s, %s, %s", m1, m2, m3, m4);
     }
 
     @Test
-    public void testConnect() throws Exception {
+    public void testConnectManagerNotConnected() /*throws Exception*/ {
         //given
+        String expectedMessage = String.format("[%s]", normalRunMessages);
         //when
-        command.execute();
-        //then
-        shouldPrint("[Enter database name, login and password.\n" +
-                "Type 'exit' for exit program.\n" +
-                ", Please, enter database name:, Enter you login:, Enter you password:, " +
-                "Connection successful!\n]");
-    }
-
-    @Test
-    public void testConnectWithSQLException() throws Exception {
-        //given
-        //when
-        doThrow(new SQLException()).when(manager).connect(anyString(), anyString(), anyString());
         when(manager.isConnected()).thenReturn(true);
         command.execute();
         //then
-        shouldPrint("[Enter database name, login and password.\n" +
-                "Type 'exit' for exit program.\n" +
-                ", Please, enter database name:, " +
-                "Enter you login:, Enter you password:, " +
-                "Connection failed: null, Try again or type <exit>.]");
+        shouldPrint(expectedMessage);
+    }
+
+    @Test
+    public void testConnectManagerIsConnectedWithSQLException() throws SQLException {
+        //given
+        String exceptionMessage = "Some SQLException";
+        String failedMessage = res.getString("dbconnect.failed");
+        String tryAgainMessage = res.getString("dbconnect.try.again");
+        String expectedMessage = String.format("[%s %s, %s, %s %s, %s]",failedMessage, exceptionMessage,
+                normalRunMessages, failedMessage, exceptionMessage, tryAgainMessage);
+        //when
+        when(manager.isConnected()).thenReturn(false).thenReturn(true);
+        doThrow(new SQLException(exceptionMessage)).when(manager).connect(anyString(), anyString(), anyString());
+        command.execute();
+        //then
+        shouldPrint(expectedMessage);
+    }
+
+
+
+    @Test
+    public void testConnectWithSQLException() throws SQLException {
+        //given
+        String exceptionMessage = "Some SQLException";
+        String failedMessage = res.getString("dbconnect.failed");
+        String tryAgainMessage = res.getString("dbconnect.try.again");
+        String expectedMessage = String.format("[%s, %s %s, %s]", normalRunMessages, failedMessage,
+                exceptionMessage, tryAgainMessage);
+        //when
+        doThrow(new SQLException(exceptionMessage)).when(manager).connect(anyString(), anyString(), anyString());
+        when(manager.isConnected()).thenReturn(true);
+        command.execute();
+        //then
+        shouldPrint(expectedMessage);
     }
 
     private void shouldPrint(String expected) {
