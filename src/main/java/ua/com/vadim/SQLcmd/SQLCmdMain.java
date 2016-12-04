@@ -6,7 +6,7 @@ import ua.com.vadim.SQLcmd.view.View;
 
 import java.util.Locale;
 
-public class SQLcmdMain {
+public class SQLCmdMain {
 
     public static void main(String[] args) {
         Locale.setDefault(Locale.ENGLISH);

@@ -106,7 +106,7 @@ public class TableCreateRecordTest {
     }
 
     @Test
-    public void testTablesIsEmpty() throws Exception {
+    public void testTableIsEmpty() throws Exception {
         //given
         String emptyTablesFormatted = String.format(res.getString("table.create.empty.table"), tableName);
         String expectedMessage = String.format("[%s]", emptyTablesFormatted);

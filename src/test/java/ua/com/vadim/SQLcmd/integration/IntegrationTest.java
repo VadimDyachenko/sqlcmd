@@ -4,7 +4,7 @@ import ua.com.vadim.SQLcmd.controller.PropertiesLoader;
 import ua.com.vadim.SQLcmd.exception.ExitException;
 import org.junit.Before;
 import org.junit.Test;
-import ua.com.vadim.SQLcmd.SQLcmdMain;
+import ua.com.vadim.SQLcmd.SQLCmdMain;
 import ua.com.vadim.SQLcmd.controller.RunParameters;
 import ua.com.vadim.SQLcmd.model.DataSet;
 import ua.com.vadim.SQLcmd.model.DataSetImpl;
@@ -92,7 +92,7 @@ public class IntegrationTest {
         consoleInputStream.addLine("4");
         consoleInputStream.addLine("y");
         //when
-        SQLcmdMain.main(new String[0]);
+        SQLCmdMain.main(new String[0]);
 
         //then
         assertEquals("Welcome to SQLCmd!\n" +
@@ -109,7 +109,7 @@ public class IntegrationTest {
         //given
         consoleInputStream.addLine("exit");
         //when
-        SQLcmdMain.main(new String[0]);
+        SQLCmdMain.main(new String[0]);
         //then
         assertEquals("Welcome to SQLCmd!\n" +
                 "\n" +
@@ -124,7 +124,7 @@ public class IntegrationTest {
         consoleInputStream.addLine("2");
         consoleInputStream.addLine("exit");
         //when
-        SQLcmdMain.main(new String[0]);
+        SQLCmdMain.main(new String[0]);
         //then
         assertEquals("Welcome to SQLCmd!\n" +
                 "\nNo any database connected.\n" +
@@ -143,7 +143,7 @@ public class IntegrationTest {
         consoleInputStream.addLine("3");
         consoleInputStream.addLine("exit");
         //when
-        SQLcmdMain.main(new String[0]);
+        SQLCmdMain.main(new String[0]);
         //then
         assertEquals("Welcome to SQLCmd!\n" +
                 "\n" +
@@ -162,7 +162,7 @@ public class IntegrationTest {
         consoleInputStream.addLine("0");
         consoleInputStream.addLine("exit");
         //when
-        SQLcmdMain.main(new String[0]);
+        SQLCmdMain.main(new String[0]);
         //then
         assertEquals("Welcome to SQLCmd!\n" +
                 "\n" +
@@ -184,7 +184,7 @@ public class IntegrationTest {
         consoleInputStream.addLine("1");
         consoleInputStream.addLine("exit");
         //when
-        SQLcmdMain.main(new String[0]);
+        SQLCmdMain.main(new String[0]);
         //then
         assertEquals("Welcome to SQLCmd!\n" +
                 "\nNo any database connected.\n" +
@@ -208,7 +208,7 @@ public class IntegrationTest {
         consoleInputStream.addLine("2");
         consoleInputStream.addLine("exit");
         //when
-        SQLcmdMain.main(new String[0]);
+        SQLCmdMain.main(new String[0]);
         //then
         assertEquals("Welcome to SQLCmd!\n" +
                 "\n" +
@@ -247,7 +247,7 @@ public class IntegrationTest {
         consoleInputStream.addLine("2");
         consoleInputStream.addLine("exit");
         //when
-        SQLcmdMain.main(new String[0]);
+        SQLCmdMain.main(new String[0]);
         //then
         assertEquals("Welcome to SQLCmd!\n" +
                 "\n" +
@@ -283,7 +283,7 @@ public class IntegrationTest {
         consoleInputStream.addLine(TABLE_NAME);
         consoleInputStream.addLine("exit");
         //when
-        SQLcmdMain.main(new String[0]);
+        SQLCmdMain.main(new String[0]);
         //then
         assertEquals("Welcome to SQLCmd!\n" +
                 "\nNo any database connected.\n" +
@@ -314,7 +314,7 @@ public class IntegrationTest {
         consoleInputStream.addLine("3");
         consoleInputStream.addLine("exit");
         //when
-        SQLcmdMain.main(new String[0]);
+        SQLCmdMain.main(new String[0]);
         //then
         assertEquals("Welcome to SQLCmd!\n" +
                 "\n" +
@@ -354,7 +354,7 @@ public class IntegrationTest {
         consoleInputStream.addLine("1");
         consoleInputStream.addLine("exit");
         //when
-        SQLcmdMain.main(new String[0]);
+        SQLCmdMain.main(new String[0]);
         //then
         assertEquals("Welcome to SQLCmd!\n" +
                 "\n" +
@@ -405,7 +405,7 @@ public class IntegrationTest {
         consoleInputStream.addLine("usersa");
         consoleInputStream.addLine("exit");
         //when
-        SQLcmdMain.main(new String[0]);
+        SQLCmdMain.main(new String[0]);
         //then
         assertEquals("Welcome to SQLCmd!\n" +
                 "\n" +
@@ -448,7 +448,7 @@ public class IntegrationTest {
         consoleInputStream.addLine("y");
         consoleInputStream.addLine("exit");
         //when
-        SQLcmdMain.main(new String[0]);
+        SQLCmdMain.main(new String[0]);
         //then
         assertEquals("Welcome to SQLCmd!\n" +
                 "\n" +
@@ -496,7 +496,7 @@ public class IntegrationTest {
         consoleInputStream.addLine("n");
         consoleInputStream.addLine("exit");
         //when
-        SQLcmdMain.main(new String[0]);
+        SQLCmdMain.main(new String[0]);
         //then
         assertEquals("Welcome to SQLCmd!\n" +
                 "\n" +
@@ -541,7 +541,7 @@ public class IntegrationTest {
         consoleInputStream.addLine("5");
         consoleInputStream.addLine("exit");
         //when
-        SQLcmdMain.main(new String[0]);
+        SQLCmdMain.main(new String[0]);
         //then
         assertEquals("Welcome to SQLCmd!\n" +
                 "\n" +
@@ -586,7 +586,7 @@ public class IntegrationTest {
         consoleInputStream.addLine(USER_PASSWORD);
         consoleInputStream.addLine("exit");
         //when
-        SQLcmdMain.main(new String[0]);
+        SQLCmdMain.main(new String[0]);
         //then
         assertEquals("Welcome to SQLCmd!\n" +
                 "\n" +

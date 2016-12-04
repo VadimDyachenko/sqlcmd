@@ -28,13 +28,17 @@ public class TableUpdateRecord implements Command {
     @Override
     public void execute() {
         String tableName = runParameters.getTableName();
-        Set<String> columnNames = getAvailableColumnNames(tableName);
-        if (columnNames.isEmpty()) {
-            view.writeMessage(String.format(res.getString("table.update.empty.table"), tableName));
-        } else {
-            printHelpInfo();
-            printAvailableColumnNames(columnNames);
-            updateRecord(tableName);
+        try {
+            Set<String> columnNames = getAvailableColumnNames(tableName);
+            if (columnNames.isEmpty()) {
+                view.writeMessage(String.format(res.getString("table.update.empty.table"), tableName));
+            } else {
+                printHelpInfo();
+                printAvailableColumnNames(columnNames);
+                updateRecord(tableName);
+            }
+        } catch (SQLException e) {
+            view.writeMessage(res.getString("table.update.record.failed") + e.getMessage());
         }
     }
 
@@ -42,21 +46,15 @@ public class TableUpdateRecord implements Command {
         view.writeMessage(res.getString("table.update.record.help"));
     }
 
-    private Set<String> getAvailableColumnNames(String tableName) {
-        Set<String> columnNames = new LinkedHashSet<>();
-        try {
-            columnNames = manager.getTableColumnNames(tableName);
-        } catch (SQLException e) {
-            view.writeMessage(res.getString("table.update.record.failed") + e.getMessage());
-        }
-        return columnNames;
-    }
-
     private void printAvailableColumnNames(Set<String> columnNames) {
         view.writeMessage(String.format(res.getString("table.update.available.column"), columnNames.toString()));
     }
 
-    private void updateRecord(String tableName) {
+    private Set<String> getAvailableColumnNames(String tableName) throws SQLException {
+        return manager.getTableColumnNames(tableName);
+    }
+
+    private void updateRecord(String tableName) throws SQLException {
         do {
             try {
                 String[] inputRecordData = inputData(getAvailableColumnNames(tableName));
@@ -69,10 +67,7 @@ public class TableUpdateRecord implements Command {
                 }
                 manager.updateTableRecord(tableName, id, dataSet);
                 view.writeMessage(String.format(res.getString("table.update.successful"), dataSet));
-                return;
-            } catch (SQLException e) {
-                view.writeMessage(res.getString("table.update.record.failed") + e.getMessage());
-                view.writeMessage(res.getString("table.update.incorrect.data"));
+                break;
             } catch (NumberFormatException e) { //for check id
                 view.writeMessage(res.getString("table.update.record.number.format"));
             } catch (IllegalArgumentException e1) { //for check data
@@ -82,15 +77,9 @@ public class TableUpdateRecord implements Command {
     }
 
     private String[] inputData(Set<String> columnNames) throws IllegalArgumentException {
-//        do {
-//            try {
                 String[] inputUserData = view.readLine().split("\\|");
                 validateInputData(inputUserData, columnNames);
                 return inputUserData;
-//            } catch (IllegalArgumentException e) {
-//                view.writeMessage(res.getString("table.update.incorrect.data") + e.getMessage());
-//            }
-//        } while (true);
     }
 
     private void validateInputData(String[] data, Set<String> columnNames) {
