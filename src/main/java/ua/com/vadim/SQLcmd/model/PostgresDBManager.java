@@ -8,7 +8,7 @@ public class PostgresDBManager implements DatabaseManager {
     private Connection connection;
 
     public PostgresDBManager(String driver, String serverIP, String serverPort) {
-        this.url = driver + serverIP + ":" + serverPort + "/";
+        this.url = String.format("%s%s;%s/", driver, serverIP, serverPort);
         try {
             Class.forName("org.postgresql.Driver");
         } catch (ClassNotFoundException e) {
