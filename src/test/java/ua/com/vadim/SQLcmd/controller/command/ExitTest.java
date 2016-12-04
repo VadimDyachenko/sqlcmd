@@ -1,7 +1,10 @@
 package ua.com.vadim.SQLcmd.controller.command;
 
+import org.junit.BeforeClass;
+import ua.com.vadim.SQLcmd.controller.PropertiesLoader;
 import ua.com.vadim.SQLcmd.controller.RunParameters;
 import ua.com.vadim.SQLcmd.model.DatabaseManager;
+import ua.com.vadim.SQLcmd.view.UTF8Control;
 import ua.com.vadim.SQLcmd.view.View;
 import org.junit.Before;
 import org.junit.Test;
@@ -14,70 +17,71 @@ import static org.mockito.Mockito.*;
 import ua.com.vadim.SQLcmd.exception.ExitException;
 
 import java.sql.SQLException;
+import java.util.ResourceBundle;
 
 
 public class ExitTest {
-
-    private RunParameters runParameters;
+    private static RunParameters runParameters;
+    private static ResourceBundle res;
     private DatabaseManager manager;
     private View view;
     private Command command;
+
+    @BeforeClass
+    public static void beforeAllTestSetUp() throws ExitException {
+        runParameters = new PropertiesLoader().getParameters();
+        res = ResourceBundle.getBundle(runParameters.getLanguageResourcePath() + "Exit", new UTF8Control());
+    }
 
     @Before
     public void setUp() {
         manager = mock(DatabaseManager.class);
         view = mock(View.class);
-        runParameters = mock(RunParameters.class);
         command = new Exit(runParameters, manager, view);
     }
 
-    @Test
-    public void testExitYes() throws Exception {
+    @Test(expected = ExitException.class)
+    public void testExitYes() {
         //given
+//        String expectedMessage = String.format("[%s, %s]",
+//                res_exit.getString("exit.question"),
+//                res_common.getString("common.the.end"));
+
         //when
         when(view.readLine()).thenReturn("y");
-
-        try {
-            command.execute();
-            fail("Expected ExitException");
-        } catch (ExitException e) {
-            e.getMessage();
-        }
+        command.execute();
 
         //then
-        shouldPrint("[Do you really want to exit? <y/n>, " +
-                "Thank you for using SQLCmd. Good luck.]");
     }
 
+
     @Test
-    public void testExitYesWhithSQLException() throws Exception {
+    public void testExitYesWithSQLException() throws SQLException {
         //given
+        String expectedMessage = String.format("[%s]", res.getString("exit.question"));
         //when
         when(view.readLine()).thenReturn("y");
         when(manager.isConnected()).thenReturn(true);
         doThrow(new SQLException()).when(manager).disconnect();
         try {
             command.execute();
-            fail("Expected ExitException");
-        } catch (Exception e) {
-            e.getMessage();
+        } catch (ExitException e) {
+            //NOP
         }
-
         //then
-        shouldPrint("[Do you really want to exit? <y/n>, " +
-                "null, " +
-                "Thank you for using SQLCmd. Good luck.]");
+        shouldPrint(expectedMessage);
     }
 
     @Test
     public void testExitNo() throws ExitException {
         //given
+        String expectedMessage = String.format("[%s]", res.getString("exit.question"));
         //when
         when(view.readLine()).thenReturn("n");
         command.execute();
 
         //then
-        shouldPrint("[Do you really want to exit? <y/n>]");
+        shouldPrint(expectedMessage);
     }
 
     private void shouldPrint(String expected) {

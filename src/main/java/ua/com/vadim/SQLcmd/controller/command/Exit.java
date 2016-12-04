@@ -31,6 +31,6 @@ public class Exit implements Command {
                //NOP
             }
             throw new ExitException();
-        } else return;
+        }
     }
 }
