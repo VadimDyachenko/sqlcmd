@@ -28,13 +28,17 @@ public class TableCreateRecord implements Command {
     @Override
     public void execute() {
         String tableName = runParameters.getTableName();
-        Set<String> columnNames = getAvailableColumnNames(tableName);
-        if (columnNames.isEmpty()) {
-            view.writeMessage(String.format(res.getString("table.create.empty.table"), tableName));
-        } else {
-            printHelpInfo();
-            printAvailableColumnNames(columnNames);
-            createRecord(tableName, inputRecordData(columnNames));
+        try {
+            Set<String> columnNames = getAvailableColumnNames(tableName);
+            if (columnNames.isEmpty()) {
+                view.writeMessage(String.format(res.getString("table.create.empty.table"), tableName));
+            } else {
+                printHelpInfo();
+                printAvailableColumnNames(columnNames);
+                createRecord(tableName, inputRecordData(columnNames));
+            }
+        } catch (SQLException e) {
+            view.writeMessage(res.getString("table.create.record.failed") + " " + e.getMessage());
         }
     }
 
@@ -50,29 +54,19 @@ public class TableCreateRecord implements Command {
         } while (true);
     }
 
-    private void createRecord(String tableName, String[] inputUserData) {
+    private void createRecord(String tableName, String[] inputUserData) throws SQLException {
         DataSet dataSet = new DataSetImpl();
         for (int index = 0; index < inputUserData.length; index += 2) {
             String columnName = inputUserData[index];
             String value = inputUserData[index + 1];
             dataSet.put(columnName, value);
         }
-        try {
-            manager.createTableRecord(tableName, dataSet);
-            view.writeMessage(String.format(res.getString("table.create.successful"), dataSet));
-        } catch (SQLException e) {
-            view.writeMessage(res.getString("table.create.record.failed") + e.getMessage());
-        }
+        manager.createTableRecord(tableName, dataSet);
+        view.writeMessage(String.format(res.getString("table.create.successful"), dataSet));
     }
 
-    private Set<String> getAvailableColumnNames(String tableName) {
-        Set<String> columnNames = new LinkedHashSet<>();
-        try {
-            columnNames = manager.getTableColumnNames(tableName);
-        } catch (SQLException e) {
-            view.writeMessage(res.getString("table.create.record.failed") + e.getMessage());
-        }
-        return columnNames;
+    private Set<String> getAvailableColumnNames(String tableName) throws SQLException {
+        return manager.getTableColumnNames(tableName);
     }
 
     private void validateInputData(String[] data, Set<String> columnNames) {
