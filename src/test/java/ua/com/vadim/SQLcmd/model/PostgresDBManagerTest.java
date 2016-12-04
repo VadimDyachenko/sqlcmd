@@ -69,6 +69,12 @@ public class PostgresDBManagerTest {
         System.setOut(null);
         runParameters.setTableName(TEST_TABLE);
         try {
+            if (!manager.isConnected()) {
+                manager.connect(
+                        runParameters.getDatabaseName(),
+                        runParameters.getUserName(),
+                        runParameters.getPassword());
+            }
             manager.clearCurrentTable(TEST_TABLE);
             DataSet inputData1 = new DataSetImpl();
             inputData1.put("id", 1);
@@ -93,7 +99,6 @@ public class PostgresDBManagerTest {
 
     @Test
     public void testGetAllTableNames() {
-
         Set<String> tableNames = null;
         try {
             tableNames = manager.getAllTableNames();
@@ -147,7 +152,6 @@ public class PostgresDBManagerTest {
             e.printStackTrace();
         }
         assertEquals(1, users.length);
-
         DataSet user = users[0];
         assertEquals("[id, name, password]", user.getNames().toString());
         assertEquals("[10, Semen Petrov, qwert]", user.getValues().toString());
@@ -157,7 +161,6 @@ public class PostgresDBManagerTest {
     public void testUpdateTableData() {
         //given
         runParameters.setTableName(TEST_TABLE);
-
         try {
             manager.clearCurrentTable(TEST_TABLE);
             DataSet inputData = new DataSetImpl();
@@ -210,6 +213,19 @@ public class PostgresDBManagerTest {
             e.printStackTrace();
         }
         assertEquals(0, users.length);
+    }
+
+    @Test
+    public void testIsConnected() {
+        //given
+        //when
+        try {
+            manager.disconnect();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        //then
+        assertFalse(manager.isConnected());
     }
 
     private void printTableNames(Set<String> tableNames) {

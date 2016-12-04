@@ -52,10 +52,7 @@ public class PostgresDBManager implements DatabaseManager {
 
     @Override
     public Set<String> getAllTableNames() throws SQLException {
-        checkConnection();
-
         Set<String> resultTableNames = new LinkedHashSet<>();
-
         try (Statement statement = connection.createStatement();
              ResultSet resultSet = statement.executeQuery(
                      "SELECT table_name FROM information_schema.tables " +
@@ -70,7 +67,6 @@ public class PostgresDBManager implements DatabaseManager {
 
     @Override
     public void createTableRecord(String tableName, DataSet newValue) throws SQLException {
-        checkConnection();
         try (Statement statement = connection.createStatement()) {
             String columnName = getNameFormatted(newValue, "%s,");
             String values = getValuesFormatted(newValue, "'%s',");
@@ -81,7 +77,6 @@ public class PostgresDBManager implements DatabaseManager {
 
     @Override
     public DataSet[] getTableData(String tableName) throws SQLException {
-        checkConnection();
         try (Statement statement = connection.createStatement();
              ResultSet resultSet = statement.executeQuery(String.format("SELECT * FROM public.%s", tableName))
         ) {
@@ -103,7 +98,6 @@ public class PostgresDBManager implements DatabaseManager {
 
     @Override
     public void updateTableRecord(String tableName, int id, DataSet newValue) throws SQLException {
-        checkConnection();
         String tableNames = getNameFormatted(newValue, "%s = ?,");
         String sql = String.format("UPDATE public.%s SET %s WHERE id = ?", tableName, tableNames);
 
@@ -120,7 +114,6 @@ public class PostgresDBManager implements DatabaseManager {
 
     @Override
     public void clearCurrentTable(String tableName) throws SQLException {
-        checkConnection();
         try (Statement statement = connection.createStatement()) {
             statement.executeUpdate(String.format("DELETE FROM public.%s", tableName));
         }
@@ -128,7 +121,6 @@ public class PostgresDBManager implements DatabaseManager {
 
     @Override
     public Set<String> getTableColumnNames(String tableName) throws SQLException {
-        checkConnection();
         Set<String> result = new LinkedHashSet<>();
         try (Statement statement = connection.createStatement();
              ResultSet resultSet = statement.executeQuery(
@@ -172,11 +164,5 @@ public class PostgresDBManager implements DatabaseManager {
         int size = resultSet.getInt("count");
         resultSet.close();
         return size;
-    }
-
-    private void checkConnection() throws SQLException {
-        if (connection == null) {
-            throw new SQLException("No connection to the database.");
-        }
     }
 }
