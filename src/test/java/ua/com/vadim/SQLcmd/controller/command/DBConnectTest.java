@@ -21,11 +21,11 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
 
 public class DBConnectTest {
+    private static RunParameters runParameters;
+    private static ResourceBundle res;
     private DatabaseManager manager;
     private View view;
     private Command command;
-    private static RunParameters runParameters;
-    private static ResourceBundle res;
     private String normalRunMessages;
 
     @BeforeClass
