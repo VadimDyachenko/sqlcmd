@@ -1,7 +1,11 @@
 package ua.com.vadim.SQLcmd.controller.command;
 
+import org.junit.BeforeClass;
+import ua.com.vadim.SQLcmd.controller.PropertiesLoader;
 import ua.com.vadim.SQLcmd.controller.RunParameters;
+import ua.com.vadim.SQLcmd.exception.ExitException;
 import ua.com.vadim.SQLcmd.model.DatabaseManager;
+import ua.com.vadim.SQLcmd.view.UTF8Control;
 import ua.com.vadim.SQLcmd.view.View;
 import org.junit.Before;
 import org.junit.Test;
@@ -9,88 +13,111 @@ import org.mockito.ArgumentCaptor;
 
 import java.sql.SQLException;
 import java.util.LinkedHashSet;
+import java.util.ResourceBundle;
 import java.util.Set;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 public class DBSelectTableTest {
+    private static RunParameters runParameters;
+    private static ResourceBundle res;
     private DatabaseManager manager;
     private View view;
     private Command command;
+
+    @BeforeClass
+    public static void beforeAllTestSetUp() throws ExitException {
+        runParameters = new PropertiesLoader().getParameters();
+        res = ResourceBundle.getBundle(runParameters.getLanguageResourcePath() + "DBSelectTable", new UTF8Control());
+    }
 
     @Before
     public void setUp() throws Exception {
         manager = mock(DatabaseManager.class);
         view = mock(View.class);
-        RunParameters runParameters = mock(RunParameters.class);
         command = new DBSelectTable(runParameters, manager, view);
     }
 
     @Test
     public void testSelectTableWithoutConnectionToDatabase() throws Exception {
         //given
+        String expectedMessage = String.format("[%s]", res.getString("dbselect.no.connection"));
         //when
         when(manager.isConnected()).thenReturn(false);
         command.execute();
-
         //then
-        shouldPrint("[No one connection to database. Select \"DBConnect to database\" first.\n]");
+        shouldPrint(expectedMessage);
     }
 
     @Test
     public void testSelectTableWithEmptyDatabase() throws Exception {
         //given
         Set<String> tableNames = new LinkedHashSet<>();
+        String expectedMessage = String.format("[%s]", res.getString("dbselect.no.tables"));
         //when
         when(manager.isConnected()).thenReturn(true);
         when(manager.getAllTableNames()).thenReturn(tableNames);
         command.execute();
 
         //then
-        shouldPrint("[There are no tables in the database <null>\n]");
+        shouldPrint(expectedMessage);
     }
 
     @Test
     public void testGetAvailableTableNamesWithSQLException() throws Exception{
         //given
+        String exceptionMessage = "Some SQLException";
+        String expectedMessage = String.format("[%s%s, %s]",
+                res.getString("dbselect.failure"),
+                exceptionMessage,
+                res.getString("dbselect.no.tables"));
         //when
         when(manager.isConnected()).thenReturn(true);
-        when(manager.getAllTableNames()).thenThrow(new SQLException());
+        when(manager.getAllTableNames()).thenThrow(new SQLException(exceptionMessage));
         command.execute();
         //then
-        shouldPrint("[Failure, because null, There are no tables in the database <null>\n]");
+        shouldPrint(expectedMessage);
     }
 
     @Test
     public void testSelectTableExecuteWithNormalParameters() throws Exception{
         //given
         Set<String> availableTables = new LinkedHashSet<>();
-        availableTables.add("users");
-        availableTables.add("staff");
+        availableTables.add("tableA");
+        availableTables.add("tableB");
+        String result = "[tableA, tableB]";
+        String expectedMessage = String.format("[%s, %s]",
+                res.getString("dbselect.enter.name.tables"),
+                result);
         //when
         when(manager.isConnected()).thenReturn(true);
         when(manager.getAllTableNames()).thenReturn(availableTables);
-        when(view.readLine()).thenReturn("users");
+        when(view.readLine()).thenReturn("tableA");
         command.execute();
         //then
-        shouldPrint("[Enter table name. Available tables:, [users, staff]\n]");
+        shouldPrint(expectedMessage);
     }
 
     @Test
     public void testSelectTableExecuteWithWrongParameters() throws Exception {
         //given
         Set<String> availableTables = new LinkedHashSet<>();
-        availableTables.add("users");
-        availableTables.add("staff");
+        availableTables.add("tableA");
+        availableTables.add("tableB");
+        String result = "[tableA, tableB]";
+        String expectedMessage = String.format("[%s, %s, %s, %s]",
+                res.getString("dbselect.enter.name.tables"),
+                result,
+                res.getString("dbselect.enter.correct.name.tables"),
+                result);
         //when
         when(manager.isConnected()).thenReturn(true);
         when(manager.getAllTableNames()).thenReturn(availableTables);
-        when(view.readLine()).thenReturn("bla-bla", "users");
+        when(view.readLine()).thenReturn("bla-bla", "tableB");
         command.execute();
         //then
-        shouldPrint("[Enter table name. Available tables:, [users, staff]\n," +
-                " Enter correct table name. Available tables:, [users, staff]\n]");
+        shouldPrint(expectedMessage);
     }
 
 
