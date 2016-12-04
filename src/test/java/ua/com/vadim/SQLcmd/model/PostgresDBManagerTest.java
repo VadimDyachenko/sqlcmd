@@ -71,7 +71,7 @@ public class PostgresDBManagerTest {
         try {
             if (!manager.isConnected()) {
                 manager.connect(
-                        runParameters.getDatabaseName(),
+                        TEST_DATABASE,
                         runParameters.getUserName(),
                         runParameters.getPassword());
             }
