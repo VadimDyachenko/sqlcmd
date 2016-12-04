@@ -29,11 +29,15 @@ public class TablePrintData implements Command {
     @Override
     public void execute() {
         String tableName = runParameters.getTableName();
-        DataSet[] tableData = getTableData(tableName);
-        if (tableData.length == 0) {
-            view.writeMessage(String.format(res.getString("table.print.data.empty"), tableName));
-        } else {
-            printData(tableData);
+        try {
+            DataSet[] tableData = getTableData(tableName);
+            if (tableData.length == 0) {
+                view.writeMessage(String.format(res.getString("table.print.data.empty"), tableName));
+            } else {
+                printData(tableData);
+            }
+        } catch (SQLException e) {
+            view.writeMessage(res.getString("table.print.data.failed") + e.getMessage());
         }
     }
 
@@ -45,14 +49,8 @@ public class TablePrintData implements Command {
         }
     }
 
-    private DataSet[] getTableData(String tableName) {
-        DataSet[] tableData = new DataSetImpl[0];
-        try {
-            tableData = manager.getTableData(tableName);
-        } catch (SQLException e) {
-            view.writeMessage(res.getString("table.print.data.failed") + e.getMessage());
-        }
-        return tableData;
+    private DataSet[] getTableData(String tableName) throws SQLException {
+        return manager.getTableData(tableName);
     }
 
     private Map<String, Integer> getTableRowMaxLength(DataSet[] tableData) {
@@ -73,6 +71,7 @@ public class TablePrintData implements Command {
     /**
      * Method output column names in the format: |xxxx |yyy    |zz|
      * the width of the recording between "|" equal to the length of the longest entry in this column
+     *
      * @param rowLength
      */
     private void printHeader(Map<String, Integer> rowLength) {
@@ -92,6 +91,7 @@ public class TablePrintData implements Command {
     /**
      * Method output entry in the format: |xxxx |yyy    |zz|
      * the width of the recording between "|" equal to the length of the longest entry in this column
+     *
      * @param dataSet
      * @param rowLength
      */
@@ -112,6 +112,7 @@ public class TablePrintData implements Command {
      * Method output line: +-----+----+---+------+
      * The number of "+" depends on the number of columns in the table
      * the width of the line between "+" is the length of the longest entry in the column
+     *
      * @param rowLength
      */
     private void printTableLine(Map<String, Integer> rowLength) {
