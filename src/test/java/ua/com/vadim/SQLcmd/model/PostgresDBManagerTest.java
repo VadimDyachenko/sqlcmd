@@ -2,7 +2,6 @@ package ua.com.vadim.SQLcmd.model;
 
 import ua.com.vadim.SQLcmd.controller.PropertiesLoader;
 import ua.com.vadim.SQLcmd.controller.RunParameters;
-import ua.com.vadim.SQLcmd.exception.ExitException;
 import org.junit.*;
 
 import java.io.ByteArrayOutputStream;
@@ -23,9 +22,8 @@ public class PostgresDBManagerTest {
             " password VARCHAR (25) NOT NULL)";
 
     @BeforeClass
-    public static void beforeAllTestSetUp() throws ExitException {
+    public static void beforeAllTestSetUp() {
         runParameters = new PropertiesLoader().getParameters();
-
         manager = new PostgresDBManager(runParameters.getDriver(),
                 runParameters.getServerIP(),
                 runParameters.getServerPort());
@@ -98,144 +96,103 @@ public class PostgresDBManagerTest {
     }
 
     @Test
-    public void testGetAllTableNames() {
-        Set<String> tableNames = null;
-        try {
-            tableNames = manager.getAllTableNames();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+    public void testGetAllTableNames() throws SQLException {
+        //given
+        Set<String> tableNames = manager.getAllTableNames();
+        //when
         printTableNames(tableNames);
+        //then
         assertEquals("[" + TEST_TABLE + "]", consoleOutputStream.toString());
     }
 
     @Test
-    public void testGetTableColumnNames() {
+    public void testGetTableColumnNames() throws SQLException {
         //given
+        Set<String> columnNames = manager.getTableColumnNames(TEST_TABLE);
         //when
-        Set<String> columnNames = null;
-        try {
-            columnNames = manager.getTableColumnNames(TEST_TABLE);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
         printTableNames(columnNames);
+        //then
         assertEquals("[id, name, password]", consoleOutputStream.toString());
     }
 
 
     @Test
-    public void testGetTableData() {
+    public void testGetTableData() throws SQLException {
         //given
         runParameters.setTableName(TEST_TABLE);
         runParameters.setTableLevel(true);
-        try {
-            manager.clearCurrentTable(TEST_TABLE);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        //when
+        manager.clearCurrentTable(TEST_TABLE);
         DataSet inputData = new DataSetImpl();
         inputData.put("id", 10);
         inputData.put("name", "Semen Petrov");
         inputData.put("password", "qwert");
-        try {
-            manager.createTableRecord(TEST_TABLE, inputData);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        //then
-        DataSet[] users = new DataSetImpl[0];
-        try {
-            users = manager.getTableData(TEST_TABLE);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        assertEquals(1, users.length);
+        manager.createTableRecord(TEST_TABLE, inputData);
+
+        //when
+        DataSet[] users = manager.getTableData(TEST_TABLE);
         DataSet user = users[0];
+
+        //then
+        assertEquals(1, users.length);
         assertEquals("[id, name, password]", user.getNames().toString());
         assertEquals("[10, Semen Petrov, qwert]", user.getValues().toString());
     }
 
     @Test
-    public void testUpdateTableData() {
+    public void testUpdateTableData() throws SQLException {
         //given
         runParameters.setTableName(TEST_TABLE);
-        try {
-            manager.clearCurrentTable(TEST_TABLE);
-            DataSet inputData = new DataSetImpl();
-            inputData.put("id", 10);
-            inputData.put("name", "Semen Petrov");
-            inputData.put("password", "qwert");
-            manager.createTableRecord(TEST_TABLE, inputData);
+        manager.clearCurrentTable(TEST_TABLE);
+        DataSet inputData = new DataSetImpl();
+        inputData.put("id", 10);
+        inputData.put("name", "Semen Petrov");
+        inputData.put("password", "qwert");
+        manager.createTableRecord(TEST_TABLE, inputData);
+        DataSet newValue = new DataSetImpl();
+        newValue.put("password", "abcde");
+        newValue.put("name", "Ivan Ivanov");
 
-            //when
-            DataSet newValue = new DataSetImpl();
-            newValue.put("password", "abcde");
-            newValue.put("name", "Bob Marley");
-            manager.updateTableRecord(TEST_TABLE, 10, newValue);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        //when
+        manager.updateTableRecord(TEST_TABLE, 10, newValue);
+        DataSet[] users = manager.getTableData(TEST_TABLE);
+        DataSet user = users[0];
 
         //then
-        DataSet[] users = new DataSetImpl[0];
-        try {
-            users = manager.getTableData(TEST_TABLE);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
         assertEquals(1, users.length);
-
-        DataSet user = users[0];
         assertEquals("[id, name, password]", user.getNames().toString());
-        assertEquals("[10, Bob Marley, abcde]", user.getValues().toString());
+        assertEquals("[10, Ivan Ivanov, abcde]", user.getValues().toString());
     }
 
     @Test
-    public void testClearTableData() {
+    public void testClearTableData() throws SQLException {
         //given
         runParameters.setTableName(TEST_TABLE);
         runParameters.setTableLevel(true);
 
         //when
-        try {
-            manager.clearCurrentTable(TEST_TABLE);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        manager.clearCurrentTable(TEST_TABLE);
 
         //then
-        DataSet[] users = new DataSetImpl[0];
-        try {
-            users = manager.getTableData(TEST_TABLE);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        DataSet[] users = manager.getTableData(TEST_TABLE);
         assertEquals(0, users.length);
     }
 
     @Test
-    public void testIsConnected() {
+    public void testIsConnected() throws SQLException {
         //given
         //when
-        try {
-            manager.disconnect();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        manager.disconnect();
+
         //then
         assertFalse(manager.isConnected());
     }
 
     private void printTableNames(Set<String> tableNames) {
-
         String availableTables = "[";
         for (String name : tableNames) {
             availableTables += name + ", ";
         }
         availableTables = availableTables.substring(0, availableTables.length() - 2) + "]";
-
         System.out.print(availableTables);
     }
 }
