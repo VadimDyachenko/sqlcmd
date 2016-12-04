@@ -27,7 +27,6 @@ public class ConnectionStatus implements Command {
             view.writeMessage(res.getString("connection.status.without.connection"));
             return;
         }
-        //TODO причесать вывод подключения к базе и таблице
         String message = String.format(res.getString("connection.status.database"), runParameters.getDatabaseName());
         message += " ";
 
