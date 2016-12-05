@@ -24,9 +24,7 @@ public class PostgresDBManagerTest {
     @BeforeClass
     public static void beforeAllTestSetUp() {
         runParameters = new PropertiesLoader().getParameters();
-        manager = new PostgresDBManager(runParameters.getDriver(),
-                runParameters.getServerIP(),
-                runParameters.getServerPort());
+        manager = new PostgresDBManager(runParameters.getServerIP(), runParameters.getServerPort());
         try {
             manager.connect(runParameters.getDatabaseName(), runParameters.getUserName(), runParameters.getPassword());
             manager.dropDatabase(TEST_DATABASE);

@@ -27,7 +27,6 @@ public class PropertiesLoader {
                 getServerIP(),
                 getServerPort(),
                 getDatabaseName(),
-                getDriver(),
                 getUserName(),
                 getPassword(),
                 getInterfaceLanguage()
@@ -44,10 +43,6 @@ public class PropertiesLoader {
 
     private String getDatabaseName() {
         return properties.getProperty("database.name");
-    }
-
-    private String getDriver() {
-        return properties.getProperty("database.jdbc.driver");
     }
 
     private String getUserName() {

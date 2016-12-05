@@ -51,9 +51,7 @@ public class IntegrationTest {
         System.setIn(consoleInputStream);
         System.setOut(new PrintStream(consoleOutputStream));
         RunParameters runParameters = new PropertiesLoader().getParameters();
-        DatabaseManager manager = new PostgresDBManager(runParameters.getDriver(),
-                                                                runParameters.getServerIP(),
-                                                                runParameters.getServerPort());
+        DatabaseManager manager = new PostgresDBManager(runParameters.getServerIP(), runParameters.getServerPort());
         try {
             manager.connect(
                     runParameters.getDatabaseName(),

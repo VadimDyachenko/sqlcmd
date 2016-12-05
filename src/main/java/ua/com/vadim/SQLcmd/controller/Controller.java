@@ -73,9 +73,8 @@ public class Controller {
         localeSelector = new LocaleSelector(runParameters, view);
         localeSelector.setDefaultLocale();
         res = ResourceBundle.getBundle(runParameters.getLanguageResourcePath() + "common", new UTF8Control());
-        DatabaseManager manager = new PostgresDBManager(runParameters.getDriver(),
-                runParameters.getServerIP(),
-                runParameters.getServerPort());
+        DatabaseManager manager = new PostgresDBManager(runParameters.getServerIP(),
+                                                        runParameters.getServerPort());
         commandExecutor = new CommandExecutor(runParameters, manager, view);
     }
 
