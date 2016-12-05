@@ -2,6 +2,7 @@ package ua.com.vadim.SQLcmd.controller.command;
 
 
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import ua.com.vadim.SQLcmd.controller.PropertiesLoader;
 import ua.com.vadim.SQLcmd.controller.RunParameters;
 import ua.com.vadim.SQLcmd.exception.ExitException;
@@ -47,7 +48,34 @@ public class DBConnectTest {
     }
 
     @Test
-    public void testConnectManagerNotConnected() /*throws Exception*/ {
+    public void testConnectDefaultParameter() {
+        //given
+        String expectedMessage = String.format("[%s]", res.getString("dbconnect.successful"));
+        //when
+        when(manager.isConnected()).thenReturn(false);
+        command.execute();
+        //then
+        shouldPrint(expectedMessage);
+    }
+
+    @Test (expected = ExitException.class)
+    public void testConnectDefaultParameterWithSQLException() throws SQLException {
+        //given
+        String exceptionMessage = "Some SQLException";
+        String failedMessage = res.getString("dbconnect.failed");
+        String tryAgainMessage = res.getString("dbconnect.default.failed");
+        String expectedMessage = String.format("[%s %s, %s]",failedMessage, exceptionMessage,
+                tryAgainMessage);
+        //when
+        when(manager.isConnected()).thenReturn(false);
+        doThrow(new SQLException(exceptionMessage)).when(manager).connect(anyString(), anyString(), anyString());
+        command.execute();
+        //then
+        shouldPrint(expectedMessage);
+    }
+
+    @Test
+    public void testConnectNewParameter() throws SQLException {
         //given
         String expectedMessage = String.format("[%s]", normalRunMessages);
         //when
@@ -58,25 +86,7 @@ public class DBConnectTest {
     }
 
     @Test
-    public void testConnectManagerIsConnectedWithSQLException() throws SQLException {
-        //given
-        String exceptionMessage = "Some SQLException";
-        String failedMessage = res.getString("dbconnect.failed");
-        String tryAgainMessage = res.getString("dbconnect.try.again");
-        String expectedMessage = String.format("[%s %s, %s, %s %s, %s]",failedMessage, exceptionMessage,
-                normalRunMessages, failedMessage, exceptionMessage, tryAgainMessage);
-        //when
-        when(manager.isConnected()).thenReturn(false).thenReturn(true);
-        doThrow(new SQLException(exceptionMessage)).when(manager).connect(anyString(), anyString(), anyString());
-        command.execute();
-        //then
-        shouldPrint(expectedMessage);
-    }
-
-
-
-    @Test
-    public void testConnectWithSQLException() throws SQLException {
+    public void testConnectNewParameterWithSQLException() throws SQLException {
         //given
         String exceptionMessage = "Some SQLException";
         String failedMessage = res.getString("dbconnect.failed");

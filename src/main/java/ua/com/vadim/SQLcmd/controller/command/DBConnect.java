@@ -24,23 +24,25 @@ public class DBConnect implements Command {
 
     @Override
     public void execute() {
-        try {
-            if (manager.isConnected()) {
-                connectWithNewParameters();
-            } else {
-                connectDefaultParameters();
-            }
-        } catch (SQLException e) {
-            view.writeMessage(res.getString("dbconnect.failed") + " " + e.getMessage());
+        if (manager.isConnected()) {
             connectWithNewParameters();
+        } else {
+            connectDefaultParameters();
         }
     }
 
-    private void connectDefaultParameters() throws SQLException {
-        manager.connect(
-                runParameters.getDatabaseName(),
-                runParameters.getUserName(),
-                runParameters.getPassword());
+    private void connectDefaultParameters() throws ExitException {
+        try {
+            manager.connect(
+                    runParameters.getDatabaseName(),
+                    runParameters.getUserName(),
+                    runParameters.getPassword());
+        } catch (SQLException e) {
+            view.writeMessage(res.getString("dbconnect.failed") + " " + e.getMessage());
+            view.writeMessage(res.getString("dbconnect.default.failed"));
+            throw new ExitException();
+        }
+        view.writeMessage(res.getString("dbconnect.successful"));
     }
 
     private void connectWithNewParameters() throws ExitException {
@@ -55,7 +57,8 @@ public class DBConnect implements Command {
         } catch (SQLException e) {
             view.writeMessage(res.getString("dbconnect.failed") + " " + e.getMessage());
             view.writeMessage(res.getString("dbconnect.try.again"));
-        } while (!manager.isConnected());
+        }
+        while (!manager.isConnected()) ;
     }
 
     private String getInputString(String message) throws ExitException {
