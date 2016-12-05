@@ -24,7 +24,7 @@ public class Controller {
         try {
             setUp();
             view.writeMessage(res.getString("common.welcome"));
-            tryDBconnectWhithDefaultParameters();
+            tryDBconnectWithDefaultParameters();
             do {
                 commandExecutor.execute(AvailableCommand.PRINT_CURRENT_CONNECTION_STATUS);
                 AvailableCommand command = askCommand();
@@ -78,7 +78,7 @@ public class Controller {
         commandExecutor = new CommandExecutor(runParameters, manager, view);
     }
 
-    private void tryDBconnectWhithDefaultParameters() {
+    private void tryDBconnectWithDefaultParameters() {
         view.writeMessage(res.getString("common.try.connect.default.parameters"));
         commandExecutor.execute(AvailableCommand.DB_CONNECT);
     }

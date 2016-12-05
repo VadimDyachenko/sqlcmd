@@ -9,7 +9,7 @@ import java.util.Set;
 import static org.junit.Assert.assertEquals;
 
 public class DataSetImplTest {
-    DataSet dataSet;
+    private DataSet dataSet;
 
     @Before
     public void setUp() {

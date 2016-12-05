@@ -23,7 +23,7 @@ public interface DatabaseManager {
 
     void updateTableRecord(String tableName, int id, DataSet newValue) throws SQLException;
 
-    void clearCurrentTable(String tableName) throws SQLException;
+    void clearTable(String tableName) throws SQLException;
 
     Set<String> getTableColumnNames(String tableName) throws SQLException;
 

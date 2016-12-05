@@ -114,7 +114,7 @@ public class PostgresDBManager implements DatabaseManager {
     }
 
     @Override
-    public void clearCurrentTable(String tableName) throws SQLException {
+    public void clearTable(String tableName) throws SQLException {
         try (Statement statement = connection.createStatement()) {
             statement.executeUpdate(String.format("DELETE FROM public.%s", tableName));
         }

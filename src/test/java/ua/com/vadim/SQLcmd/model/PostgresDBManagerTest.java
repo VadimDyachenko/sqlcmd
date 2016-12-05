@@ -15,8 +15,8 @@ public class PostgresDBManagerTest {
     private ByteArrayOutputStream consoleOutputStream;
     private static DatabaseManager manager;
     private static RunParameters runParameters;
-    private static final String TEST_TABLE = "test_table_users";
     private static final String TEST_DATABASE = "test_db_sqlcmd";
+    private static final String TEST_TABLE = "test_table_users";
     private static final String CREATE_TABLE_QUERY = TEST_TABLE + " (id SERIAL PRIMARY KEY," +
             " name VARCHAR (25) UNIQUE NOT NULL," +
             " password VARCHAR (25) NOT NULL)";
@@ -71,7 +71,7 @@ public class PostgresDBManagerTest {
                         runParameters.getUserName(),
                         runParameters.getPassword());
             }
-            manager.clearCurrentTable(TEST_TABLE);
+            manager.clearTable(TEST_TABLE);
             DataSet inputData1 = new DataSetImpl();
             inputData1.put("id", 1);
             inputData1.put("name", "Semen Petrov");
@@ -119,7 +119,7 @@ public class PostgresDBManagerTest {
         //given
         runParameters.setTableName(TEST_TABLE);
         runParameters.setTableLevel(true);
-        manager.clearCurrentTable(TEST_TABLE);
+        manager.clearTable(TEST_TABLE);
         DataSet inputData = new DataSetImpl();
         inputData.put("id", 10);
         inputData.put("name", "Semen Petrov");
@@ -140,7 +140,7 @@ public class PostgresDBManagerTest {
     public void testUpdateTableData() throws SQLException {
         //given
         runParameters.setTableName(TEST_TABLE);
-        manager.clearCurrentTable(TEST_TABLE);
+        manager.clearTable(TEST_TABLE);
         DataSet inputData = new DataSetImpl();
         inputData.put("id", 10);
         inputData.put("name", "Semen Petrov");
@@ -168,7 +168,7 @@ public class PostgresDBManagerTest {
         runParameters.setTableLevel(true);
 
         //when
-        manager.clearCurrentTable(TEST_TABLE);
+        manager.clearTable(TEST_TABLE);
 
         //then
         DataSet[] users = manager.getTableData(TEST_TABLE);

@@ -28,7 +28,7 @@ public class TableClear implements Command {
         String answer = view.readLine().trim().toLowerCase();
         if (answer.equals("y") || answer.equals("д")) {
             try {
-                manager.clearCurrentTable(currentTableName);
+                manager.clearTable(currentTableName);
             } catch (SQLException e) {
                 view.writeMessage(res.getString("table.clear.failed") + e.getMessage());
                 return;

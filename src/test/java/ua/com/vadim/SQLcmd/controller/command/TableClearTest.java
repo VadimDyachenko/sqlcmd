@@ -63,7 +63,7 @@ public class TableClearTest {
         String fail = res.getString("table.clear.failed");
         String expectedMessage = String.format("[%s, %s%s]", questionFormatted, fail, exceptionMessage);
         //then
-        doThrow(new SQLException(exceptionMessage)).when(manager).clearCurrentTable(testTableName);
+        doThrow(new SQLException(exceptionMessage)).when(manager).clearTable(testTableName);
         when(view.readLine()).thenReturn("y");
         command.execute();
         //then
