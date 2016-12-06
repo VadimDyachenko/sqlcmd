@@ -2,7 +2,6 @@ package ua.com.vadim.SQLcmd.controller.command;
 
 
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import ua.com.vadim.SQLcmd.controller.PropertiesLoader;
 import ua.com.vadim.SQLcmd.controller.RunParameters;
 import ua.com.vadim.SQLcmd.exception.ExitException;

@@ -7,10 +7,10 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
-public class LocaleSelector {
+class LocaleSelector {
     private final Map<String, Locale> supportedLocale = new HashMap<>();
 
-    public LocaleSelector() {
+    LocaleSelector() {
         setSupportedLocale();
     }
 
@@ -19,7 +19,7 @@ public class LocaleSelector {
         supportedLocale.put("en", Locale.ENGLISH);
     }
 
-    public void setLocale(String locale) throws UnsupportedLanguageException {
+    void setLocale(String locale) throws UnsupportedLanguageException {
         if (supportedLocale.containsKey(locale)) {
             Locale.setDefault(supportedLocale.get(locale));
         } else {
@@ -31,7 +31,7 @@ public class LocaleSelector {
         return supportedLocale.keySet();
     }
 
-    public void setEnglishLocale() {
+    void setEnglishLocale() {
         Locale.setDefault(Locale.ENGLISH);
     }
 }
