@@ -91,7 +91,7 @@ public class Controller {
         }
     }
 
-    private void tryDBconnectWithDefaultParameters() {
+    private void tryDBconnectWithDefaultParameters() throws ExitException {
         view.writeMessage(res.getString("common.try.connect.default.parameters"));
         commandExecutor.execute(AvailableCommand.DB_CONNECT);
     }

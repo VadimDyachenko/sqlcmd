@@ -16,7 +16,7 @@ public class Console implements View {
     }
 
     @Override
-    public String readLine() throws ExitException {
+    public String readLine() {
         String result = "";
         try {
             result = reader.readLine();

@@ -8,15 +8,14 @@ import ua.com.vadim.SQLcmd.view.UTF8Control;
 import ua.com.vadim.SQLcmd.view.View;
 
 import java.sql.SQLException;
-import java.util.LinkedHashSet;
 import java.util.ResourceBundle;
 import java.util.Set;
 
 public class TableUpdateRecord implements Command {
-    private ResourceBundle res;
     private RunParameters runParameters;
     private DatabaseManager manager;
     private View view;
+    private ResourceBundle res;
 
     public TableUpdateRecord(RunParameters runParameters, DatabaseManager manager, View view) {
         this.runParameters = runParameters;
@@ -57,7 +56,7 @@ public class TableUpdateRecord implements Command {
     private void updateRecord(String tableName) throws SQLException {
         do {
             try {
-                String[] inputRecordData = inputData(getAvailableColumnNames(tableName));
+                String[] inputRecordData = inputData();
                 DataSet dataSet = new DataSetImpl();
                 Integer id = Integer.parseInt(inputRecordData[1]);
                 for (int index = 2; index < inputRecordData.length; index += 2) {
@@ -76,13 +75,13 @@ public class TableUpdateRecord implements Command {
         } while (true);
     }
 
-    private String[] inputData(Set<String> columnNames) throws IllegalArgumentException {
+    private String[] inputData() throws IllegalArgumentException {
                 String[] inputUserData = view.readLine().split("\\|");
-                validateInputData(inputUserData, columnNames);
+                validateInputData(inputUserData);
                 return inputUserData;
     }
 
-    private void validateInputData(String[] data, Set<String> columnNames) {
+    private void validateInputData(String[] data) {
         if (data.length % 2 != 0) {
             throw new IllegalArgumentException(res.getString("table.update.record.invalid.number"));
         }
