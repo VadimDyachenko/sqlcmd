@@ -1,6 +1,7 @@
 package ua.com.vadim.SQLcmd.controller;
 
 import ua.com.vadim.SQLcmd.exception.ExitException;
+import ua.com.vadim.SQLcmd.exception.UnsupportedLanguageException;
 import ua.com.vadim.SQLcmd.model.DatabaseManager;
 import ua.com.vadim.SQLcmd.model.PostgresDBManager;
 import ua.com.vadim.SQLcmd.view.UTF8Control;
@@ -70,12 +71,24 @@ public class Controller {
 
     private void setUp() throws ExitException {
         runParameters = new PropertiesLoader().getParameters();
-        localeSelector = new LocaleSelector(runParameters, view);
-        localeSelector.setDefaultLocale();
+        localeSetUp();
         res = ResourceBundle.getBundle(runParameters.getLanguageResourcePath() + "common", new UTF8Control());
         DatabaseManager manager = new PostgresDBManager(runParameters.getServerIP(),
                                                         runParameters.getServerPort());
         commandExecutor = new CommandExecutor(runParameters, manager, view);
+    }
+
+    private void localeSetUp() {
+        localeSelector = new LocaleSelector();
+        try {
+            localeSelector.setLocale(runParameters.getInterfaceLanguage());
+        } catch (UnsupportedLanguageException e) {
+            view.writeMessage("Unsupported language parameter in sqlcmd.properties file.");
+            view.writeMessage("Exit the program and change it to available variant: " +
+                    localeSelector.getSupportedLocale().toString());
+            view.writeMessage("Current interface language setting to [en]\n");
+            localeSelector.setEnglishLocale();
+        }
     }
 
     private void tryDBconnectWithDefaultParameters() {

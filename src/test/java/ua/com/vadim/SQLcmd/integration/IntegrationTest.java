@@ -1,21 +1,26 @@
 package ua.com.vadim.SQLcmd.integration;
 
 import org.junit.*;
+import ua.com.vadim.SQLcmd.controller.LocaleSelector;
 import ua.com.vadim.SQLcmd.controller.PropertiesLoader;
 import ua.com.vadim.SQLcmd.exception.ExitException;
 import ua.com.vadim.SQLcmd.SQLCmdMain;
 import ua.com.vadim.SQLcmd.controller.RunParameters;
+import ua.com.vadim.SQLcmd.exception.UnsupportedLanguageException;
 import ua.com.vadim.SQLcmd.model.DataSet;
 import ua.com.vadim.SQLcmd.model.DataSetImpl;
 import ua.com.vadim.SQLcmd.model.DatabaseManager;
 import ua.com.vadim.SQLcmd.model.PostgresDBManager;
+import ua.com.vadim.SQLcmd.view.Console;
 import ua.com.vadim.SQLcmd.view.UTF8Control;
+import ua.com.vadim.SQLcmd.view.View;
 
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.io.UnsupportedEncodingException;
 import java.sql.SQLException;
+import java.util.Locale;
 import java.util.ResourceBundle;
 
 import static org.junit.Assert.assertEquals;
@@ -24,6 +29,7 @@ public class IntegrationTest {
 
     private static RunParameters runParameters;
     private static DatabaseManager manager;
+    private static View view;
     private ConfigurableInputStream consoleInputStream;
     private ByteArrayOutputStream consoleOutputStream;
     private static final String TEST_DATABASE = "test_db_sqlcmd";
@@ -47,6 +53,8 @@ public class IntegrationTest {
     public static void beforeAllTestSetUp() {
         runParameters = new PropertiesLoader().getParameters();
         manager = new PostgresDBManager(runParameters.getServerIP(), runParameters.getServerPort());
+        view = new Console();
+        localeSetUp();
         resourceSetUp();
         try {
             manager.connect(runParameters.getDatabaseName(), runParameters.getUserName(), runParameters.getPassword());
@@ -58,6 +66,17 @@ public class IntegrationTest {
             manager.disconnect();
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    private static void localeSetUp() {
+        LocaleSelector localeSelector = new LocaleSelector();
+        try {
+            localeSelector.setLocale(runParameters.getInterfaceLanguage());
+        } catch (UnsupportedLanguageException e) {
+            view.writeMessage("Unsupported language parameter in sqlcmd.properties file.");
+            view.writeMessage("Current interface language setting to [en]\n");
+            localeSelector.setEnglishLocale();
         }
     }
 
@@ -137,7 +156,6 @@ public class IntegrationTest {
         assertEquals(expectedMessage, getData());
     }
 
-//    @Ignore
 //    @Test
 //    public void testTerminatedExit() {
 //        //given
