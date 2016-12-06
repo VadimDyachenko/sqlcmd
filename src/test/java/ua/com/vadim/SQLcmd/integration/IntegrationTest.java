@@ -1,20 +1,13 @@
 package ua.com.vadim.SQLcmd.integration;
 
 import org.junit.*;
-import ua.com.vadim.SQLcmd.controller.LocaleSelector;
-import ua.com.vadim.SQLcmd.controller.PropertiesLoader;
-import ua.com.vadim.SQLcmd.exception.ExitException;
+
 import ua.com.vadim.SQLcmd.SQLCmdMain;
-import ua.com.vadim.SQLcmd.controller.RunParameters;
-import ua.com.vadim.SQLcmd.exception.UnsupportedLanguageException;
 import ua.com.vadim.SQLcmd.model.DataSet;
 import ua.com.vadim.SQLcmd.model.DataSetImpl;
 import ua.com.vadim.SQLcmd.model.DatabaseManager;
 import ua.com.vadim.SQLcmd.model.PostgresDBManager;
-import ua.com.vadim.SQLcmd.view.Console;
 import ua.com.vadim.SQLcmd.view.UTF8Control;
-import ua.com.vadim.SQLcmd.view.View;
-
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
@@ -27,21 +20,21 @@ import static org.junit.Assert.assertEquals;
 
 public class IntegrationTest {
 
-    private static RunParameters runParameters;
     private static DatabaseManager manager;
-    private static View view;
     private ConfigurableInputStream consoleInputStream;
     private ByteArrayOutputStream consoleOutputStream;
+
+    private static final String SERVER_IP = "192.168.1.5";
+    private static final String SERVER_PORT = "5432";
+    private static final String WORK_DATABASE = "sqlcmd";
+    private static final String USER_NAME = "javauser";
+    private static final String USER_PASSWORD = "test";
     private static final String TEST_DATABASE = "test_db_sqlcmd";
     private static final String TEST_DATABASE_EMPTY = "test_db_empty";
     private static final String TEST_TABLE = "test_table_users";
     private static final String CREATE_TABLE_QUERY = TEST_TABLE + " (id SERIAL PRIMARY KEY," +
             " name VARCHAR (25) UNIQUE NOT NULL," +
             " password VARCHAR (25) NOT NULL)";
-    private static final String USER_NAME = "javauser";
-    private static final String USER_PASSWORD = "test";
-    private static String MAIN_MENU = "common.main.menu";
-    private static String TABLE_MENU = "common.table.men";
 
     private static ResourceBundle res_common;
     private static ResourceBundle res_exit;
@@ -51,17 +44,18 @@ public class IntegrationTest {
 
     @BeforeClass
     public static void beforeAllTestSetUp() {
-        runParameters = new PropertiesLoader().getParameters();
-        manager = new PostgresDBManager(runParameters.getServerIP(), runParameters.getServerPort());
-        view = new Console();
-        localeSetUp();
+        manager = new PostgresDBManager(SERVER_IP, SERVER_PORT);
+        Locale.setDefault(Locale.ENGLISH);
+//        localeSetUp();
         resourceSetUp();
         try {
-            manager.connect(runParameters.getDatabaseName(), runParameters.getUserName(), runParameters.getPassword());
+            manager.connect(WORK_DATABASE, USER_NAME, USER_PASSWORD);
             manager.dropDatabase(TEST_DATABASE);
+            manager.dropDatabase(TEST_DATABASE_EMPTY);
             manager.createDatabase(TEST_DATABASE);
+            manager.createDatabase(TEST_DATABASE_EMPTY);
             manager.disconnect();
-            manager.connect(TEST_DATABASE, runParameters.getUserName(), runParameters.getPassword());
+            manager.connect(TEST_DATABASE, USER_NAME, USER_PASSWORD);
             manager.createTable(CREATE_TABLE_QUERY);
             manager.disconnect();
         } catch (Exception e) {
@@ -69,22 +63,24 @@ public class IntegrationTest {
         }
     }
 
-    private static void localeSetUp() {
-        LocaleSelector localeSelector = new LocaleSelector();
-        try {
-            localeSelector.setLocale(runParameters.getInterfaceLanguage());
-        } catch (UnsupportedLanguageException e) {
-            view.writeMessage("Unsupported language parameter in sqlcmd.properties file.");
-            view.writeMessage("Current interface language setting to [en]\n");
-            localeSelector.setEnglishLocale();
-        }
-    }
+//    private static void localeSetUp() {
+//        LocaleSelector localeSelector = new LocaleSelector();
+//        try {
+//            localeSelector.setLocale(runParameters.getInterfaceLanguage());
+//        } catch (UnsupportedLanguageException e) {
+//            view.writeMessage("Unsupported language parameter in sqlcmd.properties file.");
+//            view.writeMessage("Current interface language setting to [en]\n");
+//            localeSelector.setEnglishLocale();
+//        }
+//    }
 
     @AfterClass
     public static void afterAllTestsClear() {
+//        manager = new PostgresDBManager(SERVER_IP, SERVER_PORT);
         try {
-            manager.connect(runParameters.getDatabaseName(), runParameters.getUserName(), runParameters.getPassword());
+            manager.connect(WORK_DATABASE, USER_NAME, USER_PASSWORD);
             manager.dropDatabase(TEST_DATABASE);
+            manager.dropDatabase(TEST_DATABASE_EMPTY);
             manager.disconnect();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -97,8 +93,9 @@ public class IntegrationTest {
         consoleOutputStream = new ByteArrayOutputStream();
         System.setIn(consoleInputStream);
         System.setOut(new PrintStream(consoleOutputStream));
+//        manager = new PostgresDBManager(SERVER_IP, SERVER_PORT);
         try {
-            manager.connect(TEST_DATABASE, runParameters.getUserName(), runParameters.getPassword());
+            manager.connect(TEST_DATABASE, USER_NAME, USER_PASSWORD);
             putDataToTestTable();
         } catch (Exception e) {
             e.printStackTrace();
@@ -138,9 +135,8 @@ public class IntegrationTest {
         //given
         consoleInputStream.addLine("4"); // 4 - Exit (Main menu)
         consoleInputStream.addLine("y"); // answer "y"
-
         String connectionStatus = String.format(res_connectionStatus.getString("connection.status.database"),
-                runParameters.getDatabaseName());
+                WORK_DATABASE);
         String expectedMessage = res_common.getString("common.welcome") + "\n" +
                 res_common.getString("common.try.connect.default.parameters") + "\n" +
                 res_DBConnect.getString("dbconnect.successful") + "\n" +
@@ -156,39 +152,61 @@ public class IntegrationTest {
         assertEquals(expectedMessage, getData());
     }
 
-//    @Test
-//    public void testTerminatedExit() {
-//        //given
-//        consoleInputStream.addLine("exit");
-//        //when
-//        SQLCmdMain.main(new String[0]);
-//        //then
-//        assertEquals("Welcome to SQLCmd!\n" +
-//                "\n" +
-//                MAIN_MENU +
-//                //input - exit
-//                "Terminated. Thank you for using SQLCmd. Good luck.\n", getData());
-//    }
-//
-//    @Ignore
-//    @Test
-//    public void testListWithoutConnection() {
-//        //given
-//        consoleInputStream.addLine("2");
-//        consoleInputStream.addLine("exit");
-//        //when
-//        SQLCmdMain.main(new String[0]);
-//        //then
-//        assertEquals("Welcome to SQLCmd!\n" +
-//                "\nNo any database connected.\n" +
-//                MAIN_MENU +
-//                // input - 2
-//                "No one connection to database. Select \"DBConnect to database\" first.\n" +
-//                "\nNo any database connected.\n" +
-//                MAIN_MENU +
-//                //input - exit
-//                "Terminated. Thank you for using SQLCmd. Good luck.\n", getData());
-//    }
+    @Test
+    public void testTerminatedExit() {
+        //given
+        consoleInputStream.addLine("exit");
+
+        String connectionStatus = String.format(res_connectionStatus.getString("connection.status.database"),
+                WORK_DATABASE);
+        String expectedMessage = res_common.getString("common.welcome") + "\n" +
+                res_common.getString("common.try.connect.default.parameters") + "\n" +
+                res_DBConnect.getString("dbconnect.successful") + "\n" +
+                connectionStatus + " \n\n" +
+                res_common.getString("common.choice.operation") + "\n" +
+                res_common.getString("common.main.menu") + "\n" +
+                res_common.getString("common.the.end") + "\n";
+        //when
+        SQLCmdMain.main(new String[0]);
+        //then
+        assertEquals(expectedMessage, getData());
+    }
+
+    @Test
+    public void testConnectDatabase() {
+        //given
+        consoleInputStream.addLine("1"); // 1 - Connect to Database (Main menu)
+        consoleInputStream.addLine(TEST_DATABASE);
+        consoleInputStream.addLine(USER_NAME);
+        consoleInputStream.addLine(USER_PASSWORD);
+        consoleInputStream.addLine("4"); // 4 - Exit (Main menu)
+        consoleInputStream.addLine("y"); // answer "y"
+
+        String connectionStatusFirst = String.format(res_connectionStatus.getString("connection.status.database"),
+                WORK_DATABASE);
+        String connectionStatusSecond = String.format(res_connectionStatus.getString("connection.status.database"),
+                TEST_DATABASE);
+        String expectedMessage = res_common.getString("common.welcome") + "\n" +
+                res_common.getString("common.try.connect.default.parameters") + "\n" +
+                res_DBConnect.getString("dbconnect.successful") + "\n" +
+                connectionStatusFirst + " \n\n" +
+                res_common.getString("common.choice.operation") + "\n" +
+                res_common.getString("common.main.menu") + "\n" +
+                res_DBConnect.getString("dbconnect.enter.connection.parameters") + "\n" +
+                res_DBConnect.getString("dbconnect.enter.database.name") + "\n" +
+                res_DBConnect.getString("dbconnect.enter.login") + "\n" +
+                res_DBConnect.getString("dbconnect.enter.password") + "\n" +
+                connectionStatusSecond + " \n\n" +
+                res_common.getString("common.choice.operation") + "\n" +
+                res_common.getString("common.main.menu") + "\n" +
+                res_exit.getString("exit.question") + "\n" +
+                res_common.getString("common.the.end") + "\n";
+
+        //when
+        SQLCmdMain.main(new String[0]);
+        //then
+        assertEquals(expectedMessage, getData());
+    }
 //
 //    @Ignore
 //    @Test
@@ -706,6 +724,6 @@ public class IntegrationTest {
     }
 
     private static ResourceBundle getResourceBundle(String resource) {
-        return ResourceBundle.getBundle(runParameters.getLanguageResourcePath() + resource, new UTF8Control());
+        return ResourceBundle.getBundle("ua.com.vadim.SQLcmd.controller.resources.interface." + resource, new UTF8Control());
     }
 }

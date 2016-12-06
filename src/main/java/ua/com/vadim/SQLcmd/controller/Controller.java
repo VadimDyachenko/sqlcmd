@@ -15,7 +15,6 @@ public class Controller {
     private CommandExecutor commandExecutor;
     private RunParameters runParameters;
     private ResourceBundle res;
-    private LocaleSelector localeSelector;
 
     public Controller(View view) {
         this.view = view;
@@ -33,6 +32,7 @@ public class Controller {
             }
             while (true);
         } catch (ExitException e) {
+
             view.writeMessage(res.getString("common.the.end"));
         }
     }
@@ -46,7 +46,6 @@ public class Controller {
                 Integer numOfChoice = Integer.parseInt(view.readLine());
                 if (runParameters.isTableLevel()) return AvailableCommand.getTableCommand(numOfChoice);
                 else return AvailableCommand.getMainCommand(numOfChoice);
-
             } catch (IllegalArgumentException e) {
                 view.writeMessage(res.getString("common.choice.correct"));
             }
@@ -79,7 +78,7 @@ public class Controller {
     }
 
     private void localeSetUp() {
-        localeSelector = new LocaleSelector();
+        LocaleSelector localeSelector = new LocaleSelector();
         try {
             localeSelector.setLocale(runParameters.getInterfaceLanguage());
         } catch (UnsupportedLanguageException e) {
