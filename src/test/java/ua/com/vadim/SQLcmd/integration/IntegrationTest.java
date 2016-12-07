@@ -42,6 +42,9 @@ public class IntegrationTest {
     private static ResourceBundle res_DBConnect;
     private static ResourceBundle res_DBListTableNames;
     private static ResourceBundle res_DBSelectTable;
+    private static ResourceBundle res_TableCreateRecord;
+    private static ResourceBundle res_TableUpdateRecord;
+    private static ResourceBundle res_TableClear;
 
 
     @BeforeClass
@@ -246,7 +249,7 @@ public class IntegrationTest {
     }
 
     @Test
-    public void testListWithConnect() {
+    public void testPrintTable() {
         //given
         setStartupAnswers();
         consoleInputStream.addLine("3"); // 3 - Select Table (Main Menu)
@@ -256,11 +259,11 @@ public class IntegrationTest {
         consoleInputStream.addLine("4"); // 4 - Exit (Main Menu)
         consoleInputStream.addLine("y");
 
-        String printResult =    "|id|name        |password    |\n" +
-                                "+--+------------+------------+\n" +
-                                "|1 |Semen Petrov|qwert       |\n" +
-                                "|2 |Bob Marley  |pass1       |\n" +
-                                "|3 |Coca Cola   |pepsithebest|";
+        String printResult = "|id|name        |password    |\n" +
+                "+--+------------+------------+\n" +
+                "|1 |Semen Petrov|qwert       |\n" +
+                "|2 |Bob Marley  |pass1       |\n" +
+                "|3 |Coca Cola   |pepsithebest|";
 
         String expectedMessage = getStartupTableMessages() +
                 printResult + "\n" +
@@ -271,434 +274,147 @@ public class IntegrationTest {
                 res_common.getString("common.choice.operation") + "\n" +
                 res_common.getString("common.main.menu") + "\n" +
                 res_exit.getString("exit.question") + "\n" +
-                res_common.getString("common.the.end") + "\n";;
+                res_common.getString("common.the.end") + "\n";
 
         //when
         SQLCmdMain.main(new String[0]);
         //then
         assertEquals(expectedMessage, getData());
     }
-//
-//    @Ignore
-//    @Test
-//    public void testListWithConnectToEmptyDatabase() {
-//        //given
-//        consoleInputStream.addLine("1");
-//        consoleInputStream.addLine(TEST_DATABASE_EMPTY);
-//        consoleInputStream.addLine(USER_NAME);
-//        consoleInputStream.addLine(USER_PASSWORD);
-//        consoleInputStream.addLine("2");
-//        consoleInputStream.addLine("exit");
-//        //when
-//        SQLCmdMain.main(new String[0]);
-//        //then
-//        assertEquals("Welcome to SQLCmd!\n" +
-//                "\n" +
-//                MAIN_MENU +
-//                // input - 1
-//                "Enter database name, login and password.\n" +
-//                "Type 'exit' for exit program.\n" +
-//                "\n" +
-//                "Please, enter database name:\n" +
-//                // input - TEST_DATABASE_EMPTY
-//                "Enter you login:\n" +
-//                // input - javauser
-//                "Enter you password:\n" +
-//                // input - test
-//                "Connection successful!\n" +
-//                "\n" +
-//                //input - 2
-//                "Connected to database: <" + TEST_DATABASE_EMPTY + ">\n" +
-//                MAIN_MENU +
-//                "There are no tables consoleInputStream the database <" + TEST_DATABASE_EMPTY + ">\n" +
-//                "\n" +
-//                "Connected to database: <" + TEST_DATABASE_EMPTY + ">\n" +
-//                MAIN_MENU +
-//                //input - exit
-//                "Terminated. Thank you for using SQLCmd. Good luck.\n", getData());
-//    }
-//
-//    @Ignore
-//    @Test
-//    public void testSelectTableWithConnect() {
-//        //given
-//        consoleInputStream.addLine("1");
-//        consoleInputStream.addLine("3");
-//        consoleInputStream.addLine(TEST_TABLE);
-//        consoleInputStream.addLine("exit");
-//        //when
-//        SQLCmdMain.main(new String[0]);
-//        //then
-//        assertEquals("Welcome to SQLCmd!\n" +
-//                "\nNo any database connected.\n" +
-//                MAIN_MENU +
-//                // input - 1
-//                "Connection successful!\n" +
-//                "\n" +
-//                //input - 3
-//                "Connected to database: <" + TEST_DATABASE + ">.\n" +
-//                MAIN_MENU +
-//                "Enter table name. Available tables:\n" +
-//                "[users, staff]\n" +
-//                "\n" +
-//                //input - users
-//                "Connected to database: <" + TEST_DATABASE + ">. Selected table: <users>\n" +
-//                TABLE_MENU +
-//                //input - exit
-//                "Terminated. Thank you for using SQLCmd. Good luck.\n", getData());
-//    }
-//
-//    @Ignore
-//    @Test
-//    public void testSelectTableToEmptyDatabase() {
-//        //given
-//        consoleInputStream.addLine("1");
-//        consoleInputStream.addLine(TEST_DATABASE_EMPTY);
-//        consoleInputStream.addLine(USER_NAME);
-//        consoleInputStream.addLine(USER_PASSWORD);
-//        consoleInputStream.addLine("3");
-//        consoleInputStream.addLine("exit");
-//        //when
-//        SQLCmdMain.main(new String[0]);
-//        //then
-//        assertEquals("Welcome to SQLCmd!\n" +
-//                "\n" +
-//                MAIN_MENU +
-//                // input - 1
-//                "Enter database name, login and password.\n" +
-//                "Type 'exit' for exit program.\n" +
-//                "\n" +
-//                "Please, enter database name:\n" +
-//                //input - TEST_DATABASE_EMPTY
-//                "Enter you login:\n" +
-//                //input - USER_NAME
-//                "Enter you password:\n" +
-//                //input - USER_PASSWORD
-//                "Connection successful!\n" +
-//                "\n" +
-//                //input - 3
-//                "Connected to database: <" + TEST_DATABASE_EMPTY + ">\n" +
-//                MAIN_MENU +
-//                "There are no tables consoleInputStream the database <" + TEST_DATABASE_EMPTY + ">\n" +
-//                "\n" +
-//                "Connected to database: <" + TEST_DATABASE_EMPTY + ">\n" +
-//                MAIN_MENU +
-//                //input - exit
-//                "Terminated. Thank you for using SQLCmd. Good luck.\n", getData());
-//    }
-//
-//    @Ignore
-//    @Test
-//    public void testPrintTableWithConnect() {
-//        //given
-//        consoleInputStream.addLine("1");
-//        consoleInputStream.addLine(TEST_DATABASE);
-//        consoleInputStream.addLine(USER_NAME);
-//        consoleInputStream.addLine(USER_PASSWORD);
-//        consoleInputStream.addLine("3");
-//        consoleInputStream.addLine(TEST_TABLE);
-//        consoleInputStream.addLine("1");
-//        consoleInputStream.addLine("exit");
-//        //when
-//        SQLCmdMain.main(new String[0]);
-//        //then
-//        assertEquals("Welcome to SQLCmd!\n" +
-//                "\n" +
-//                MAIN_MENU +
-//                // input - 1
-//                "Enter database name, login and password.\n" +
-//                "Type 'exit' for exit program.\n" +
-//                "\n" +
-//                "Please, enter database name:\n" +
-//                //input - TEST_DATABASE
-//                "Enter you login:\n" +
-//                //input - USER_NAME
-//                "Enter you password:\n" +
-//                //input - USER_PASSWORD
-//                "Connection successful!\n" +
-//                "\n" +
-//                //input - 3
-//                "Connected to database: <" + TEST_DATABASE + ">\n" +
-//                MAIN_MENU +
-//                "Enter table name. Available tables:\n" +
-//                "[users, staff]\n" +
-//                "\n" +
-//                //input - TEST_TABLE
-//                "Connected to database: <" + TEST_DATABASE + ">. Selected table: <users>\n" +
-//                TABLE_MENU +
-//                //input - 1
-//                "|id|name        |password    |\n" +
-//                "+--+------------+------------+\n" +
-//                "|1 |Semen Petrov|qwert       |\n" +
-//                "|2 |Bob Marley  |pass1       |\n" +
-//                "|3 |Coca Cola   |pepsithebest|\n" +
-//                "\n" +
-//                "\n" +
-//                "Connected to database: <" + TEST_DATABASE + ">. Selected table: <users>\n" +
-//                TABLE_MENU +
-//                //input - exit
-//                "Terminated. Thank you for using SQLCmd. Good luck.\n", getData());
-//    }
-//
-//    @Ignore
-//    @Test
-//    public void testSelectIncorrectTableName() {
-//        //given
-//        consoleInputStream.addLine("1");
-//        consoleInputStream.addLine(TEST_DATABASE);
-//        consoleInputStream.addLine(USER_NAME);
-//        consoleInputStream.addLine(USER_PASSWORD);
-//        consoleInputStream.addLine("3");
-//        consoleInputStream.addLine("usersa");
-//        consoleInputStream.addLine("exit");
-//        //when
-//        SQLCmdMain.main(new String[0]);
-//        //then
-//        assertEquals("Welcome to SQLCmd!\n" +
-//                "\n" +
-//                MAIN_MENU +
-//                // input - 1
-//                "Enter database name, login and password.\n" +
-//                "Type 'exit' for exit program.\n" +
-//                "\n" +
-//                "Please, enter database name:\n" +
-//                //input - TEST_DATABASE
-//                "Enter you login:\n" +
-//                //input - javauser
-//                "Enter you password:\n" +
-//                //input - test +
-//                "Connection successful!\n" +
-//                "\n" +
-//                //input - 3
-//                "Connected to database: <" + TEST_DATABASE + ">\n" +
-//                MAIN_MENU +
-//                "Enter table name. Available tables:\n" +
-//                "[users, staff]\n" +
-//                "\n" +
-//                //input - usersa
-//                "Enter correct table name. Available tables:\n" +
-//                "[users, staff]\n\n" +
-//                //input - exit
-//                "Terminated. Thank you for using SQLCmd. Good luck.\n", getData());
-//    }
-//
-//    @Ignore
-//    @Test
-//    public void testClearTable() {
-//        //given
-//        consoleInputStream.addLine("1");
-//        consoleInputStream.addLine(TEST_DATABASE);
-//        consoleInputStream.addLine(USER_NAME);
-//        consoleInputStream.addLine(USER_PASSWORD);
-//        consoleInputStream.addLine("3");
-//        consoleInputStream.addLine("users");
-//        consoleInputStream.addLine("4");
-//        consoleInputStream.addLine("y");
-//        consoleInputStream.addLine("exit");
-//        //when
-//        SQLCmdMain.main(new String[0]);
-//        //then
-//        assertEquals("Welcome to SQLCmd!\n" +
-//                "\n" +
-//                MAIN_MENU +
-//                // input - 1
-//                "Enter database name, login and password.\n" +
-//                "Type 'exit' for exit program.\n" +
-//                "\n" +
-//                "Please, enter database name:\n" +
-//                //input - TEST_DATABASE
-//                "Enter you login:\n" +
-//                //input - javauser
-//                "Enter you password:\n" +
-//                //input - test
-//                "Connection successful!\n" +
-//                "\n" +
-//                "Connected to database: <" + TEST_DATABASE + ">\n" +
-//                MAIN_MENU +
-//                //input - 3
-//                "Enter table name. Available tables:\n" +
-//                "[users, staff]\n" +
-//                "\n" +
-//                "Connected to database: <" + TEST_DATABASE + ">. Selected table: <users>\n" +
-//                TABLE_MENU +
-//                "Do you really want to clear table <users>? <y/n>\n" +
-//                //input - y
-//                "Table clear successful.\n" +
-//                "\n" +
-//                "Connected to database: <" + TEST_DATABASE + ">. Selected table: <users>\n" +
-//                TABLE_MENU +
-//                //input - exit
-//                "Terminated. Thank you for using SQLCmd. Good luck.\n", getData());
-//    }
-//
-//    @Ignore
-//    @Test
-//    public void testClearTableWithCancell() {
-//        //given
-//        consoleInputStream.addLine("1");
-//        consoleInputStream.addLine(TEST_DATABASE);
-//        consoleInputStream.addLine(USER_NAME);
-//        consoleInputStream.addLine(USER_PASSWORD);
-//        consoleInputStream.addLine("3");
-//        consoleInputStream.addLine("users");
-//        consoleInputStream.addLine("4");
-//        consoleInputStream.addLine("n");
-//        consoleInputStream.addLine("exit");
-//        //when
-//        SQLCmdMain.main(new String[0]);
-//        //then
-//        assertEquals("Welcome to SQLCmd!\n" +
-//                "\n" +
-//                MAIN_MENU +
-//                // input - 1
-//                "Enter database name, login and password.\n" +
-//                "Type 'exit' for exit program.\n" +
-//                "\n" +
-//                "Please, enter database name:\n" +
-//                //input - TEST_DATABASE
-//                "Enter you login:\n" +
-//                //input - javauser
-//                "Enter you password:\n" +
-//                //input - test
-//                "Connection successful!\n" +
-//                "\n" +
-//                "Connected to database: <" + TEST_DATABASE + ">\n" +
-//                MAIN_MENU +
-//                //input - 3
-//                "Enter table name. Available tables:\n" +
-//                "[users, staff]\n" +
-//                "\n" +
-//                "Connected to database: <" + TEST_DATABASE + ">. Selected table: <users>\n" +
-//                TABLE_MENU +
-//                "Do you really want to clear table <users>? <y/n>\n" +
-//                //input - y
-//                "Connected to database: <" + TEST_DATABASE + ">. Selected table: <users>\n" +
-//                TABLE_MENU +
-//                //input - exit
-//                "Terminated. Thank you for using SQLCmd. Good luck.\n", getData());
-//    }
-//
-//    @Ignore
-//    @Test
-//    public void testReturn() {
-//        //given
-//        consoleInputStream.addLine("1");
-//        consoleInputStream.addLine(TEST_DATABASE);
-//        consoleInputStream.addLine(USER_NAME);
-//        consoleInputStream.addLine(USER_PASSWORD);
-//        consoleInputStream.addLine("3");
-//        consoleInputStream.addLine("users");
-//        consoleInputStream.addLine("5");
-//        consoleInputStream.addLine("exit");
-//        //when
-//        SQLCmdMain.main(new String[0]);
-//        //then
-//        assertEquals("Welcome to SQLCmd!\n" +
-//                "\n" +
-//                MAIN_MENU +
-//                // input - 1
-//                "Enter database name, login and password.\n" +
-//                "Type 'exit' for exit program.\n" +
-//                "\n" +
-//                "Please, enter database name:\n" +
-//                //input - TEST_DATABASE
-//                "Enter you login:\n" +
-//                //input - javauser
-//                "Enter you password:\n" +
-//                //input - test
-//                "Connection successful!\n" +
-//                "\n" +
-//                "Connected to database: <" + TEST_DATABASE + ">\n" +
-//                MAIN_MENU +
-//                //input - 3
-//                "Enter table name. Available tables:\n" +
-//                "[users, staff]\n" +
-//                "\n" +
-//                "Connected to database: <" + TEST_DATABASE + ">. Selected table: <users>\n" +
-//                TABLE_MENU +
-//                //input - 5
-//                "Connected to database: <" + TEST_DATABASE + ">\n" +
-//                MAIN_MENU +
-//                //input - exit
-//                "Terminated. Thank you for using SQLCmd. Good luck.\n", getData());
-//    }
-//
-//    @Ignore
-//    @Test
-//    public void testConnectToAnotherDatabase() {
-//        //given
-//        consoleInputStream.addLine("1");
-//        consoleInputStream.addLine(TEST_DATABASE);
-//        consoleInputStream.addLine(USER_NAME);
-//        consoleInputStream.addLine(USER_PASSWORD);
-//        consoleInputStream.addLine("1");
-//        consoleInputStream.addLine(TEST_DATABASE_EMPTY);
-//        consoleInputStream.addLine(USER_NAME);
-//        consoleInputStream.addLine(USER_PASSWORD);
-//        consoleInputStream.addLine("exit");
-//        //when
-//        SQLCmdMain.main(new String[0]);
-//        //then
-//        assertEquals("Welcome to SQLCmd!\n" +
-//                "\n" +
-//                MAIN_MENU +
-//                // input - 1
-//                "Enter database name, login and password.\n" +
-//                "Type 'exit' for exit program.\n" +
-//                "\n" +
-//                "Please, enter database name:\n" +
-//                //input - TEST_DATABASE
-//                "Enter you login:\n" +
-//                //input - javauser
-//                "Enter you password:\n" +
-//                //input - test
-//                "Connection successful!\n" +
-//                "\n" +
-//                "Connected to database: <" + TEST_DATABASE + ">\n" +
-//                MAIN_MENU +
-//                "Enter database name, login and password.\n" +
-//                "Type 'exit' for exit program.\n" +
-//                "\n" +
-//                "Please, enter database name:\n" +
-//                //input - postgers
-//                "Enter you login:\n" +
-//                //input - javauser
-//                "Enter you password:\n" +
-//                //input - test
-//                "Connection successful!\n" +
-//                "\n" +
-//                "Connected to database: <" + TEST_DATABASE_EMPTY + ">\n" +
-//                MAIN_MENU +
-//                //input - exit
-//                "Terminated. Thank you for using SQLCmd. Good luck.\n", getData());
-//    }
 
-//    @Test
-//    public void testUnsupportedChoiceInMainMenu() {
-//        //given
-//        consoleInputStream.addLine("0");
-//        consoleInputStream.addLine("exit");
-//        //when
-//        SQLCmdMain.main(new String[0]);
-//        //then
-//        assertEquals("Welcome to SQLCmd!\n" +
-//                "\n" +
-//                MAIN_MENU +
-//                // input - 0
-//                "\n" +
-//                "Please choice correct number:\n" +
-//                "1 - Connect to database\n" +
-//                "2 - List all table names\n" +
-//                "3 - Select table to work\n" +
-//                "4 - Exit\n" +
-//                //input - exit
-//                "Terminated. Thank you for using SQLCmd. Good luck.\n", getData());
-//    }
+    @Test
+    public void testCreateRecord() {
+        //given
+        setStartupAnswers();
+        consoleInputStream.addLine("3"); // 3 - Select Table (Main Menu)
+        consoleInputStream.addLine(TEST_TABLE);
+        consoleInputStream.addLine("2"); // 2 - Create table record
+        consoleInputStream.addLine("id|8|name|ABC|password|DEF");
+        consoleInputStream.addLine("5"); // 5 - Return to Main menu
+        consoleInputStream.addLine("4"); // 4 - Exit (Main Menu)
+        consoleInputStream.addLine("y");
+
+        String availableColumn = String.format(res_TableCreateRecord.getString("table.create.available.column"),
+                "[id, name, password]");
+        String resultCreateRecord = String.format(res_TableCreateRecord.getString("table.create.successful"),
+                "{id:8, name:ABC, password:DEF}");
+        String expectedMessage = getStartupTableMessages() +
+                res_TableCreateRecord.getString("table.create.record.help") + "\n" +
+                availableColumn + "\n" +
+                resultCreateRecord + "\n" +
+                getConnectionStatus() + "\n\n" +
+                res_common.getString("common.choice.operation") + "\n" +
+                res_common.getString("common.table.menu") + "\n" +
+                getConnectionDBStatus() + " \n\n" +
+                res_common.getString("common.choice.operation") + "\n" +
+                res_common.getString("common.main.menu") + "\n" +
+                res_exit.getString("exit.question") + "\n" +
+                res_common.getString("common.the.end") + "\n";
+        ;
+        //when
+        SQLCmdMain.main(new String[0]);
+        //then
+        assertEquals(expectedMessage, getData());
+    }
+
+    @Test
+    public void testUpdateRecord() {
+        //given
+        setStartupAnswers();
+        consoleInputStream.addLine("3"); // 3 - Select Table (Main Menu)
+        consoleInputStream.addLine(TEST_TABLE);
+        consoleInputStream.addLine("3"); // 3 - Update table record
+        consoleInputStream.addLine("id|1|name|Serj|password|pass");
+        consoleInputStream.addLine("5"); // 5 - Return to Main menu
+        consoleInputStream.addLine("4"); // 4 - Exit (Main Menu)
+        consoleInputStream.addLine("y");
+
+        String availableColumn = String.format(res_TableUpdateRecord.getString("table.update.available.column"),
+                "[id, name, password]");
+        String resultUpdateRecord = String.format(res_TableUpdateRecord.getString("table.update.successful"),
+                "{name:Serj, password:pass}");
+        String expectedMessage = getStartupTableMessages() +
+                res_TableUpdateRecord.getString("table.update.record.help") + "\n" +
+                availableColumn + "\n" +
+                resultUpdateRecord + "\n" +
+                getConnectionStatus() + "\n\n" +
+                res_common.getString("common.choice.operation") + "\n" +
+                res_common.getString("common.table.menu") + "\n" +
+                getConnectionDBStatus() + " \n\n" +
+                res_common.getString("common.choice.operation") + "\n" +
+                res_common.getString("common.main.menu") + "\n" +
+                res_exit.getString("exit.question") + "\n" +
+                res_common.getString("common.the.end") + "\n";
+        ;
+        //when
+        SQLCmdMain.main(new String[0]);
+        //then
+        assertEquals(expectedMessage, getData());
+    }
+
+    @Test
+    public void testClearTable() {
+        //given
+        setStartupAnswers();
+        consoleInputStream.addLine("3"); // 3 - Select Table (Main Menu)
+        consoleInputStream.addLine(TEST_TABLE);
+        consoleInputStream.addLine("4"); // 4 - Clear Table
+        consoleInputStream.addLine("y");
+        consoleInputStream.addLine("5"); // 5 - Return to Main menu
+        consoleInputStream.addLine("4"); // 4 - Exit (Main Menu)
+        consoleInputStream.addLine("y");
+
+        String questionClearTable = String.format(res_TableClear.getString("table.clear.question"),
+                TEST_TABLE);
+        String expectedMessage = getStartupTableMessages() +
+                questionClearTable + "\n" +
+                res_TableClear.getString("table.clear.successful") + "\n" +
+                getConnectionStatus() + "\n\n" +
+                res_common.getString("common.choice.operation") + "\n" +
+                res_common.getString("common.table.menu") + "\n" +
+                getConnectionDBStatus() + " \n\n" +
+                res_common.getString("common.choice.operation") + "\n" +
+                res_common.getString("common.main.menu") + "\n" +
+                res_exit.getString("exit.question") + "\n" +
+                res_common.getString("common.the.end") + "\n";
+        //when
+        SQLCmdMain.main(new String[0]);
+        //then
+        assertEquals(expectedMessage, getData());
+    }
+
+    @Test
+    public void testUnsupportedChoiceInMainMenu() {
+        //given
+        setStartupAnswers();
+        consoleInputStream.addLine("3"); // 3 - Select Table (Main Menu)
+        consoleInputStream.addLine(TEST_TABLE);
+        consoleInputStream.addLine("0"); // 0 - Unsupported choice
+        consoleInputStream.addLine("5"); // 5 - Return to Main menu
+        consoleInputStream.addLine("0"); // 0 - Unsupported choice
+        consoleInputStream.addLine("4"); // 4 - Exit (Main Menu)
+        consoleInputStream.addLine("y");
+
+        String expectedMessage = getStartupTableMessages() +
+                res_common.getString("common.choice.correct") + "\n" +
+                res_common.getString("common.table.menu") + "\n" +
+                getConnectionDBStatus() + " \n\n" +
+                res_common.getString("common.choice.operation") + "\n" +
+                res_common.getString("common.main.menu") + "\n" +
+                res_common.getString("common.choice.correct") + "\n" +
+                res_common.getString("common.main.menu") + "\n" +
+                res_exit.getString("exit.question") + "\n" +
+                res_common.getString("common.the.end") + "\n";
+
+        //when
+        SQLCmdMain.main(new String[0]);
+        //then
+        assertEquals(expectedMessage, getData());
+    }
 
     private String getStartupMessages() {
         String connectionStatusFirst = String.format(res_connectionStatus.getString("connection.status.database"),
                 WORK_DATABASE);
-        String connectionStatusSecond = getConnectionDBStatus();
         String result = res_common.getString("common.welcome") + "\n" +
                 res_common.getString("common.try.connect.default.parameters") + "\n" +
                 res_DBConnect.getString("dbconnect.successful") + "\n" +
@@ -709,7 +425,7 @@ public class IntegrationTest {
                 res_DBConnect.getString("dbconnect.enter.database.name") + "\n" +
                 res_DBConnect.getString("dbconnect.enter.login") + "\n" +
                 res_DBConnect.getString("dbconnect.enter.password") + "\n" +
-                connectionStatusSecond + " \n\n" +
+                getConnectionDBStatus() + " \n\n" +
                 res_common.getString("common.choice.operation") + "\n" +
                 res_common.getString("common.main.menu") + "\n";
         return result;
@@ -738,12 +454,12 @@ public class IntegrationTest {
 
     private String getConnectionTableStatus() {
         return String.format(res_connectionStatus.getString("connection.status.table"),
-                    TEST_TABLE);
+                TEST_TABLE);
     }
 
     private String getConnectionDBStatus() {
         return String.format(res_connectionStatus.getString("connection.status.database"),
-                    TEST_DATABASE);
+                TEST_DATABASE);
     }
 
     private String getData() {
@@ -763,6 +479,9 @@ public class IntegrationTest {
         res_DBConnect = getResourceBundle("DBConnect");
         res_DBListTableNames = getResourceBundle("DBListTableNames");
         res_DBSelectTable = getResourceBundle("DBSelectTable");
+        res_TableCreateRecord = getResourceBundle("TableCreateRecord");
+        res_TableUpdateRecord = getResourceBundle("TableUpdateRecord");
+        res_TableClear = getResourceBundle("TableClear");
     }
 
     private static ResourceBundle getResourceBundle(String resource) {
