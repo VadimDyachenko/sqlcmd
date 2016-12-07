@@ -173,8 +173,7 @@ public class IntegrationTest {
 
         String connectionStatusFirst = String.format(res_connectionStatus.getString("connection.status.database"),
                 WORK_DATABASE);
-        String connectionStatusSecond = String.format(res_connectionStatus.getString("connection.status.database"),
-                TEST_DATABASE);
+        String connectionStatusSecond = getConnectionDBStatus();
         String expectedMessage = res_common.getString("common.welcome") + "\n" +
                 res_common.getString("common.try.connect.default.parameters") + "\n" +
                 res_DBConnect.getString("dbconnect.successful") + "\n" +
@@ -201,16 +200,14 @@ public class IntegrationTest {
     public void testListAllTableNames() {
         //given
         setStartupAnswers();
-        consoleInputStream.addLine("2"); // 2 - List Table Name
-        consoleInputStream.addLine("4"); // 4 - Exit
+        consoleInputStream.addLine("2"); // 2 - List Table Names (Main Menu)
+        consoleInputStream.addLine("4"); // 4 - Exit (Main Menu)
         consoleInputStream.addLine("y");
 
-        String connectionStatus = String.format(res_connectionStatus.getString("connection.status.database"),
-                TEST_DATABASE);
         String expectedMessage = getStartupMessages() +
                 res_DBListTableNames.getString("dblist.available.tables") + "\n" +
                 "[" + TEST_TABLE + "]\n" +
-                connectionStatus + " \n\n" +
+                getConnectionDBStatus() + " \n\n" +
                 res_common.getString("common.choice.operation") + "\n" +
                 res_common.getString("common.main.menu") + "\n" +
                 res_exit.getString("exit.question") + "\n" +
@@ -225,24 +222,19 @@ public class IntegrationTest {
     public void testSelectTable() {
         //given
         setStartupAnswers();
-        consoleInputStream.addLine("3"); // 3 - Select Table
+        consoleInputStream.addLine("3"); // 3 - Select Table (Main Menu)
         consoleInputStream.addLine(TEST_TABLE);
         consoleInputStream.addLine("5"); // 5 - Return to Main menu
-        consoleInputStream.addLine("4"); // 4 - Exit
+        consoleInputStream.addLine("4"); // 4 - Exit (Main Menu)
         consoleInputStream.addLine("y");
 
-        String connectionDBStatus = String.format(res_connectionStatus.getString("connection.status.database"),
-                TEST_DATABASE);
-        String connectionTableStatus = String.format(res_connectionStatus.getString("connection.status.table"),
-                TEST_TABLE);
-        String connectionStatus = connectionDBStatus + " " + connectionTableStatus;
         String expectedMessage = getStartupMessages() +
                 res_DBSelectTable.getString("dbselect.enter.name.tables") + "\n" +
                 "[" + TEST_TABLE + "]\n" +
-                connectionStatus + "\n\n" +
+                getConnectionStatus() + "\n\n" +
                 res_common.getString("common.choice.operation") + "\n" +
                 res_common.getString("common.table.menu") + "\n" +
-                connectionDBStatus + " \n\n" +
+                getConnectionDBStatus() + " \n\n" +
                 res_common.getString("common.choice.operation") + "\n" +
                 res_common.getString("common.main.menu") + "\n" +
                 res_exit.getString("exit.question") + "\n" +
@@ -253,41 +245,39 @@ public class IntegrationTest {
         assertEquals(expectedMessage, getData());
     }
 
-//    @Test
-//    public void testListWithConnect() {
-//        //given
-//        consoleInputStream.addLine("1");
-//        consoleInputStream.addLine(TEST_DATABASE);
-//        consoleInputStream.addLine(USER_NAME);
-//        consoleInputStream.addLine(USER_PASSWORD);
-//        consoleInputStream.addLine("2");
-//        consoleInputStream.addLine("exit");
-//        //when
-//        SQLCmdMain.main(new String[0]);
-//        //then
-//        assertEquals("Welcome to SQLCmd!\n" +
-//                "\n" +
-//                // input - 1
-//                "Enter database name, login and password.\n" +
-//                "Type 'exit' for exit program.\n" +
-//                "\n" +
-//                "Please, enter database name:\n" +
-//                // input - TEST_DATABASE
-//                "Enter you login:\n" +
-//                // input - javauser
-//                "Enter you password:\n" +
-//                // input - test
-//                "Connection successful!\n" +
-//                "\n" +
-//                //input - 2
-//                "Connected to database: <" + TEST_DATABASE + ">\n" +
-//                "Available tables:\n" +
-//                "[users, staff]\n" +
-//                "\n" +
-//                "Connected to database: <" + TEST_DATABASE + ">\n" +
-//                //input - exit
-//                "Terminated. Thank you for using SQLCmd. Good luck.\n", getData());
-//    }
+    @Test
+    public void testListWithConnect() {
+        //given
+        setStartupAnswers();
+        consoleInputStream.addLine("3"); // 3 - Select Table (Main Menu)
+        consoleInputStream.addLine(TEST_TABLE);
+        consoleInputStream.addLine("1"); // 1 - Print Table Data
+        consoleInputStream.addLine("5"); // 5 - Return to Main menu
+        consoleInputStream.addLine("4"); // 4 - Exit (Main Menu)
+        consoleInputStream.addLine("y");
+
+        String printResult =    "|id|name        |password    |\n" +
+                                "+--+------------+------------+\n" +
+                                "|1 |Semen Petrov|qwert       |\n" +
+                                "|2 |Bob Marley  |pass1       |\n" +
+                                "|3 |Coca Cola   |pepsithebest|";
+
+        String expectedMessage = getStartupTableMessages() +
+                printResult + "\n" +
+                getConnectionStatus() + "\n\n" +
+                res_common.getString("common.choice.operation") + "\n" +
+                res_common.getString("common.table.menu") + "\n" +
+                getConnectionDBStatus() + " \n\n" +
+                res_common.getString("common.choice.operation") + "\n" +
+                res_common.getString("common.main.menu") + "\n" +
+                res_exit.getString("exit.question") + "\n" +
+                res_common.getString("common.the.end") + "\n";;
+
+        //when
+        SQLCmdMain.main(new String[0]);
+        //then
+        assertEquals(expectedMessage, getData());
+    }
 //
 //    @Ignore
 //    @Test
@@ -708,8 +698,7 @@ public class IntegrationTest {
     private String getStartupMessages() {
         String connectionStatusFirst = String.format(res_connectionStatus.getString("connection.status.database"),
                 WORK_DATABASE);
-        String connectionStatusSecond = String.format(res_connectionStatus.getString("connection.status.database"),
-                TEST_DATABASE);
+        String connectionStatusSecond = getConnectionDBStatus();
         String result = res_common.getString("common.welcome") + "\n" +
                 res_common.getString("common.try.connect.default.parameters") + "\n" +
                 res_DBConnect.getString("dbconnect.successful") + "\n" +
@@ -731,6 +720,30 @@ public class IntegrationTest {
         consoleInputStream.addLine(TEST_DATABASE);
         consoleInputStream.addLine(USER_NAME);
         consoleInputStream.addLine(USER_PASSWORD);
+    }
+
+    private String getStartupTableMessages() {
+        String result = getStartupMessages() +
+                res_DBSelectTable.getString("dbselect.enter.name.tables") + "\n" +
+                "[" + TEST_TABLE + "]\n" +
+                getConnectionStatus() + "\n\n" +
+                res_common.getString("common.choice.operation") + "\n" +
+                res_common.getString("common.table.menu") + "\n";
+        return result;
+    }
+
+    private String getConnectionStatus() {
+        return getConnectionDBStatus() + " " + getConnectionTableStatus();
+    }
+
+    private String getConnectionTableStatus() {
+        return String.format(res_connectionStatus.getString("connection.status.table"),
+                    TEST_TABLE);
+    }
+
+    private String getConnectionDBStatus() {
+        return String.format(res_connectionStatus.getString("connection.status.database"),
+                    TEST_DATABASE);
     }
 
     private String getData() {
