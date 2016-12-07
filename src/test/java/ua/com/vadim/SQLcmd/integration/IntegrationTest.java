@@ -41,12 +41,14 @@ public class IntegrationTest {
     private static ResourceBundle res_connectionStatus;
     private static ResourceBundle res_DBConnect;
     private static ResourceBundle res_DBListTableNames;
+    private static ResourceBundle res_DBSelectTable;
 
 
     @BeforeClass
     public static void beforeAllTestSetUp() {
         manager = new PostgresDBManager(SERVER_IP, SERVER_PORT);
-        Locale.setDefault(Locale.ENGLISH);;
+        Locale.setDefault(Locale.ENGLISH);
+        ;
         resourceSetUp();
         try {
             manager.connect(WORK_DATABASE, USER_NAME, USER_PASSWORD);
@@ -199,8 +201,8 @@ public class IntegrationTest {
     public void testListAllTableNames() {
         //given
         setStartupAnswers();
-        consoleInputStream.addLine("2");
-        consoleInputStream.addLine("4");
+        consoleInputStream.addLine("2"); // 2 - List Table Name
+        consoleInputStream.addLine("4"); // 4 - Exit
         consoleInputStream.addLine("y");
 
         String connectionStatus = String.format(res_connectionStatus.getString("connection.status.database"),
@@ -212,58 +214,45 @@ public class IntegrationTest {
                 res_common.getString("common.choice.operation") + "\n" +
                 res_common.getString("common.main.menu") + "\n" +
                 res_exit.getString("exit.question") + "\n" +
-                res_common.getString("common.the.end") + "\n";;
+                res_common.getString("common.the.end") + "\n";
         //when
         SQLCmdMain.main(new String[0]);
         //then
         assertEquals(expectedMessage, getData());
     }
-//
-//    @Ignore
-//    @Test
-//    public void testUnsupportedChoiceInMainMenu() {
-//        //given
-//        consoleInputStream.addLine("0");
-//        consoleInputStream.addLine("exit");
-//        //when
-//        SQLCmdMain.main(new String[0]);
-//        //then
-//        assertEquals("Welcome to SQLCmd!\n" +
-//                "\n" +
-//                MAIN_MENU +
-//                // input - 0
-//                "\n" +
-//                "Please choice correct number:\n" +
-//                "1 - Connect to database\n" +
-//                "2 - List all table names\n" +
-//                "3 - Select table to work\n" +
-//                "4 - Exit\n" +
-//                //input - exit
-//                "Terminated. Thank you for using SQLCmd. Good luck.\n", getData());
-//    }
-//
-//    @Ignore
-//    @Test
-//    public void testConnect() {
-//        //given
-//        consoleInputStream.addLine("1");
-//        consoleInputStream.addLine("exit");
-//        //when
-//        SQLCmdMain.main(new String[0]);
-//        //then
-//        assertEquals("Welcome to SQLCmd!\n" +
-//                "\nNo any database connected.\n" +
-//                MAIN_MENU +
-//                // input - 1
-//                "Connection successful!\n" +
-//                "\n" +
-//                "Connected to database: <" + TEST_DATABASE + ">.\n" +
-//                MAIN_MENU +
-//                //input - exit
-//                "Terminated. Thank you for using SQLCmd. Good luck.\n", getData());
-//    }
-//
-//    @Ignore
+
+    @Test
+    public void testSelectTable() {
+        //given
+        setStartupAnswers();
+        consoleInputStream.addLine("3"); // 3 - Select Table
+        consoleInputStream.addLine(TEST_TABLE);
+        consoleInputStream.addLine("5"); // 5 - Return to Main menu
+        consoleInputStream.addLine("4"); // 4 - Exit
+        consoleInputStream.addLine("y");
+
+        String connectionDBStatus = String.format(res_connectionStatus.getString("connection.status.database"),
+                TEST_DATABASE);
+        String connectionTableStatus = String.format(res_connectionStatus.getString("connection.status.table"),
+                TEST_TABLE);
+        String connectionStatus = connectionDBStatus + " " + connectionTableStatus;
+        String expectedMessage = getStartupMessages() +
+                res_DBSelectTable.getString("dbselect.enter.name.tables") + "\n" +
+                "[" + TEST_TABLE + "]\n" +
+                connectionStatus + "\n\n" +
+                res_common.getString("common.choice.operation") + "\n" +
+                res_common.getString("common.table.menu") + "\n" +
+                connectionDBStatus + " \n\n" +
+                res_common.getString("common.choice.operation") + "\n" +
+                res_common.getString("common.main.menu") + "\n" +
+                res_exit.getString("exit.question") + "\n" +
+                res_common.getString("common.the.end") + "\n";
+        //when
+        SQLCmdMain.main(new String[0]);
+        //then
+        assertEquals(expectedMessage, getData());
+    }
+
 //    @Test
 //    public void testListWithConnect() {
 //        //given
@@ -278,7 +267,6 @@ public class IntegrationTest {
 //        //then
 //        assertEquals("Welcome to SQLCmd!\n" +
 //                "\n" +
-//                MAIN_MENU +
 //                // input - 1
 //                "Enter database name, login and password.\n" +
 //                "Type 'exit' for exit program.\n" +
@@ -293,12 +281,10 @@ public class IntegrationTest {
 //                "\n" +
 //                //input - 2
 //                "Connected to database: <" + TEST_DATABASE + ">\n" +
-//                MAIN_MENU +
 //                "Available tables:\n" +
 //                "[users, staff]\n" +
 //                "\n" +
 //                "Connected to database: <" + TEST_DATABASE + ">\n" +
-//                MAIN_MENU +
 //                //input - exit
 //                "Terminated. Thank you for using SQLCmd. Good luck.\n", getData());
 //    }
@@ -697,6 +683,28 @@ public class IntegrationTest {
 //                "Terminated. Thank you for using SQLCmd. Good luck.\n", getData());
 //    }
 
+//    @Test
+//    public void testUnsupportedChoiceInMainMenu() {
+//        //given
+//        consoleInputStream.addLine("0");
+//        consoleInputStream.addLine("exit");
+//        //when
+//        SQLCmdMain.main(new String[0]);
+//        //then
+//        assertEquals("Welcome to SQLCmd!\n" +
+//                "\n" +
+//                MAIN_MENU +
+//                // input - 0
+//                "\n" +
+//                "Please choice correct number:\n" +
+//                "1 - Connect to database\n" +
+//                "2 - List all table names\n" +
+//                "3 - Select table to work\n" +
+//                "4 - Exit\n" +
+//                //input - exit
+//                "Terminated. Thank you for using SQLCmd. Good luck.\n", getData());
+//    }
+
     private String getStartupMessages() {
         String connectionStatusFirst = String.format(res_connectionStatus.getString("connection.status.database"),
                 WORK_DATABASE);
@@ -741,6 +749,7 @@ public class IntegrationTest {
         res_connectionStatus = getResourceBundle("connectionStatus");
         res_DBConnect = getResourceBundle("DBConnect");
         res_DBListTableNames = getResourceBundle("DBListTableNames");
+        res_DBSelectTable = getResourceBundle("DBSelectTable");
     }
 
     private static ResourceBundle getResourceBundle(String resource) {
