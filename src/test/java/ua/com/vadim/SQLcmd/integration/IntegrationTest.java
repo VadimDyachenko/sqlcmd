@@ -3,6 +3,8 @@ package ua.com.vadim.SQLcmd.integration;
 import org.junit.*;
 
 import ua.com.vadim.SQLcmd.SQLCmdMain;
+import ua.com.vadim.SQLcmd.controller.PropertiesLoader;
+import ua.com.vadim.SQLcmd.controller.RunParameters;
 import ua.com.vadim.SQLcmd.model.DataSet;
 import ua.com.vadim.SQLcmd.model.DataSetImpl;
 import ua.com.vadim.SQLcmd.model.DatabaseManager;
@@ -50,7 +52,7 @@ public class IntegrationTest {
     @BeforeClass
     public static void beforeAllTestSetUp() {
         manager = new PostgresDBManager(SERVER_IP, SERVER_PORT);
-        Locale.setDefault(Locale.ENGLISH);
+        setLocale();
         resourceSetUp();
         try {
             manager.connect(WORK_DATABASE, USER_NAME, USER_PASSWORD);
@@ -64,6 +66,15 @@ public class IntegrationTest {
             manager.disconnect();
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    private static void setLocale() {
+        RunParameters runParameters = new PropertiesLoader().getParameters();
+        if (runParameters.getInterfaceLanguage().toLowerCase().equals("ru")) {
+            Locale.setDefault(new Locale("ru", "RU"));
+        } else {
+            Locale.setDefault(Locale.ENGLISH);
         }
     }
 
