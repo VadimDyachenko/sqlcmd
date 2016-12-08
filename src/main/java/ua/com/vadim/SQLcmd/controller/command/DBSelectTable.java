@@ -9,10 +9,10 @@ import java.sql.SQLException;
 import java.util.*;
 
 public class DBSelectTable implements Command {
-    private ResourceBundle res;
-    private RunParameters runParameters;
-    private DatabaseManager manager;
-    private View view;
+    private final ResourceBundle res;
+    private final RunParameters runParameters;
+    private final DatabaseManager manager;
+    private final View view;
 
     public DBSelectTable(RunParameters runParameters, DatabaseManager manager, View view) {
         this.runParameters = runParameters;

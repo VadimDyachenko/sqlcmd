@@ -9,10 +9,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import ua.com.vadim.SQLcmd.controller.command.Command;
 import ua.com.vadim.SQLcmd.exception.ExitException;
 import ua.com.vadim.SQLcmd.exception.UnsupportedLanguageException;
-import ua.com.vadim.SQLcmd.model.DatabaseManager;
 import ua.com.vadim.SQLcmd.view.UTF8Control;
 import ua.com.vadim.SQLcmd.view.View;
 
@@ -27,14 +25,12 @@ public class ControllerTest {
     private static String serverIP;
     private static String serverPort;
     private static String databaseName;
-    private static final String TABLE_NAME = "users";
     private static String userName;
     private static String password;
     private static final String resPath = "ua.com.vadim.SQLcmd.controller.resources.interface.";
     private static ResourceBundle res_common;
     private static ResourceBundle res_dbConnect;
     private static ResourceBundle res_connectionStatus;
-    private static ResourceBundle res_dbSelectTable;
     private static ResourceBundle res_exit;
 
     @Mock

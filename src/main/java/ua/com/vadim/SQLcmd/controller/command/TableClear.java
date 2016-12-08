@@ -9,10 +9,10 @@ import java.sql.SQLException;
 import java.util.ResourceBundle;
 
 public class TableClear implements Command {
-    private ResourceBundle res;
-    private RunParameters runParameters;
-    private DatabaseManager manager;
-    private View view;
+    private final ResourceBundle res;
+    private final RunParameters runParameters;
+    private final DatabaseManager manager;
+    private final View view;
 
     public TableClear(RunParameters runParameters, DatabaseManager manager, View view) {
         this.runParameters = runParameters;

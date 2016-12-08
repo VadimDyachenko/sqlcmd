@@ -4,7 +4,7 @@ package ua.com.vadim.SQLcmd.integration;
 import java.io.IOException;
 import java.io.InputStream;
 
-public class ConfigurableInputStream extends InputStream{
+class ConfigurableInputStream extends InputStream{
 
     private String line;
 
@@ -18,7 +18,7 @@ public class ConfigurableInputStream extends InputStream{
         return (int)ch;
     }
 
-    public void addLine(String line) {
+    void addLine(String line) {
         if (this.line == null) {
             this.line = line;
         } else {

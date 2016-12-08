@@ -9,9 +9,9 @@ import java.sql.SQLException;
 import java.util.*;
 
 public class DBListTableNames implements Command {
-    private ResourceBundle res;
-    private DatabaseManager manager;
-    private View view;
+    private final ResourceBundle res;
+    private final DatabaseManager manager;
+    private final View view;
 
     public DBListTableNames(RunParameters runParameters, DatabaseManager manager, View view) {
         this.manager = manager;

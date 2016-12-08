@@ -70,7 +70,7 @@ public class PostgresDBManager implements DatabaseManager {
     public void createTableRecord(String tableName, DataSet newValue) throws SQLException {
         try (Statement statement = connection.createStatement()) {
             String columnName = getNameFormatted(newValue, "%s,");
-            String values = getValuesFormatted(newValue, "'%s',");
+            String values = getValuesFormatted(newValue);
             statement.executeUpdate(
                     String.format("INSERT INTO public.%s(%s)VALUES (%s)", tableName, columnName, values));
         }
@@ -149,10 +149,10 @@ public class PostgresDBManager implements DatabaseManager {
         return string;
     }
 
-    private String getValuesFormatted(DataSet input, String format) {
+    private String getValuesFormatted(DataSet input) {
         String values = "";
         for (Object value : input.getValues()) {
-            values += String.format(format, value);
+            values += String.format("'%s',", value);
         }
         values = values.substring(0, values.length() - 1);
         return values;

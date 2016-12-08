@@ -1,12 +1,9 @@
 package ua.com.vadim.SQLcmd.controller.command;
 
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import ua.com.vadim.SQLcmd.controller.PropertiesLoader;
 import ua.com.vadim.SQLcmd.controller.RunParameters;
 import ua.com.vadim.SQLcmd.exception.ExitException;
-import ua.com.vadim.SQLcmd.model.DataSet;
-import ua.com.vadim.SQLcmd.model.DataSetImpl;
 import ua.com.vadim.SQLcmd.model.DatabaseManager;
 import org.junit.Before;
 import org.junit.Test;
@@ -21,7 +18,6 @@ import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
-import static org.mockito.Mockito.atLeastOnce;
 
 public class TableCreateRecordTest {
     private static RunParameters runParameters;
@@ -30,13 +26,13 @@ public class TableCreateRecordTest {
     private View view;
     private Command command;
     private Set<String> columnNames;
-    private String tableName = "tableA";
-    private String helpInfo = res.getString("table.create.record.help");
-    private String successful = res.getString("table.create.successful");
-    private String column = "[id, names, password]";
-    private String availableColumn = res.getString("table.create.available.column");
-    private String availableColumnFormatted = String.format(availableColumn, column);
-    private String createRecordResult = "{id:1, names:Some Name, password:somepassword}";
+    private final String tableName = "tableA";
+    private final String helpInfo = res.getString("table.create.record.help");
+    private final String successful = res.getString("table.create.successful");
+    private final String column = "[id, names, password]";
+    private final String availableColumn = res.getString("table.create.available.column");
+    private final String availableColumnFormatted = String.format(availableColumn, column);
+    private final String createRecordResult = "{id:1, names:Some Name, password:somepassword}";
 
     @BeforeClass
     public static void beforeAllTestSetUp() throws ExitException {

@@ -10,7 +10,7 @@ import static org.junit.Assert.assertEquals;
 
 
 public class LocaleSelectorTest {
-    private LocaleSelector localeSelector = new LocaleSelector();
+    private final LocaleSelector localeSelector = new LocaleSelector();
 
     @Test
     public void testSetLocale() throws UnsupportedLanguageException {

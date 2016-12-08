@@ -29,13 +29,13 @@ public class TableUpdateRecordTest {
     private Command command;
     private Set<String> columnNames;
     private DataSet[] tableData;
-    private String tableName = "tableA";
-    private String helpInfo = res.getString("table.update.record.help");
-    private String successful = res.getString("table.update.successful");
-    private String column = "[id, names, password]";
-    private String availableColumn = res.getString("table.update.available.column");
-    private String availableColumnFormatted = String.format(availableColumn, column);
-    private String createUpdateResult = "{names:Some Name, password:somepassword}";
+    private final String tableName = "tableA";
+    private final String helpInfo = res.getString("table.update.record.help");
+    private final String successful = res.getString("table.update.successful");
+    private final String column = "[id, names, password]";
+    private final String availableColumn = res.getString("table.update.available.column");
+    private final String availableColumnFormatted = String.format(availableColumn, column);
+    private final String createUpdateResult = "{names:Some Name, password:somepassword}";
 
     @BeforeClass
     public static void beforeAllTestSetUp() throws ExitException {

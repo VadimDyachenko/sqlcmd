@@ -10,10 +10,10 @@ import java.sql.SQLException;
 import java.util.ResourceBundle;
 
 public class DBConnect implements Command {
-    private ResourceBundle res;
-    private DatabaseManager manager;
-    private View view;
-    private RunParameters runParameters;
+    private final ResourceBundle res;
+    private final DatabaseManager manager;
+    private final View view;
+    private final RunParameters runParameters;
 
     public DBConnect(RunParameters runParameters, DatabaseManager manager, View view) {
         this.runParameters = runParameters;

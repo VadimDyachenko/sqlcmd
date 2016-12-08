@@ -12,7 +12,7 @@ import java.util.ResourceBundle;
 public class Exit implements Command {
     private final DatabaseManager manager;
     private final View view;
-    private ResourceBundle res;
+    private final ResourceBundle res;
 
     public Exit(RunParameters runParameters, DatabaseManager manager, View view) {
         this.manager = manager;

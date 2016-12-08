@@ -29,12 +29,11 @@ public class Controller {
             setUp();
             view.writeMessage(res.getString("common.welcome"));
             tryDBconnectWithDefaultParameters();
-            do {
+            while (true) {
                 commandExecutor.execute(AvailableCommand.PRINT_CURRENT_CONNECTION_STATUS);
                 AvailableCommand command = askCommand();
                 commandExecutor.execute(command);
             }
-            while (true);
         } catch (ExitException e) {
             view.writeMessage(res.getString("common.the.end"));
         }

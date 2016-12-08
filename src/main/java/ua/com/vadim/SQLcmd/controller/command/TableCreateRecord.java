@@ -8,15 +8,14 @@ import ua.com.vadim.SQLcmd.view.UTF8Control;
 import ua.com.vadim.SQLcmd.view.View;
 
 import java.sql.SQLException;
-import java.util.LinkedHashSet;
 import java.util.ResourceBundle;
 import java.util.Set;
 
 public class TableCreateRecord implements Command {
-    private ResourceBundle res;
-    private DatabaseManager manager;
-    private View view;
-    private RunParameters runParameters;
+    private final ResourceBundle res;
+    private final DatabaseManager manager;
+    private final View view;
+    private final RunParameters runParameters;
 
     public TableCreateRecord(RunParameters runParameters, DatabaseManager manager, View view) {
         this.runParameters = runParameters;

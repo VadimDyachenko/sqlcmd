@@ -12,10 +12,10 @@ import java.util.ResourceBundle;
 import java.util.Set;
 
 public class TableUpdateRecord implements Command {
-    private RunParameters runParameters;
-    private DatabaseManager manager;
-    private View view;
-    private ResourceBundle res;
+    private final RunParameters runParameters;
+    private final DatabaseManager manager;
+    private final View view;
+    private final ResourceBundle res;
 
     public TableUpdateRecord(RunParameters runParameters, DatabaseManager manager, View view) {
         this.runParameters = runParameters;

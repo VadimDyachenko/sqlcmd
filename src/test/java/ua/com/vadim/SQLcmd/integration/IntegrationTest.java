@@ -51,7 +51,6 @@ public class IntegrationTest {
     public static void beforeAllTestSetUp() {
         manager = new PostgresDBManager(SERVER_IP, SERVER_PORT);
         Locale.setDefault(Locale.ENGLISH);
-        ;
         resourceSetUp();
         try {
             manager.connect(WORK_DATABASE, USER_NAME, USER_PASSWORD);
@@ -310,7 +309,6 @@ public class IntegrationTest {
                 res_common.getString("common.main.menu") + "\n" +
                 res_exit.getString("exit.question") + "\n" +
                 res_common.getString("common.the.end") + "\n";
-        ;
         //when
         SQLCmdMain.main(new String[0]);
         //then
@@ -345,7 +343,6 @@ public class IntegrationTest {
                 res_common.getString("common.main.menu") + "\n" +
                 res_exit.getString("exit.question") + "\n" +
                 res_common.getString("common.the.end") + "\n";
-        ;
         //when
         SQLCmdMain.main(new String[0]);
         //then

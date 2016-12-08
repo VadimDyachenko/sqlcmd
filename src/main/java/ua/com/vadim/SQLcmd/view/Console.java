@@ -8,7 +8,7 @@ import java.io.InputStreamReader;
 
 public class Console implements View {
 
-    private BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+    private final BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 
     @Override
     public void writeMessage(String message) {
