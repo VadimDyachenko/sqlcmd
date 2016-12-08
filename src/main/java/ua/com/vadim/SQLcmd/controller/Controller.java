@@ -14,10 +14,14 @@ public class Controller {
     private View view;
     private CommandExecutor commandExecutor;
     private RunParameters runParameters;
+    private LocaleSelector localeSelector;
     private ResourceBundle res;
 
     public Controller(View view) {
         this.view = view;
+        runParameters = new PropertiesLoader().getParameters();
+        localeSelector= new LocaleSelector();
+
     }
 
     public void run() {
@@ -32,7 +36,6 @@ public class Controller {
             }
             while (true);
         } catch (ExitException e) {
-
             view.writeMessage(res.getString("common.the.end"));
         }
     }
@@ -69,16 +72,14 @@ public class Controller {
     }
 
     private void setUp() throws ExitException {
-        runParameters = new PropertiesLoader().getParameters();
         localeSetUp();
         res = ResourceBundle.getBundle(runParameters.getLanguageResourcePath() + "common", new UTF8Control());
         DatabaseManager manager = new PostgresDBManager(runParameters.getServerIP(),
-                                                        runParameters.getServerPort());
+                runParameters.getServerPort());
         commandExecutor = new CommandExecutor(runParameters, manager, view);
     }
 
     private void localeSetUp() {
-        LocaleSelector localeSelector = new LocaleSelector();
         try {
             localeSelector.setLocale(runParameters.getInterfaceLanguage());
         } catch (UnsupportedLanguageException e) {
