@@ -1,5 +1,6 @@
 package ua.com.vadim.SQLcmd.model;
 
+import org.postgresql.util.PSQLException;
 import ua.com.vadim.SQLcmd.controller.PropertiesLoader;
 import ua.com.vadim.SQLcmd.controller.RunParameters;
 import org.junit.*;
@@ -15,22 +16,31 @@ public class PostgresDBManagerTest {
     private ByteArrayOutputStream consoleOutputStream;
     private static DatabaseManager manager;
     private static RunParameters runParameters;
+    private static String DATABASE;
+    private static String USER_NAME;
+    private static String USER_PASSWORD;
     private static final String TEST_DATABASE = "test_db_sqlcmd";
     private static final String TEST_TABLE = "test_table_users";
     private static final String CREATE_TABLE_QUERY = TEST_TABLE + " (id SERIAL PRIMARY KEY," +
             " name VARCHAR (25) UNIQUE NOT NULL," +
             " password VARCHAR (25) NOT NULL)";
+    private static final String WRONG_SERVER_IP = "192.168.1.1";
+    private static final String WRONG_SERVER_PORT = "5433";
 
     @BeforeClass
     public static void beforeAllTestSetUp() {
         runParameters = new PropertiesLoader().getParameters();
+        DATABASE = runParameters.getDatabaseName();
+        USER_NAME = runParameters.getUserName();
+        USER_PASSWORD = runParameters.getPassword();
+
         manager = new PostgresDBManager(runParameters.getServerIP(), runParameters.getServerPort());
         try {
-            manager.connect(runParameters.getDatabaseName(), runParameters.getUserName(), runParameters.getPassword());
+            manager.connect(DATABASE, USER_NAME, USER_PASSWORD);
             manager.dropDatabase(TEST_DATABASE);
             manager.createDatabase(TEST_DATABASE);
             manager.disconnect();
-            manager.connect(TEST_DATABASE, runParameters.getUserName(), runParameters.getPassword());
+            manager.connect(TEST_DATABASE, USER_NAME, USER_PASSWORD);
             manager.createTable(CREATE_TABLE_QUERY);
             manager.disconnect();
         } catch (Exception e) {
@@ -41,7 +51,7 @@ public class PostgresDBManagerTest {
     @AfterClass
     public static void afterAllTestsClear() {
         try {
-            manager.connect(runParameters.getDatabaseName(), runParameters.getUserName(), runParameters.getPassword());
+            manager.connect(DATABASE, USER_NAME, USER_PASSWORD);
             manager.dropDatabase(TEST_DATABASE);
             manager.disconnect();
         } catch (SQLException e) {
@@ -54,7 +64,7 @@ public class PostgresDBManagerTest {
         consoleOutputStream = new ByteArrayOutputStream();
         System.setOut(new PrintStream(consoleOutputStream));
         try {
-            manager.connect(TEST_DATABASE, runParameters.getUserName(), runParameters.getPassword());
+            manager.connect(TEST_DATABASE, USER_NAME, USER_PASSWORD);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -66,10 +76,7 @@ public class PostgresDBManagerTest {
         runParameters.setTableName(TEST_TABLE);
         try {
             if (!manager.isConnected()) {
-                manager.connect(
-                        TEST_DATABASE,
-                        runParameters.getUserName(),
-                        runParameters.getPassword());
+                manager.connect(TEST_DATABASE, USER_NAME, USER_PASSWORD);
             }
             manager.clearTable(TEST_TABLE);
             DataSet inputData1 = new DataSetImpl();
@@ -180,6 +187,17 @@ public class PostgresDBManagerTest {
         //given
         //when
         manager.disconnect();
+
+        //then
+        assertFalse(manager.isConnected());
+    }
+
+    @Test (expected = PSQLException.class)
+    public void testWithoutConnection() throws SQLException {
+        //given
+        DatabaseManager manager_test = new PostgresDBManager(WRONG_SERVER_IP, WRONG_SERVER_PORT);
+        //when
+        manager_test.connect(DATABASE, USER_NAME, USER_PASSWORD);
 
         //then
         assertFalse(manager.isConnected());

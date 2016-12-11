@@ -2,7 +2,6 @@ package ua.com.vadim.SQLcmd.controller;
 
 import ua.com.vadim.SQLcmd.exception.ExitException;
 
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
