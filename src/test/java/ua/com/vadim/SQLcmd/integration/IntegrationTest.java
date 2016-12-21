@@ -26,7 +26,7 @@ public class IntegrationTest {
     private ConfigurableInputStream consoleInputStream;
     private ByteArrayOutputStream consoleOutputStream;
 
-    private static final String SERVER_IP = "192.168.1.5";
+    private static final String SERVER_IP = "localhost";
     private static final String SERVER_PORT = "5432";
     private static final String WORK_DATABASE = "sqlcmd";
     private static final String USER_NAME = "javauser";
@@ -34,7 +34,8 @@ public class IntegrationTest {
     private static final String TEST_DATABASE = "test_db_sqlcmd";
     private static final String TEST_DATABASE_EMPTY = "test_db_empty";
     private static final String TEST_TABLE = "test_table_users";
-    private static final String CREATE_TABLE_QUERY = TEST_TABLE + " (id SERIAL PRIMARY KEY," +
+    private static final String CREATE_TABLE_QUERY = TEST_TABLE +
+            " (id SERIAL PRIMARY KEY," +
             " name VARCHAR (25) UNIQUE NOT NULL," +
             " password VARCHAR (25) NOT NULL)";
 
