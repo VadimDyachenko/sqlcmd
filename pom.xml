@@ -42,21 +42,30 @@
                     <exclude>**/*.java</exclude>
                 </excludes>
             </resource>
-            <!--<resource>-->
-                <!--<directory>src/main/resources</directory>-->
-                <!--<excludes>-->
-                    <!--<exclude>**/*.properties</exclude>-->
-                <!--</excludes>-->
-                <!--<filtering>true</filtering>-->
-            <!--</resource>-->
-            <resource>
-                <directory>configuration</directory>
-                <includes>
-                    <include>./configuration/sqlcmd.properties</include>
-                </includes>
-            </resource>
         </resources>
         <plugins>
+            <plugin>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>3.0.2</version>
+                <executions>
+                    <execution>
+                        <id>copy-resources</id>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>production/configuration</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>configuration</directory>
+                                    <filtering>true</filtering>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>

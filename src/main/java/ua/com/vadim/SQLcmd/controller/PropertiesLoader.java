@@ -8,7 +8,7 @@ import java.io.IOException;
 import java.util.Properties;
 
 public class PropertiesLoader {
-    private static final String CONFIG_SQLCMD_PROPERTIES = "./configuration/sqlcmd.properties";
+    private static final String CONFIG_SQLCMD_PROPERTIES = "configuration/sqlcmd.properties";
     private final Properties properties;
 
     public PropertiesLoader() {
@@ -17,7 +17,7 @@ public class PropertiesLoader {
         try (FileInputStream fileInputStream = new FileInputStream(file)) {
             properties.load(fileInputStream);
         } catch (IOException e) {
-            e.getMessage();
+            System.out.println("Error loading properties file: " + e.getMessage());
         }
     }
 
