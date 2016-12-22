@@ -7,6 +7,7 @@ import ua.com.vadim.SQLcmd.model.PostgresDBManager;
 import ua.com.vadim.SQLcmd.view.UTF8Control;
 import ua.com.vadim.SQLcmd.view.View;
 
+import java.sql.SQLException;
 import java.util.ResourceBundle;
 
 public class Controller {
@@ -16,6 +17,7 @@ public class Controller {
     private RunParameters runParameters;
     private LocaleSelector localeSelector;
     private ResourceBundle res;
+    private DatabaseManager manager;
 
     public Controller(View view) {
         this.view = view;
@@ -35,6 +37,11 @@ public class Controller {
                 commandExecutor.execute(command);
             }
         } catch (ExitException e) {
+            try {
+                manager.disconnect();
+            } catch (SQLException e1) {
+                e1.printStackTrace();
+            }
             view.writeMessage(res.getString("common.the.end"));
         }
     }
@@ -73,7 +80,7 @@ public class Controller {
     private void setUp() throws ExitException {
         localeSetUp();
         res = ResourceBundle.getBundle(runParameters.getLanguageResourcePath() + "common", new UTF8Control());
-        DatabaseManager manager = new PostgresDBManager(runParameters.getServerIP(),
+        manager = new PostgresDBManager(runParameters.getServerIP(),
                 runParameters.getServerPort());
         commandExecutor = new CommandExecutor(runParameters, manager, view);
     }
