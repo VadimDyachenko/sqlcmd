@@ -89,8 +89,6 @@ public class ControllerTest {
         when(runParameters.getUserName()).thenReturn(userName);
         when(runParameters.getPassword()).thenReturn(password);
         when(runParameters.getDatabaseName()).thenReturn(databaseName);
-        doCallRealMethod().when(localeSelector).setEnglishLocale();
-
         controller.run();
 
         //then
@@ -123,8 +121,6 @@ public class ControllerTest {
         when(runParameters.getPassword()).thenReturn(password);
         when(runParameters.getDatabaseName()).thenReturn(databaseName);
         doThrow(new UnsupportedLanguageException()).when(localeSelector).setLocale(anyString());
-        doCallRealMethod().when(localeSelector).setEnglishLocale();
-
         controller.run();
 
         //then
@@ -152,7 +148,6 @@ public class ControllerTest {
         when(runParameters.getPassword()).thenReturn(password);
         when(runParameters.getDatabaseName()).thenReturn(databaseName);
         doThrow(new ExitException()).when(view).readLine();
-        doCallRealMethod().when(localeSelector).setEnglishLocale();
         controller.run();
         //then
         shouldPrint(expectedMessage);
@@ -182,7 +177,7 @@ public class ControllerTest {
         when(runParameters.getPassword()).thenReturn(password);
         when(runParameters.getDatabaseName()).thenReturn(databaseName);
         when(view.readLine()).thenThrow(new IllegalArgumentException()).thenReturn("4", "y");
-        doCallRealMethod().when(localeSelector).setEnglishLocale();
+
         controller.run();
         //then
         shouldPrint(expectedMessage);

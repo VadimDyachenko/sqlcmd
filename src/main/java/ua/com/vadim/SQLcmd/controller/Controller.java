@@ -42,10 +42,11 @@ public class Controller {
             } catch (SQLException e1) {
                 e1.printStackTrace();
             }
-            view.writeMessage(res.getString("common.the.end"));
+            finally {
+                view.writeMessage(res.getString("common.the.end"));
+            }
         }
     }
-
 
     private AvailableCommand askCommand() {
         view.writeMessage(res.getString("common.choice.operation"));
