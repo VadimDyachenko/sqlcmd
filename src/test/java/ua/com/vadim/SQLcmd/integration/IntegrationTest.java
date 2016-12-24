@@ -107,21 +107,17 @@ public class IntegrationTest {
 
     private void putDataToTestTable() throws SQLException {
         manager.clearTable(TEST_TABLE);
-        DataSet inputData1 = new DataSetImpl();
-        inputData1.put("id", 1);
-        inputData1.put("name", "Semen Petrov");
-        inputData1.put("password", "qwert");
-        manager.createTableRecord(TEST_TABLE, inputData1);
-        DataSet inputData2 = new DataSetImpl();
-        inputData2.put("id", 2);
-        inputData2.put("name", "Bob Marley");
-        inputData2.put("password", "pass1");
-        manager.createTableRecord(TEST_TABLE, inputData2);
-        DataSet inputData3 = new DataSetImpl();
-        inputData3.put("id", 3);
-        inputData3.put("name", "Coca Cola");
-        inputData3.put("password", "pepsithebest");
-        manager.createTableRecord(TEST_TABLE, inputData3);
+        createRecord(1, "Semen Petrov", "qwert");
+        createRecord(2, "Bob Marley", "pass1");
+        createRecord(3, "Coca Cola", "pepsithebest");
+    }
+
+    private void createRecord(int id, String name, String password) throws SQLException {
+        DataSet inputData = new DataSetImpl();
+        inputData.put("id", id);
+        inputData.put("name", name);
+        inputData.put("password", password);
+        manager.createTableRecord(TEST_TABLE, inputData);
     }
 
     @After
