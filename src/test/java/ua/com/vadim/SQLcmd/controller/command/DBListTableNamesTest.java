@@ -1,13 +1,13 @@
 package ua.com.vadim.SQLcmd.controller.command;
 
+import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Test;
+import org.mockito.ArgumentCaptor;
 import ua.com.vadim.SQLcmd.controller.PropertiesLoader;
 import ua.com.vadim.SQLcmd.controller.RunParameters;
 import ua.com.vadim.SQLcmd.exception.ExitException;
 import ua.com.vadim.SQLcmd.model.DatabaseManager;
-import org.junit.Before;
-import org.junit.Test;
-import org.mockito.ArgumentCaptor;
 import ua.com.vadim.SQLcmd.view.UTF8Control;
 import ua.com.vadim.SQLcmd.view.View;
 

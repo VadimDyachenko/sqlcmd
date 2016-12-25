@@ -1,7 +1,8 @@
 package ua.com.vadim.SQLcmd.model;
 
 import java.sql.*;
-import java.util.*;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 public class PostgresDBManager implements DatabaseManager {
     private final String url;

@@ -1,16 +1,17 @@
 package ua.com.vadim.SQLcmd.model;
 
+import org.junit.*;
 import org.postgresql.util.PSQLException;
 import ua.com.vadim.SQLcmd.controller.PropertiesLoader;
 import ua.com.vadim.SQLcmd.controller.RunParameters;
-import org.junit.*;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.sql.SQLException;
 import java.util.Set;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 
 public class PostgresDBManagerTest {
     private ByteArrayOutputStream consoleOutputStream;

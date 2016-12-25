@@ -1,12 +1,12 @@
 package ua.com.vadim.SQLcmd.controller.command;
 
-import ua.com.vadim.SQLcmd.controller.RunParameters;
-import ua.com.vadim.SQLcmd.exception.ExitException;
 import org.junit.Before;
 import org.junit.Test;
+import ua.com.vadim.SQLcmd.controller.RunParameters;
+import ua.com.vadim.SQLcmd.exception.ExitException;
 
 import static org.junit.Assert.assertFalse;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
 
 public class ReturnTest {
     private Command command;

@@ -3,12 +3,10 @@ package ua.com.vadim.SQLcmd.controller;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-
 import ua.com.vadim.SQLcmd.exception.ExitException;
 import ua.com.vadim.SQLcmd.exception.UnsupportedLanguageException;
 import ua.com.vadim.SQLcmd.view.UTF8Control;

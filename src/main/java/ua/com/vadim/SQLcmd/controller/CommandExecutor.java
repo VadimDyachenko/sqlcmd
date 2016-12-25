@@ -1,9 +1,9 @@
 package ua.com.vadim.SQLcmd.controller;
 
+import ua.com.vadim.SQLcmd.controller.command.*;
 import ua.com.vadim.SQLcmd.exception.ExitException;
 import ua.com.vadim.SQLcmd.model.DatabaseManager;
 import ua.com.vadim.SQLcmd.view.View;
-import ua.com.vadim.SQLcmd.controller.command.*;
 
 import java.util.HashMap;
 import java.util.Map;

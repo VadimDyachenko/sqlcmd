@@ -1,22 +1,22 @@
 package ua.com.vadim.SQLcmd.controller.command;
 
+import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Test;
+import org.mockito.ArgumentCaptor;
 import ua.com.vadim.SQLcmd.controller.PropertiesLoader;
 import ua.com.vadim.SQLcmd.controller.RunParameters;
 import ua.com.vadim.SQLcmd.exception.ExitException;
 import ua.com.vadim.SQLcmd.model.DatabaseManager;
 import ua.com.vadim.SQLcmd.view.UTF8Control;
 import ua.com.vadim.SQLcmd.view.View;
-import org.junit.Before;
-import org.junit.Test;
-import org.mockito.ArgumentCaptor;
 
 import java.sql.SQLException;
 import java.util.LinkedHashSet;
 import java.util.ResourceBundle;
 import java.util.Set;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
 
 public class DBSelectTableTest {

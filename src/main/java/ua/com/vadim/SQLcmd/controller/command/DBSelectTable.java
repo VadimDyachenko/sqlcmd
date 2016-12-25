@@ -6,7 +6,9 @@ import ua.com.vadim.SQLcmd.view.UTF8Control;
 import ua.com.vadim.SQLcmd.view.View;
 
 import java.sql.SQLException;
-import java.util.*;
+import java.util.LinkedHashSet;
+import java.util.ResourceBundle;
+import java.util.Set;
 
 public class DBSelectTable implements Command {
     private final ResourceBundle res;

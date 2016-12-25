@@ -1,9 +1,9 @@
 package ua.com.vadim.SQLcmd.controller.command;
 
 import ua.com.vadim.SQLcmd.controller.RunParameters;
+import ua.com.vadim.SQLcmd.model.DataSet;
 import ua.com.vadim.SQLcmd.model.DataSetImpl;
 import ua.com.vadim.SQLcmd.model.DatabaseManager;
-import ua.com.vadim.SQLcmd.model.DataSet;
 import ua.com.vadim.SQLcmd.view.UTF8Control;
 import ua.com.vadim.SQLcmd.view.View;
 

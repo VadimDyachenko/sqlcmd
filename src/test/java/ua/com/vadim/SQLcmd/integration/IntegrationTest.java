@@ -1,7 +1,6 @@
 package ua.com.vadim.SQLcmd.integration;
 
 import org.junit.*;
-
 import ua.com.vadim.SQLcmd.SQLCmdMain;
 import ua.com.vadim.SQLcmd.controller.PropertiesLoader;
 import ua.com.vadim.SQLcmd.controller.RunParameters;
