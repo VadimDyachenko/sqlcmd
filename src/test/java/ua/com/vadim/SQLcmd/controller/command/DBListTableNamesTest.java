@@ -21,7 +21,7 @@ import static org.mockito.Mockito.*;
 
 public class DBListTableNamesTest {
     private static RunParameters runParameters;
-    private static ResourceBundle res;
+    private static ResourceBundle resources;
     private DatabaseManager manager;
     private View view;
     private Command command;
@@ -29,7 +29,7 @@ public class DBListTableNamesTest {
     @BeforeClass
     public static void beforeAllTestSetUp() throws ExitException {
         runParameters = new PropertiesLoader().getParameters();
-        res = ResourceBundle.getBundle("DBListTableNames", new UTF8Control());
+        resources = ResourceBundle.getBundle("DBListTableNames", new UTF8Control());
     }
 
     @Before
@@ -42,7 +42,7 @@ public class DBListTableNamesTest {
     @Test
     public void testListTableNamesWithoutConnectionToDatabase() throws Exception {
         //given
-        String expectedMessage = String.format("[%s]", res.getString("dblist.no.connection"));
+        String expectedMessage = String.format("[%s]", resources.getString("dblist.no.connection"));
         //when
         when(manager.isConnected()).thenReturn(false);
         command.execute();
@@ -59,7 +59,7 @@ public class DBListTableNamesTest {
         tableNames.add("password");
         String expectedResult = "[id, names, password]";
         String expectedMessage = String.format("[%s, %s]",
-                res.getString("dblist.available.tables"),
+                resources.getString("dblist.available.tables"),
                 expectedResult);
         //when
         when(manager.isConnected()).thenReturn(true);
@@ -74,7 +74,7 @@ public class DBListTableNamesTest {
     public void testListTableNamesWithEmptyDatabase() throws Exception {
         //given
         Set<String> tableNames = new LinkedHashSet<>();
-        String expectedMessage = String.format("[%s]", res.getString("dblist.no.tables"));
+        String expectedMessage = String.format("[%s]", resources.getString("dblist.no.tables"));
         //when
         when(manager.isConnected()).thenReturn(true);
         when(manager.getAllTableNames()).thenReturn(tableNames);
@@ -88,9 +88,9 @@ public class DBListTableNamesTest {
         //given
         String exceptionMessage = "Some SQLMessage";
         String expectedMessage = String.format("[%s%s, %s]",
-                res.getString("dblist.failure"),
+                resources.getString("dblist.failure"),
                 exceptionMessage,
-                res.getString("dblist.no.tables"));
+                resources.getString("dblist.no.tables"));
         //when
         when(manager.isConnected()).thenReturn(true);
         doThrow(new SQLException(exceptionMessage)).when(manager).getAllTableNames();

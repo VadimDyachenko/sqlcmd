@@ -23,23 +23,23 @@ import static org.mockito.Mockito.*;
 
 public class TableUpdateRecordTest {
     private static RunParameters runParameters;
-    private static ResourceBundle res;
+    private static ResourceBundle resources;
     private DatabaseManager manager;
     private View view;
     private Command command;
     private Set<String> columnNames;
     private final String tableName = "tableA";
-    private final String helpInfo = res.getString("table.update.record.help");
-    private final String successful = res.getString("table.update.successful");
+    private final String helpInfo = resources.getString("table.update.record.help");
+    private final String successful = resources.getString("table.update.successful");
     private final String column = "[id, names, password]";
-    private final String availableColumn = res.getString("table.update.available.column");
+    private final String availableColumn = resources.getString("table.update.available.column");
     private final String availableColumnFormatted = String.format(availableColumn, column);
     private final String createUpdateResult = "{names:Some Name, password:somepassword}";
 
     @BeforeClass
     public static void beforeAllTestSetUp() throws ExitException {
         runParameters = new PropertiesLoader().getParameters();
-        res = ResourceBundle.getBundle("TableUpdateRecord", new UTF8Control());
+        resources = ResourceBundle.getBundle("TableUpdateRecord", new UTF8Control());
     }
 
     @Before
@@ -77,7 +77,7 @@ public class TableUpdateRecordTest {
     public void testTableUpdateRecordWrongId() throws SQLException {
         //given
         String successfulFormatted = String.format(successful, createUpdateResult);
-        String wrongIdMessage = res.getString("table.update.record.number.format");
+        String wrongIdMessage = resources.getString("table.update.record.number.format");
         String expectedMessage = String.format("[%s, %s, %s, %s]",
                                             helpInfo,
                                             availableColumnFormatted,
@@ -96,8 +96,8 @@ public class TableUpdateRecordTest {
     public void testTableUpdateRecordWrongArguments() throws SQLException {
         //given
         String successfulFormatted = String.format(successful, createUpdateResult);
-        String wrongArguments = res.getString("table.update.incorrect.data");
-        String exceptionMessage = res.getString("table.update.record.invalid.number");
+        String wrongArguments = resources.getString("table.update.incorrect.data");
+        String exceptionMessage = resources.getString("table.update.record.invalid.number");
         String expectedMessage = String.format("[%s, %s, %s%s, %s]",
                 helpInfo,
                 availableColumnFormatted,
@@ -116,7 +116,7 @@ public class TableUpdateRecordTest {
     @Test
     public void testTableIsEmpty() throws Exception {
         //given
-        String emptyTablesFormatted = String.format(res.getString("table.update.empty.table"), tableName);
+        String emptyTablesFormatted = String.format(resources.getString("table.update.empty.table"), tableName);
         String expectedMessage = String.format("[%s]", emptyTablesFormatted);
         columnNames = new LinkedHashSet<>();
         //when
@@ -130,7 +130,7 @@ public class TableUpdateRecordTest {
     public void testUpdateRecordWithSQLException() throws SQLException {
         //given
         String exceptionMessage = "Some SQLException";
-        String failMessage = res.getString("table.update.record.failed");
+        String failMessage = resources.getString("table.update.record.failed");
         String expectedMessage = String.format("[%s%s]",
                 failMessage,
                 exceptionMessage);

@@ -22,7 +22,7 @@ import static org.mockito.Mockito.*;
 
 public class DBConnectTest {
     private static RunParameters runParameters;
-    private static ResourceBundle res;
+    private static ResourceBundle resources;
     private DatabaseManager manager;
     private View view;
     private Command command;
@@ -31,7 +31,7 @@ public class DBConnectTest {
     @BeforeClass
     public static void beforeAllTestSetUp() throws ExitException {
         runParameters = new PropertiesLoader().getParameters();
-        res = ResourceBundle.getBundle("DBConnect", new UTF8Control());
+        resources = ResourceBundle.getBundle("DBConnect", new UTF8Control());
     }
 
     @Before
@@ -39,17 +39,17 @@ public class DBConnectTest {
         manager = mock(PostgresDBManager.class);
         view = mock(Console.class);
         command = new DBConnect(runParameters, manager, view);
-        String m1 = res.getString("dbconnect.enter.connection.parameters");
-        String m2 = res.getString("dbconnect.enter.database.name");
-        String m3 = res.getString("dbconnect.enter.login");
-        String m4 = res.getString("dbconnect.enter.password");
+        String m1 = resources.getString("dbconnect.enter.connection.parameters");
+        String m2 = resources.getString("dbconnect.enter.database.name");
+        String m3 = resources.getString("dbconnect.enter.login");
+        String m4 = resources.getString("dbconnect.enter.password");
         normalRunMessages = String.format("%s, %s, %s, %s", m1, m2, m3, m4);
     }
 
     @Test
     public void testConnectDefaultParameter() {
         //given
-        String expectedMessage = String.format("[%s]", res.getString("dbconnect.successful"));
+        String expectedMessage = String.format("[%s]", resources.getString("dbconnect.successful"));
         //when
         when(manager.isConnected()).thenReturn(false);
         command.execute();
@@ -61,8 +61,8 @@ public class DBConnectTest {
     public void testConnectDefaultParameterWithSQLException() throws SQLException {
         //given
         String exceptionMessage = "Some SQLException";
-        String failedMessage = res.getString("dbconnect.failed");
-        String tryAgainMessage = res.getString("dbconnect.default.failed");
+        String failedMessage = resources.getString("dbconnect.failed");
+        String tryAgainMessage = resources.getString("dbconnect.default.failed");
         String expectedMessage = String.format("[%s %s, %s]",failedMessage, exceptionMessage,
                 tryAgainMessage);
         //when
@@ -88,8 +88,8 @@ public class DBConnectTest {
     public void testConnectNewParameterWithSQLException() throws SQLException {
         //given
         String exceptionMessage = "Some SQLException";
-        String failedMessage = res.getString("dbconnect.failed");
-        String tryAgainMessage = res.getString("dbconnect.try.again");
+        String failedMessage = resources.getString("dbconnect.failed");
+        String tryAgainMessage = resources.getString("dbconnect.try.again");
         String expectedMessage = String.format("[%s, %s %s, %s]", normalRunMessages, failedMessage,
                 exceptionMessage, tryAgainMessage);
         //when

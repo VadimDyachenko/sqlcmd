@@ -21,7 +21,7 @@ import static org.mockito.Mockito.*;
 
 public class TablePrintDataTest {
     private static RunParameters runParameters;
-    private static ResourceBundle res;
+    private static ResourceBundle resources;
     private DatabaseManager manager;
     private View view;
     private Command command;
@@ -29,7 +29,7 @@ public class TablePrintDataTest {
     @BeforeClass
     public static void beforeAllTestSetUp() throws ExitException {
         runParameters = new PropertiesLoader().getParameters();
-        res = ResourceBundle.getBundle("TablePrintData", new UTF8Control());
+        resources = ResourceBundle.getBundle("TablePrintData", new UTF8Control());
     }
 
     @Before
@@ -45,7 +45,7 @@ public class TablePrintDataTest {
         DataSet[] tableData = new DataSetImpl[0];
         String tableName = "tableA";
         runParameters.setTableName(tableName);
-        String messageFormatted = String.format(res.getString("table.print.data.empty"), tableName);
+        String messageFormatted = String.format(resources.getString("table.print.data.empty"), tableName);
         String expectedMessage = String.format("[%s]", messageFormatted);
         //when
         when(manager.getTableData(tableName)).thenReturn(tableData);
@@ -82,7 +82,7 @@ public class TablePrintDataTest {
         runParameters.setTableName(tableName);
         String exceptionMessage = "Some SQLException";
         String expectedMessage = String.format("[%s%s]",
-                res.getString("table.print.data.failed"),
+                resources.getString("table.print.data.failed"),
                 exceptionMessage);
         //when
         when(manager.getTableData(tableName)).thenThrow(new SQLException(exceptionMessage));

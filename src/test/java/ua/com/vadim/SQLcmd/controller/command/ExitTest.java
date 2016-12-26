@@ -4,8 +4,6 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
-import ua.com.vadim.SQLcmd.controller.PropertiesLoader;
-import ua.com.vadim.SQLcmd.controller.RunParameters;
 import ua.com.vadim.SQLcmd.exception.ExitException;
 import ua.com.vadim.SQLcmd.model.DatabaseManager;
 import ua.com.vadim.SQLcmd.view.UTF8Control;
@@ -19,16 +17,14 @@ import static org.mockito.Mockito.*;
 
 
 public class ExitTest {
-    private static RunParameters runParameters;
-    private static ResourceBundle res;
+    private static ResourceBundle resources;
     private DatabaseManager manager;
     private View view;
     private Command command;
 
     @BeforeClass
     public static void beforeAllTestSetUp() throws ExitException {
-        runParameters = new PropertiesLoader().getParameters();
-        res = ResourceBundle.getBundle(/*runParameters.getLanguageResourcePath() + */"Exit", new UTF8Control());
+        resources = ResourceBundle.getBundle("Exit", new UTF8Control());
     }
 
     @Before
@@ -40,23 +36,15 @@ public class ExitTest {
 
     @Test(expected = ExitException.class)
     public void testExitYes() {
-        //given
-//        String expectedMessage = String.format("[%s, %s]",
-//                res_exit.getString("exit.question"),
-//                res_common.getString("common.the.end"));
-
         //when
         when(view.readLine()).thenReturn("y");
         command.execute();
-
-        //then
     }
-
 
     @Test
     public void testExitYesWithSQLException() throws SQLException {
         //given
-        String expectedMessage = String.format("[%s]", res.getString("exit.question"));
+        String expectedMessage = String.format("[%s]", resources.getString("exit.question"));
         //when
         when(view.readLine()).thenReturn("y");
         when(manager.isConnected()).thenReturn(true);
@@ -73,7 +61,7 @@ public class ExitTest {
     @Test
     public void testExitNo() throws ExitException {
         //given
-        String expectedMessage = String.format("[%s]", res.getString("exit.question"));
+        String expectedMessage = String.format("[%s]", resources.getString("exit.question"));
         //when
         when(view.readLine()).thenReturn("n");
         command.execute();

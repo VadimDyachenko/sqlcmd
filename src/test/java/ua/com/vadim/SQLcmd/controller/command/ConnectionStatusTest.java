@@ -21,7 +21,7 @@ import static org.mockito.Mockito.*;
 
 public class ConnectionStatusTest {
     private static RunParameters runParameters;
-    private static ResourceBundle res;
+    private static ResourceBundle resources;
     private DatabaseManager manager;
     private View view;
     private Command command;
@@ -29,7 +29,7 @@ public class ConnectionStatusTest {
     @BeforeClass
     public static void beforeAllTestSetUp() throws ExitException {
         runParameters = new PropertiesLoader().getParameters();
-        res = ResourceBundle.getBundle("connectionStatus", new UTF8Control());
+        resources = ResourceBundle.getBundle("connectionStatus", new UTF8Control());
     }
 
     @Before
@@ -42,7 +42,7 @@ public class ConnectionStatusTest {
     @Test
     public void testDBManagerNotConnected() throws SQLException{
         //given
-        String expectedMessage = String.format("[%s]", res.getString("connection.status.without.connection"));
+        String expectedMessage = String.format("[%s]", resources.getString("connection.status.without.connection"));
         manager.disconnect();
         //when
         when(manager.isConnected()).thenReturn(false);
@@ -59,8 +59,8 @@ public class ConnectionStatusTest {
         runParameters.setDatabaseName(dataBaseName);
         runParameters.setTableLevel(true);
         runParameters.setTableName(tableName);
-        String messageDBFormatted = String.format(res.getString("connection.status.database"), dataBaseName);
-        String messageTableFormatted = String.format(res.getString("connection.status.table"), tableName);
+        String messageDBFormatted = String.format(resources.getString("connection.status.database"), dataBaseName);
+        String messageTableFormatted = String.format(resources.getString("connection.status.table"), tableName);
         String expectedMessage = String.format("[%s %s\n]", messageDBFormatted, messageTableFormatted);
         //when
         when(manager.isConnected()).thenReturn(true);

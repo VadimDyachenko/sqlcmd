@@ -19,7 +19,7 @@ import static org.mockito.Mockito.*;
 
 public class TableClearTest {
     private static RunParameters runParameters;
-    private static ResourceBundle res;
+    private static ResourceBundle resources;
     private DatabaseManager manager;
     private View view;
     private Command command;
@@ -29,7 +29,7 @@ public class TableClearTest {
     @BeforeClass
     public static void beforeAllTestSetUp() throws ExitException {
         runParameters = new PropertiesLoader().getParameters();
-        res = ResourceBundle.getBundle("TableClear", new UTF8Control());
+        resources = ResourceBundle.getBundle("TableClear", new UTF8Control());
     }
 
     @Before
@@ -38,7 +38,7 @@ public class TableClearTest {
         view = mock(View.class);
         command = new TableClear(runParameters, manager, view);
 
-        String question = res.getString("table.clear.question");
+        String question = resources.getString("table.clear.question");
         runParameters.setTableName(testTableName);
         questionFormatted = String.format(question, testTableName);
     }
@@ -46,7 +46,7 @@ public class TableClearTest {
     @Test
     public void testTableClearWithYesAnswer() throws Exception {
         //given
-        String successful = res.getString("table.clear.successful");
+        String successful = resources.getString("table.clear.successful");
         String expectedMessage = String.format("[%s, %s]", questionFormatted, successful);
         //when
         when(manager.isConnected()).thenReturn(true);
@@ -60,7 +60,7 @@ public class TableClearTest {
     public void testTableClearWithSQLException() throws Exception {
         //given
         String exceptionMessage = "Some SQLException";
-        String fail = res.getString("table.clear.failed");
+        String fail = resources.getString("table.clear.failed");
         String expectedMessage = String.format("[%s, %s%s]", questionFormatted, fail, exceptionMessage);
         //then
         doThrow(new SQLException(exceptionMessage)).when(manager).clearTable(testTableName);

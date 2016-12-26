@@ -21,23 +21,23 @@ import static org.mockito.Mockito.*;
 
 public class TableCreateRecordTest {
     private static RunParameters runParameters;
-    private static ResourceBundle res;
+    private static ResourceBundle resources;
     private DatabaseManager manager;
     private View view;
     private Command command;
     private Set<String> columnNames;
     private final String tableName = "tableA";
-    private final String helpInfo = res.getString("table.create.record.help");
-    private final String successful = res.getString("table.create.successful");
+    private final String helpInfo = resources.getString("table.create.record.help");
+    private final String successful = resources.getString("table.create.successful");
     private final String column = "[id, names, password]";
-    private final String availableColumn = res.getString("table.create.available.column");
+    private final String availableColumn = resources.getString("table.create.available.column");
     private final String availableColumnFormatted = String.format(availableColumn, column);
     private final String createRecordResult = "{id:1, names:Some Name, password:somepassword}";
 
     @BeforeClass
     public static void beforeAllTestSetUp() throws ExitException {
         runParameters = new PropertiesLoader().getParameters();
-        res = ResourceBundle.getBundle("TableCreateRecord", new UTF8Control());
+        resources = ResourceBundle.getBundle("TableCreateRecord", new UTF8Control());
     }
 
     @Before
@@ -68,8 +68,8 @@ public class TableCreateRecordTest {
     @Test
     public void testTableCreateRecordWithWrongParameters() throws Exception {
         //given
-        String incorrectMessage = res.getString("table.create.incorrect.data");
-        String wrongNumberParameter = res.getString("table.create.record.invalid.number");
+        String incorrectMessage = resources.getString("table.create.incorrect.data");
+        String wrongNumberParameter = resources.getString("table.create.record.invalid.number");
         String successfulFormatted = String.format(successful, createRecordResult);
         String expectedMessage = String.format("[%s, %s, %s%s, %s]",
                 helpInfo,
@@ -90,7 +90,7 @@ public class TableCreateRecordTest {
     public void testGetAvailableColumnNamesWithSQLException() throws SQLException {
         //given
         String exceptionMessage = "Some SQLException";
-        String failMessage = res.getString("table.create.record.failed");
+        String failMessage = resources.getString("table.create.record.failed");
         String expectedMessage = String.format("[%s %s]",
                 failMessage,
                 exceptionMessage);
@@ -104,7 +104,7 @@ public class TableCreateRecordTest {
     @Test
     public void testTableIsEmpty() throws Exception {
         //given
-        String emptyTablesFormatted = String.format(res.getString("table.create.empty.table"), tableName);
+        String emptyTablesFormatted = String.format(resources.getString("table.create.empty.table"), tableName);
         String expectedMessage = String.format("[%s]", emptyTablesFormatted);
         columnNames = new LinkedHashSet<>();
         //when

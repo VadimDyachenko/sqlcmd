@@ -21,7 +21,7 @@ import static org.mockito.Mockito.*;
 
 public class DBSelectTableTest {
     private static RunParameters runParameters;
-    private static ResourceBundle res;
+    private static ResourceBundle resources;
     private DatabaseManager manager;
     private View view;
     private Command command;
@@ -29,7 +29,7 @@ public class DBSelectTableTest {
     @BeforeClass
     public static void beforeAllTestSetUp() throws ExitException {
         runParameters = new PropertiesLoader().getParameters();
-        res = ResourceBundle.getBundle("DBSelectTable", new UTF8Control());
+        resources = ResourceBundle.getBundle("DBSelectTable", new UTF8Control());
     }
 
     @Before
@@ -42,7 +42,7 @@ public class DBSelectTableTest {
     @Test
     public void testSelectTableWithoutConnectionToDatabase() throws Exception {
         //given
-        String expectedMessage = String.format("[%s]", res.getString("dbselect.no.connection"));
+        String expectedMessage = String.format("[%s]", resources.getString("dbselect.no.connection"));
         //when
         when(manager.isConnected()).thenReturn(false);
         command.execute();
@@ -54,7 +54,7 @@ public class DBSelectTableTest {
     public void testSelectTableWithEmptyDatabase() throws Exception {
         //given
         Set<String> tableNames = new LinkedHashSet<>();
-        String expectedMessage = String.format("[%s]", res.getString("dbselect.no.tables"));
+        String expectedMessage = String.format("[%s]", resources.getString("dbselect.no.tables"));
         //when
         when(manager.isConnected()).thenReturn(true);
         when(manager.getAllTableNames()).thenReturn(tableNames);
@@ -69,9 +69,9 @@ public class DBSelectTableTest {
         //given
         String exceptionMessage = "Some SQLException";
         String expectedMessage = String.format("[%s%s, %s]",
-                res.getString("dbselect.failure"),
+                resources.getString("dbselect.failure"),
                 exceptionMessage,
-                res.getString("dbselect.no.tables"));
+                resources.getString("dbselect.no.tables"));
         //when
         when(manager.isConnected()).thenReturn(true);
         when(manager.getAllTableNames()).thenThrow(new SQLException(exceptionMessage));
@@ -88,7 +88,7 @@ public class DBSelectTableTest {
         availableTables.add("tableB");
         String result = "[tableA, tableB]";
         String expectedMessage = String.format("[%s, %s]",
-                res.getString("dbselect.enter.name.tables"),
+                resources.getString("dbselect.enter.name.tables"),
                 result);
         //when
         when(manager.isConnected()).thenReturn(true);
@@ -107,9 +107,9 @@ public class DBSelectTableTest {
         availableTables.add("tableB");
         String result = "[tableA, tableB]";
         String expectedMessage = String.format("[%s, %s, %s, %s]",
-                res.getString("dbselect.enter.name.tables"),
+                resources.getString("dbselect.enter.name.tables"),
                 result,
-                res.getString("dbselect.enter.correct.name.tables"),
+                resources.getString("dbselect.enter.correct.name.tables"),
                 result);
         //when
         when(manager.isConnected()).thenReturn(true);
