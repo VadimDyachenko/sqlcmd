@@ -29,7 +29,7 @@ public class DBListTableNamesTest {
     @BeforeClass
     public static void beforeAllTestSetUp() throws ExitException {
         runParameters = new PropertiesLoader().getParameters();
-        res = ResourceBundle.getBundle(runParameters.getLanguageResourcePath() + "DBListTableNames", new UTF8Control());
+        res = ResourceBundle.getBundle("DBListTableNames", new UTF8Control());
     }
 
     @Before

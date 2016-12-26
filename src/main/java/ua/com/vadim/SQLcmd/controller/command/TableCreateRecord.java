@@ -12,7 +12,7 @@ import java.util.ResourceBundle;
 import java.util.Set;
 
 public class TableCreateRecord implements Command {
-    private final ResourceBundle res;
+    private final ResourceBundle resource;
     private final DatabaseManager manager;
     private final View view;
     private final RunParameters runParameters;
@@ -21,7 +21,7 @@ public class TableCreateRecord implements Command {
         this.runParameters = runParameters;
         this.manager = manager;
         this.view = view;
-        res = ResourceBundle.getBundle(runParameters.getLanguageResourcePath() + "TableCreateRecord", new UTF8Control());
+        resource = ResourceBundle.getBundle("TableCreateRecord", new UTF8Control());
     }
 
     @Override
@@ -30,14 +30,14 @@ public class TableCreateRecord implements Command {
         try {
             Set<String> columnNames = getAvailableColumnNames(tableName);
             if (columnNames.isEmpty()) {
-                view.writeMessage(String.format(res.getString("table.create.empty.table"), tableName));
+                view.writeMessage(String.format(resource.getString("table.create.empty.table"), tableName));
             } else {
                 printHelpInfo();
                 printAvailableColumnNames(columnNames);
                 createRecord(tableName, inputRecordData(columnNames));
             }
         } catch (SQLException e) {
-            view.writeMessage(res.getString("table.create.record.failed") + " " + e.getMessage());
+            view.writeMessage(resource.getString("table.create.record.failed") + " " + e.getMessage());
         }
     }
 
@@ -48,7 +48,7 @@ public class TableCreateRecord implements Command {
                 validateInputData(inputUserData, columnNames);
                 return inputUserData;
             } catch (IllegalArgumentException e) {
-                view.writeMessage(res.getString("table.create.incorrect.data") + e.getMessage());
+                view.writeMessage(resource.getString("table.create.incorrect.data") + e.getMessage());
             }
         } while (true);
     }
@@ -61,7 +61,7 @@ public class TableCreateRecord implements Command {
             dataSet.put(columnName, value);
         }
         manager.createTableRecord(tableName, dataSet);
-        view.writeMessage(String.format(res.getString("table.create.successful"), dataSet));
+        view.writeMessage(String.format(resource.getString("table.create.successful"), dataSet));
     }
 
     private Set<String> getAvailableColumnNames(String tableName) throws SQLException {
@@ -70,15 +70,15 @@ public class TableCreateRecord implements Command {
 
     private void validateInputData(String[] data, Set<String> columnNames) {
         if (data.length % 2 != 0 || data.length / 2 != columnNames.size()) {
-            throw new IllegalArgumentException(res.getString("table.create.record.invalid.number"));
+            throw new IllegalArgumentException(resource.getString("table.create.record.invalid.number"));
         }
     }
 
     private void printHelpInfo() {
-        view.writeMessage(res.getString("table.create.record.help"));
+        view.writeMessage(resource.getString("table.create.record.help"));
     }
 
     private void printAvailableColumnNames(Set<String> columnNames) {
-        view.writeMessage(String.format(res.getString("table.create.available.column"), columnNames.toString()));
+        view.writeMessage(String.format(resource.getString("table.create.available.column"), columnNames.toString()));
     }
 }

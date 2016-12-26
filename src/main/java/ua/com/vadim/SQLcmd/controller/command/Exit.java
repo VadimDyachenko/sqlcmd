@@ -12,19 +12,19 @@ import java.util.ResourceBundle;
 public class Exit implements Command {
     private final DatabaseManager manager;
     private final View view;
-    private final ResourceBundle res;
+    private final ResourceBundle resource;
 
-    public Exit(RunParameters runParameters, DatabaseManager manager, View view) {
+    public Exit(DatabaseManager manager, View view) {
         this.manager = manager;
         this.view = view;
-        res = ResourceBundle.getBundle(runParameters.getLanguageResourcePath() + "Exit", new UTF8Control());
+        resource = ResourceBundle.getBundle("Exit", new UTF8Control());
     }
 
     @Override
     public void execute() throws ExitException {
-        view.writeMessage(res.getString("exit.question"));
+        view.writeMessage(resource.getString("exit.question"));
         String answer = view.readLine().trim().toLowerCase();
-        if (answer.equals("y") || answer.equals("д")) {
+        if (answer.equals("y") || answer.equals("д")) { //TODO выпилить хардкод y/д
             try {
                 manager.disconnect();
             } catch (SQLException e) {

@@ -31,7 +31,7 @@ public class DBConnectTest {
     @BeforeClass
     public static void beforeAllTestSetUp() throws ExitException {
         runParameters = new PropertiesLoader().getParameters();
-        res = ResourceBundle.getBundle(runParameters.getLanguageResourcePath() + "DBConnect", new UTF8Control());
+        res = ResourceBundle.getBundle("DBConnect", new UTF8Control());
     }
 
     @Before

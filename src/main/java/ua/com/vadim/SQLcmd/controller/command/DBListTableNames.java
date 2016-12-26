@@ -11,14 +11,14 @@ import java.util.ResourceBundle;
 import java.util.Set;
 
 public class DBListTableNames implements Command {
-    private final ResourceBundle res;
+    private final ResourceBundle resource;
     private final DatabaseManager manager;
     private final View view;
 
     public DBListTableNames(RunParameters runParameters, DatabaseManager manager, View view) {
         this.manager = manager;
         this.view = view;
-        res = ResourceBundle.getBundle(runParameters.getLanguageResourcePath() + "DBListTableNames", new UTF8Control());
+        resource = ResourceBundle.getBundle("DBListTableNames", new UTF8Control());
     }
 
     @Override
@@ -26,14 +26,14 @@ public class DBListTableNames implements Command {
         if (manager.isConnected()) {
             listTableNames();
         } else {
-            view.writeMessage(res.getString("dblist.no.connection"));
+            view.writeMessage(resource.getString("dblist.no.connection"));
         }
     }
 
     private void listTableNames() {
         Set<String> tableNames = getTableNames();
         if (tableNames.isEmpty()) {
-            view.writeMessage(res.getString("dblist.no.tables"));
+            view.writeMessage(resource.getString("dblist.no.tables"));
         } else {
             printResult(tableNames);
         }
@@ -44,13 +44,13 @@ public class DBListTableNames implements Command {
         try {
             tableNames = manager.getAllTableNames();
         } catch (SQLException e) {
-            view.writeMessage(res.getString("dblist.failure") + e.getMessage());
+            view.writeMessage(resource.getString("dblist.failure") + e.getMessage());
         }
         return tableNames;
     }
 
     private void printResult(Set<String> tableNames) {
-        view.writeMessage(res.getString("dblist.available.tables"));
+        view.writeMessage(resource.getString("dblist.available.tables"));
         view.writeMessage(tableNames.toString());
     }
 }

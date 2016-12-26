@@ -15,13 +15,13 @@ public class TableUpdateRecord implements Command {
     private final RunParameters runParameters;
     private final DatabaseManager manager;
     private final View view;
-    private final ResourceBundle res;
+    private final ResourceBundle resource;
 
     public TableUpdateRecord(RunParameters runParameters, DatabaseManager manager, View view) {
         this.runParameters = runParameters;
         this.manager = manager;
         this.view = view;
-        res = ResourceBundle.getBundle(runParameters.getLanguageResourcePath() + "TableUpdateRecord", new UTF8Control());
+        resource = ResourceBundle.getBundle("TableUpdateRecord", new UTF8Control());
     }
 
     @Override
@@ -30,23 +30,23 @@ public class TableUpdateRecord implements Command {
         try {
             Set<String> columnNames = getAvailableColumnNames(tableName);
             if (columnNames.isEmpty()) {
-                view.writeMessage(String.format(res.getString("table.update.empty.table"), tableName));
+                view.writeMessage(String.format(resource.getString("table.update.empty.table"), tableName));
             } else {
                 printHelpInfo();
                 printAvailableColumnNames(columnNames);
                 updateRecord(tableName);
             }
         } catch (SQLException e) {
-            view.writeMessage(res.getString("table.update.record.failed") + e.getMessage());
+            view.writeMessage(resource.getString("table.update.record.failed") + e.getMessage());
         }
     }
 
     private void printHelpInfo() {
-        view.writeMessage(res.getString("table.update.record.help"));
+        view.writeMessage(resource.getString("table.update.record.help"));
     }
 
     private void printAvailableColumnNames(Set<String> columnNames) {
-        view.writeMessage(String.format(res.getString("table.update.available.column"), columnNames.toString()));
+        view.writeMessage(String.format(resource.getString("table.update.available.column"), columnNames.toString()));
     }
 
     private Set<String> getAvailableColumnNames(String tableName) throws SQLException {
@@ -65,12 +65,12 @@ public class TableUpdateRecord implements Command {
                     dataSet.put(columnName, value);
                 }
                 manager.updateTableRecord(tableName, id, dataSet);
-                view.writeMessage(String.format(res.getString("table.update.successful"), dataSet));
+                view.writeMessage(String.format(resource.getString("table.update.successful"), dataSet));
                 break;
             } catch (NumberFormatException e) { //for check id
-                view.writeMessage(res.getString("table.update.record.number.format"));
+                view.writeMessage(resource.getString("table.update.record.number.format"));
             } catch (IllegalArgumentException e1) { //for check data
-                view.writeMessage(res.getString("table.update.incorrect.data") + e1.getMessage());
+                view.writeMessage(resource.getString("table.update.incorrect.data") + e1.getMessage());
             }
         } while (true);
     }
@@ -83,7 +83,7 @@ public class TableUpdateRecord implements Command {
 
     private void validateInputData(String[] data) {
         if (data.length % 2 != 0) {
-            throw new IllegalArgumentException(res.getString("table.update.record.invalid.number"));
+            throw new IllegalArgumentException(resource.getString("table.update.record.invalid.number"));
         }
     }
 

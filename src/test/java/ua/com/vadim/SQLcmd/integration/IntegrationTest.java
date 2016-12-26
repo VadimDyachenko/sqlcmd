@@ -477,18 +477,14 @@ public class IntegrationTest {
     }
 
     private static void resourceSetUp() {
-        res_common = getResourceBundle("common");
-        res_exit = getResourceBundle("Exit");
-        res_connectionStatus = getResourceBundle("connectionStatus");
-        res_DBConnect = getResourceBundle("DBConnect");
-        res_DBListTableNames = getResourceBundle("DBListTableNames");
-        res_DBSelectTable = getResourceBundle("DBSelectTable");
-        res_TableCreateRecord = getResourceBundle("TableCreateRecord");
-        res_TableUpdateRecord = getResourceBundle("TableUpdateRecord");
-        res_TableClear = getResourceBundle("TableClear");
-    }
-
-    private static ResourceBundle getResourceBundle(String resource) {
-        return ResourceBundle.getBundle("ua.com.vadim.SQLcmd.controller.resources.interface." + resource, new UTF8Control());
+        res_common = ResourceBundle.getBundle("common", new UTF8Control());
+        res_exit = ResourceBundle.getBundle("Exit", new UTF8Control());
+        res_connectionStatus = ResourceBundle.getBundle("connectionStatus", new UTF8Control());
+        res_DBConnect = ResourceBundle.getBundle("DBConnect", new UTF8Control());
+        res_DBListTableNames = ResourceBundle.getBundle("DBListTableNames", new UTF8Control());
+        res_DBSelectTable = ResourceBundle.getBundle("DBSelectTable", new UTF8Control());
+        res_TableCreateRecord = ResourceBundle.getBundle("TableCreateRecord", new UTF8Control());
+        res_TableUpdateRecord = ResourceBundle.getBundle("TableUpdateRecord", new UTF8Control());
+        res_TableClear = ResourceBundle.getBundle("TableClear", new UTF8Control());
     }
 }

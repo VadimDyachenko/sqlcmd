@@ -28,14 +28,14 @@ public class ExitTest {
     @BeforeClass
     public static void beforeAllTestSetUp() throws ExitException {
         runParameters = new PropertiesLoader().getParameters();
-        res = ResourceBundle.getBundle(runParameters.getLanguageResourcePath() + "Exit", new UTF8Control());
+        res = ResourceBundle.getBundle(/*runParameters.getLanguageResourcePath() + */"Exit", new UTF8Control());
     }
 
     @Before
     public void setUp() {
         manager = mock(DatabaseManager.class);
         view = mock(View.class);
-        command = new Exit(runParameters, manager, view);
+        command = new Exit(manager, view);
     }
 
     @Test(expected = ExitException.class)

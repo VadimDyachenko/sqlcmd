@@ -29,7 +29,7 @@ public class TablePrintDataTest {
     @BeforeClass
     public static void beforeAllTestSetUp() throws ExitException {
         runParameters = new PropertiesLoader().getParameters();
-        res = ResourceBundle.getBundle(runParameters.getLanguageResourcePath() + "TablePrintData", new UTF8Control());
+        res = ResourceBundle.getBundle("TablePrintData", new UTF8Control());
     }
 
     @Before

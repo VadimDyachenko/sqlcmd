@@ -9,7 +9,7 @@ import java.util.ResourceBundle;
 
 public class ConnectionStatus implements Command {
 
-    private final ResourceBundle res;
+    private final ResourceBundle resource;
     private final DatabaseManager manager;
     private final View view;
     private final RunParameters runParameters;
@@ -18,20 +18,20 @@ public class ConnectionStatus implements Command {
         this.runParameters = runParameters;
         this.manager = manager;
         this.view = view;
-        res = ResourceBundle.getBundle(runParameters.getLanguageResourcePath() + "connectionStatus", new UTF8Control());
+        resource = ResourceBundle.getBundle("connectionStatus", new UTF8Control());
     }
 
     @Override
     public void execute() {
         if (!manager.isConnected()) {
-            view.writeMessage(res.getString("connection.status.without.connection"));
+            view.writeMessage(resource.getString("connection.status.without.connection"));
             return;
         }
-        String message = String.format(res.getString("connection.status.database"), runParameters.getDatabaseName());
+        String message = String.format(resource.getString("connection.status.database"), runParameters.getDatabaseName());
         message += " ";
 
         if (runParameters.isTableLevel()) {
-            message += String.format(res.getString("connection.status.table"), runParameters.getTableName());
+            message += String.format(resource.getString("connection.status.table"), runParameters.getTableName());
         }
         message += "\n";
         view.writeMessage(message);

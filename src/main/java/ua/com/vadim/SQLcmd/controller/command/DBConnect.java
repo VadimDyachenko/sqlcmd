@@ -10,7 +10,7 @@ import java.sql.SQLException;
 import java.util.ResourceBundle;
 
 public class DBConnect implements Command {
-    private final ResourceBundle res;
+    private final ResourceBundle resource;
     private final DatabaseManager manager;
     private final View view;
     private final RunParameters runParameters;
@@ -19,7 +19,7 @@ public class DBConnect implements Command {
         this.runParameters = runParameters;
         this.manager = manager;
         this.view = view;
-        res = ResourceBundle.getBundle(runParameters.getLanguageResourcePath() + "DBConnect", new UTF8Control());
+        resource = ResourceBundle.getBundle("DBConnect", new UTF8Control());
     }
 
     @Override
@@ -38,25 +38,25 @@ public class DBConnect implements Command {
                     runParameters.getUserName(),
                     runParameters.getPassword());
         } catch (SQLException e) {
-            view.writeMessage(res.getString("dbconnect.failed") + " " + e.getMessage());
-            view.writeMessage(res.getString("dbconnect.default.failed"));
+            view.writeMessage(resource.getString("dbconnect.failed") + " " + e.getMessage());
+            view.writeMessage(resource.getString("dbconnect.default.failed"));
             throw new ExitException();
         }
-        view.writeMessage(res.getString("dbconnect.successful"));
+        view.writeMessage(resource.getString("dbconnect.successful"));
     }
 
     private void connectWithNewParameters() throws ExitException {
-        view.writeMessage(res.getString("dbconnect.enter.connection.parameters"));
+        view.writeMessage(resource.getString("dbconnect.enter.connection.parameters"));
         do try {
             manager.disconnect();
-            String databaseName = getInputString(res.getString("dbconnect.enter.database.name"));
-            String login = getInputString(res.getString("dbconnect.enter.login"));
-            String password = getInputString(res.getString("dbconnect.enter.password"));
+            String databaseName = getInputString(resource.getString("dbconnect.enter.database.name"));
+            String login = getInputString(resource.getString("dbconnect.enter.login"));
+            String password = getInputString(resource.getString("dbconnect.enter.password"));
             manager.connect(databaseName, login, password);
             runParameters.setDatabaseName(databaseName);
         } catch (SQLException e) {
-            view.writeMessage(res.getString("dbconnect.failed") + " " + e.getMessage());
-            view.writeMessage(res.getString("dbconnect.try.again"));
+            view.writeMessage(resource.getString("dbconnect.failed") + " " + e.getMessage());
+            view.writeMessage(resource.getString("dbconnect.try.again"));
         }
         while (!manager.isConnected()) ;
     }

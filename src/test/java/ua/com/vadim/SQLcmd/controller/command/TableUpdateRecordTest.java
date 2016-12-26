@@ -28,7 +28,6 @@ public class TableUpdateRecordTest {
     private View view;
     private Command command;
     private Set<String> columnNames;
-    private DataSet[] tableData;
     private final String tableName = "tableA";
     private final String helpInfo = res.getString("table.update.record.help");
     private final String successful = res.getString("table.update.successful");
@@ -40,7 +39,7 @@ public class TableUpdateRecordTest {
     @BeforeClass
     public static void beforeAllTestSetUp() throws ExitException {
         runParameters = new PropertiesLoader().getParameters();
-        res = ResourceBundle.getBundle(runParameters.getLanguageResourcePath() + "TableUpdateRecord", new UTF8Control());
+        res = ResourceBundle.getBundle("TableUpdateRecord", new UTF8Control());
     }
 
     @Before
@@ -49,7 +48,7 @@ public class TableUpdateRecordTest {
         view = mock(View.class);
         command = new TableUpdateRecord(runParameters, manager, view);
         runParameters.setTableName(tableName);
-        tableData = new DataSetImpl[1];
+        DataSet[] tableData = new DataSetImpl[1];
         DataSet dataSet = new DataSetImpl();
         dataSet.put("id", 1);
         dataSet.put("names", "TestName");

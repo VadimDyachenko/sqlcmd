@@ -29,7 +29,7 @@ public class DBSelectTableTest {
     @BeforeClass
     public static void beforeAllTestSetUp() throws ExitException {
         runParameters = new PropertiesLoader().getParameters();
-        res = ResourceBundle.getBundle(runParameters.getLanguageResourcePath() + "DBSelectTable", new UTF8Control());
+        res = ResourceBundle.getBundle("DBSelectTable", new UTF8Control());
     }
 
     @Before

@@ -194,6 +194,7 @@ public class PostgresDBManagerTest {
         assertFalse(manager.isConnected());
     }
 
+    @Ignore
     @Test (expected = PSQLException.class)
     public void testWithoutConnection() throws SQLException {
         //given

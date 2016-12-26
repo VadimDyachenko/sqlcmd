@@ -9,7 +9,7 @@ import java.sql.SQLException;
 import java.util.ResourceBundle;
 
 public class TableClear implements Command {
-    private final ResourceBundle res;
+    private final ResourceBundle resource;
     private final RunParameters runParameters;
     private final DatabaseManager manager;
     private final View view;
@@ -18,22 +18,22 @@ public class TableClear implements Command {
         this.runParameters = runParameters;
         this.manager = manager;
         this.view = view;
-        res = ResourceBundle.getBundle(runParameters.getLanguageResourcePath() + "TableClear", new UTF8Control());
+        resource = ResourceBundle.getBundle("TableClear", new UTF8Control());
     }
 
     @Override
     public void execute() {
         String currentTableName = runParameters.getTableName();
-        view.writeMessage(String.format(res.getString("table.clear.question"), currentTableName));
+        view.writeMessage(String.format(resource.getString("table.clear.question"), currentTableName));
         String answer = view.readLine().trim().toLowerCase();
         if (answer.equals("y") || answer.equals("д")) {
             try {
                 manager.clearTable(currentTableName);
             } catch (SQLException e) {
-                view.writeMessage(res.getString("table.clear.failed") + e.getMessage());
+                view.writeMessage(resource.getString("table.clear.failed") + e.getMessage());
                 return;
             }
-            view.writeMessage(res.getString("table.clear.successful"));
+            view.writeMessage(resource.getString("table.clear.successful"));
         }
     }
 }

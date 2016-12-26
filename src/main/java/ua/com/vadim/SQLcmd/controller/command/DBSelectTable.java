@@ -11,7 +11,7 @@ import java.util.ResourceBundle;
 import java.util.Set;
 
 public class DBSelectTable implements Command {
-    private final ResourceBundle res;
+    private final ResourceBundle resource;
     private final RunParameters runParameters;
     private final DatabaseManager manager;
     private final View view;
@@ -20,7 +20,7 @@ public class DBSelectTable implements Command {
         this.runParameters = runParameters;
         this.manager = manager;
         this.view = view;
-        res = ResourceBundle.getBundle(runParameters.getLanguageResourcePath() + "DBSelectTable", new UTF8Control());
+        resource = ResourceBundle.getBundle("DBSelectTable", new UTF8Control());
     }
 
     @Override
@@ -28,21 +28,21 @@ public class DBSelectTable implements Command {
         if (manager.isConnected()) {
             selectTable();
         } else {
-            view.writeMessage(res.getString("dbselect.no.connection"));
+            view.writeMessage(resource.getString("dbselect.no.connection"));
         }
     }
 
     private void selectTable() {
         Set<String> tableNames = getAvailableTableNames();
         if (tableNames.isEmpty()) {
-            view.writeMessage(res.getString("dbselect.no.tables"));
+            view.writeMessage(resource.getString("dbselect.no.tables"));
         } else {
             setTable(tableNames);
         }
     }
 
     private void setTable(Set<String> tableNames) {
-        view.writeMessage(res.getString("dbselect.enter.name.tables"));
+        view.writeMessage(resource.getString("dbselect.enter.name.tables"));
         printAvailableTables(tableNames);
         do {
             String tableName = view.readLine();
@@ -51,7 +51,7 @@ public class DBSelectTable implements Command {
                 runParameters.setTableLevel(true);
                 break;
             } else {
-                view.writeMessage(res.getString("dbselect.enter.correct.name.tables"));
+                view.writeMessage(resource.getString("dbselect.enter.correct.name.tables"));
                 printAvailableTables(tableNames);
             }
         } while (true);
@@ -62,7 +62,7 @@ public class DBSelectTable implements Command {
         try {
             result = manager.getAllTableNames();
         } catch (SQLException e) {
-            view.writeMessage(res.getString("dbselect.failure") + e.getMessage());
+            view.writeMessage(resource.getString("dbselect.failure") + e.getMessage());
         }
         return result;
     }

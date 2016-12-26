@@ -21,7 +21,7 @@ final class CommandExecutor {
         commandMap.put(AvailableCommand.TABLE_UPDATE_RECORD, new TableUpdateRecord(runParameters, manager, view));
         commandMap.put(AvailableCommand.TABLE_CLEAR, new TableClear(runParameters, manager, view));
         commandMap.put(AvailableCommand.RETURN, new Return(runParameters));
-        commandMap.put(AvailableCommand.EXIT, new Exit(runParameters, manager, view));
+        commandMap.put(AvailableCommand.EXIT, new Exit(manager, view));
         commandMap.put(AvailableCommand.PRINT_CURRENT_CONNECTION_STATUS, new ConnectionStatus(runParameters, manager, view));
     }
 

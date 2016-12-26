@@ -12,7 +12,7 @@ import java.util.Map;
 import java.util.ResourceBundle;
 
 public class TablePrintData implements Command {
-    private final ResourceBundle res;
+    private final ResourceBundle resource;
     private final DatabaseManager manager;
     private final View view;
     private final RunParameters runParameters;
@@ -22,7 +22,7 @@ public class TablePrintData implements Command {
         this.runParameters = runParameters;
         this.manager = manager;
         this.view = view;
-        res = ResourceBundle.getBundle(runParameters.getLanguageResourcePath() + "TablePrintData", new UTF8Control());
+        resource = ResourceBundle.getBundle("TablePrintData", new UTF8Control());
     }
 
     @Override
@@ -31,12 +31,12 @@ public class TablePrintData implements Command {
         try {
             DataSet[] tableData = getTableData(tableName);
             if (tableData.length == 0) {
-                view.writeMessage(String.format(res.getString("table.print.data.empty"), tableName));
+                view.writeMessage(String.format(resource.getString("table.print.data.empty"), tableName));
             } else {
                 printData(tableData);
             }
         } catch (SQLException e) {
-            view.writeMessage(res.getString("table.print.data.failed") + e.getMessage());
+            view.writeMessage(resource.getString("table.print.data.failed") + e.getMessage());
         }
     }
 

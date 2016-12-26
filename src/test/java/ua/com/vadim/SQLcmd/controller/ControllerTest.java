@@ -25,11 +25,10 @@ public class ControllerTest {
     private static String databaseName;
     private static String userName;
     private static String password;
-    private static final String resPath = "ua.com.vadim.SQLcmd.controller.resources.interface.";
-    private static ResourceBundle res_common;
-    private static ResourceBundle res_dbConnect;
-    private static ResourceBundle res_connectionStatus;
-    private static ResourceBundle res_exit;
+    private static ResourceBundle common;
+    private static ResourceBundle dbConnect;
+    private static ResourceBundle connectionStatus;
+    private static ResourceBundle exit;
 
     @Mock
     private RunParameters runParameters;
@@ -45,10 +44,10 @@ public class ControllerTest {
     public static void beforeAllTestSetUp() throws ExitException {
         Locale.setDefault(Locale.ENGLISH);
         setTestRunParameters();
-        res_common = ResourceBundle.getBundle(resPath + "common", new UTF8Control());
-        res_dbConnect = ResourceBundle.getBundle(resPath + "DBConnect", new UTF8Control());
-        res_connectionStatus = ResourceBundle.getBundle(resPath + "connectionStatus", new UTF8Control());
-        res_exit = ResourceBundle.getBundle(resPath + "Exit", new UTF8Control());
+        common = ResourceBundle.getBundle("common", new UTF8Control());
+        dbConnect = ResourceBundle.getBundle("DBConnect", new UTF8Control());
+        connectionStatus = ResourceBundle.getBundle("connectionStatus", new UTF8Control());
+        exit = ResourceBundle.getBundle("Exit", new UTF8Control());
     }
 
     private static void setTestRunParameters() {
@@ -68,20 +67,19 @@ public class ControllerTest {
     public void testRun() {
         //given
         String expectedMessage = "[" +
-                res_common.getString("common.welcome") + ", " +
-                res_common.getString("common.try.connect.default.parameters") + ", " +
-                res_dbConnect.getString("dbconnect.successful") + ", " +
-                String.format(res_connectionStatus.getString("connection.status.database"), databaseName) + " " +
-                String.format(res_connectionStatus.getString("connection.status.table"), "null") +
+                common.getString("common.welcome") + ", " +
+                common.getString("common.try.connect.default.parameters") + ", " +
+                dbConnect.getString("dbconnect.successful") + ", " +
+                String.format(connectionStatus.getString("connection.status.database"), databaseName) + " " +
+                String.format(connectionStatus.getString("connection.status.table"), "null") +
                 "\n, " +
-                res_common.getString("common.choice.operation") + ", " +
-                res_common.getString("common.table.menu") + ", " +
-                res_exit.getString("exit.question") + ", " +
-                res_common.getString("common.the.end") +
+                common.getString("common.choice.operation") + ", " +
+                common.getString("common.table.menu") + ", " +
+                exit.getString("exit.question") + ", " +
+                common.getString("common.the.end") +
                 "]";
         when(runParameters.isTableLevel()).thenReturn(true).thenReturn(true).thenReturn(false);
         when(view.readLine()).thenReturn("4", "y");
-        when(runParameters.getLanguageResourcePath()).thenReturn("ua.com.vadim.SQLcmd.controller.resources.interface.");
         when(runParameters.getServerIP()).thenReturn(serverIP);
         when(runParameters.getServerPort()).thenReturn(serverPort);
         when(runParameters.getUserName()).thenReturn(userName);
@@ -100,19 +98,18 @@ public class ControllerTest {
                 "Unsupported language parameter in sqlcmd.properties file." + ", " +
                 "Exit the program and change it to available variant: []" + ", " +
                 "Current interface language setting to [en]\n" + ", " +
-                res_common.getString("common.welcome") + ", " +
-                res_common.getString("common.try.connect.default.parameters") + ", " +
-                res_dbConnect.getString("dbconnect.successful") + ", " +
-                String.format(res_connectionStatus.getString("connection.status.database"), databaseName) +
+                common.getString("common.welcome") + ", " +
+                common.getString("common.try.connect.default.parameters") + ", " +
+                dbConnect.getString("dbconnect.successful") + ", " +
+                String.format(connectionStatus.getString("connection.status.database"), databaseName) +
                 " \n, " +
-                res_common.getString("common.choice.operation") + ", " +
-                res_common.getString("common.main.menu") + ", " +
-                res_exit.getString("exit.question") + ", " +
-                res_common.getString("common.the.end") +
+                common.getString("common.choice.operation") + ", " +
+                common.getString("common.main.menu") + ", " +
+                exit.getString("exit.question") + ", " +
+                common.getString("common.the.end") +
                 "]";
         //when
         when(view.readLine()).thenReturn("4", "y");
-        when(runParameters.getLanguageResourcePath()).thenReturn("ua.com.vadim.SQLcmd.controller.resources.interface.");
         when(runParameters.getServerIP()).thenReturn(serverIP);
         when(runParameters.getServerPort()).thenReturn(serverPort);
         when(runParameters.getUserName()).thenReturn(userName);
@@ -129,17 +126,16 @@ public class ControllerTest {
     public void testRunWithExitException() {
         //given
         String expectedMessage = "[" +
-                res_common.getString("common.welcome") + ", " +
-                res_common.getString("common.try.connect.default.parameters") + ", " +
-                res_dbConnect.getString("dbconnect.successful") + ", " +
-                String.format(res_connectionStatus.getString("connection.status.database"), databaseName) +
+                common.getString("common.welcome") + ", " +
+                common.getString("common.try.connect.default.parameters") + ", " +
+                dbConnect.getString("dbconnect.successful") + ", " +
+                String.format(connectionStatus.getString("connection.status.database"), databaseName) +
                 " \n, " +
-                res_common.getString("common.choice.operation") + ", " +
-                res_common.getString("common.main.menu") + ", " +
-                res_common.getString("common.the.end") +
+                common.getString("common.choice.operation") + ", " +
+                common.getString("common.main.menu") + ", " +
+                common.getString("common.the.end") +
                 "]";
         //when
-        when(runParameters.getLanguageResourcePath()).thenReturn("ua.com.vadim.SQLcmd.controller.resources.interface.");
         when(runParameters.getServerIP()).thenReturn(serverIP);
         when(runParameters.getServerPort()).thenReturn(serverPort);
         when(runParameters.getUserName()).thenReturn(userName);
@@ -155,20 +151,19 @@ public class ControllerTest {
     public void testRunWithIllegalArgumentException() {
         //given
         String expectedMessage = "[" +
-                res_common.getString("common.welcome") + ", " +
-                res_common.getString("common.try.connect.default.parameters") + ", " +
-                res_dbConnect.getString("dbconnect.successful") + ", " +
-                String.format(res_connectionStatus.getString("connection.status.database"), databaseName) +
+                common.getString("common.welcome") + ", " +
+                common.getString("common.try.connect.default.parameters") + ", " +
+                dbConnect.getString("dbconnect.successful") + ", " +
+                String.format(connectionStatus.getString("connection.status.database"), databaseName) +
                 " \n, " +
-                res_common.getString("common.choice.operation") + ", " +
-                res_common.getString("common.main.menu") + ", " +
-                res_common.getString("common.choice.correct") + ", " +
-                res_common.getString("common.main.menu") + ", " +
-                res_exit.getString("exit.question") + ", " +
-                res_common.getString("common.the.end") +
+                common.getString("common.choice.operation") + ", " +
+                common.getString("common.main.menu") + ", " +
+                common.getString("common.choice.correct") + ", " +
+                common.getString("common.main.menu") + ", " +
+                exit.getString("exit.question") + ", " +
+                common.getString("common.the.end") +
                 "]";
         //when
-        when(runParameters.getLanguageResourcePath()).thenReturn("ua.com.vadim.SQLcmd.controller.resources.interface.");
         when(runParameters.getServerIP()).thenReturn(serverIP);
         when(runParameters.getServerPort()).thenReturn(serverPort);
         when(runParameters.getUserName()).thenReturn(userName);

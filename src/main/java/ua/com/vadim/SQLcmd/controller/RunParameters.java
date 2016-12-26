@@ -8,7 +8,6 @@ public class RunParameters {
     private final String password;
     private String tableName = "";
     private boolean tableLevel = false;
-    private final String LANGUAGE_RESOURCES_PATH = "ua.com.vadim.SQLcmd.controller.resources.interface.";
     private final String interfaceLanguage;
 
     public RunParameters(String serverIP, String serverPort,
@@ -60,10 +59,6 @@ public class RunParameters {
 
     public String getPassword() {
         return password;
-    }
-
-    public String getLanguageResourcePath() {
-        return LANGUAGE_RESOURCES_PATH;
     }
 
     public String getInterfaceLanguage() {

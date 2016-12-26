@@ -80,7 +80,7 @@ public class Controller {
 
     private void setUp() throws ExitException {
         localeSetUp();
-        res = ResourceBundle.getBundle(runParameters.getLanguageResourcePath() + "common", new UTF8Control());
+        res = ResourceBundle.getBundle("common", new UTF8Control());
         manager = new PostgresDBManager(runParameters.getServerIP(),
                 runParameters.getServerPort());
         commandExecutor = new CommandExecutor(runParameters, manager, view);
