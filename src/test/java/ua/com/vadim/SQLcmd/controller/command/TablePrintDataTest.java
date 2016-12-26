@@ -19,11 +19,10 @@ import java.util.ResourceBundle;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
 
-public class TablePrintDataTest {
+public class TablePrintDataTest extends AbstractCommandTest{
     private static RunParameters runParameters;
     private static ResourceBundle resources;
     private DatabaseManager manager;
-    private View view;
     private Command command;
 
     @BeforeClass
@@ -89,11 +88,5 @@ public class TablePrintDataTest {
         command.execute();
         //then
         shouldPrint(expectedMessage);
-    }
-
-    private void shouldPrint(String expected) {
-        ArgumentCaptor<String> captor = ArgumentCaptor.forClass(String.class);
-        verify(view, atLeastOnce()).writeMessage(captor.capture());
-        assertEquals(expected, captor.getAllValues().toString());
     }
 }

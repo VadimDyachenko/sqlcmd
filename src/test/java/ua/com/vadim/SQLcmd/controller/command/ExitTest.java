@@ -3,7 +3,6 @@ package ua.com.vadim.SQLcmd.controller.command;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.mockito.ArgumentCaptor;
 import ua.com.vadim.SQLcmd.exception.ExitException;
 import ua.com.vadim.SQLcmd.model.DatabaseManager;
 import ua.com.vadim.SQLcmd.view.UTF8Control;
@@ -12,11 +11,10 @@ import ua.com.vadim.SQLcmd.view.View;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
 
-import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
 
 
-public class ExitTest {
+public class ExitTest extends AbstractCommandTest {
     private static ResourceBundle resources;
     private DatabaseManager manager;
     private View view;
@@ -68,11 +66,5 @@ public class ExitTest {
 
         //then
         shouldPrint(expectedMessage);
-    }
-
-    private void shouldPrint(String expected) {
-        ArgumentCaptor<String> captor = ArgumentCaptor.forClass(String.class);
-        verify(view, atLeastOnce()).writeMessage(captor.capture());
-        assertEquals(expected, captor.getAllValues().toString());
     }
 }

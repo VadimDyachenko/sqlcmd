@@ -21,11 +21,10 @@ import java.util.Set;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
 
-public class TableUpdateRecordTest {
+public class TableUpdateRecordTest extends AbstractCommandTest {
     private static RunParameters runParameters;
     private static ResourceBundle resources;
     private DatabaseManager manager;
-    private View view;
     private Command command;
     private Set<String> columnNames;
     private final String tableName = "tableA";
@@ -141,9 +140,4 @@ public class TableUpdateRecordTest {
         shouldPrint(expectedMessage);
     }
 
-    private void shouldPrint(String expected) {
-        ArgumentCaptor<String> captor = ArgumentCaptor.forClass(String.class);
-        verify(view, atLeastOnce()).writeMessage(captor.capture());
-        assertEquals(expected, captor.getAllValues().toString());
-    }
 }

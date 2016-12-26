@@ -3,7 +3,6 @@ package ua.com.vadim.SQLcmd.controller.command;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.mockito.ArgumentCaptor;
 import ua.com.vadim.SQLcmd.controller.PropertiesLoader;
 import ua.com.vadim.SQLcmd.controller.RunParameters;
 import ua.com.vadim.SQLcmd.exception.ExitException;
@@ -14,14 +13,12 @@ import ua.com.vadim.SQLcmd.view.View;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
 
-import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
 
-public class TableClearTest {
+public class TableClearTest extends AbstractCommandTest{
     private static RunParameters runParameters;
     private static ResourceBundle resources;
     private DatabaseManager manager;
-    private View view;
     private Command command;
     private final String testTableName = "tableA";
     private String questionFormatted;
@@ -69,11 +66,5 @@ public class TableClearTest {
         //then
         shouldPrint(expectedMessage);
         //when
-    }
-
-    private void shouldPrint(String expected) {
-        ArgumentCaptor<String> captor = ArgumentCaptor.forClass(String.class);
-        verify(view, atLeastOnce()).writeMessage(captor.capture());
-        assertEquals(expected, captor.getAllValues().toString());
     }
 }
