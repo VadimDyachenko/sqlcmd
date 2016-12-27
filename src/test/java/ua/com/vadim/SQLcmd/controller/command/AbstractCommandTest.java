@@ -7,12 +7,13 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.verify;
 
-public class AbstractCommandTest {
-    protected View view;
+public abstract class AbstractCommandTest {
 
     protected void shouldPrint(String expected) {
         ArgumentCaptor<String> captor = ArgumentCaptor.forClass(String.class);
-        verify(view, atLeastOnce()).writeMessage(captor.capture());
+        verify(getView(), atLeastOnce()).writeMessage(captor.capture());
         assertEquals(expected, captor.getAllValues().toString());
     }
+
+    abstract View getView();
 }
