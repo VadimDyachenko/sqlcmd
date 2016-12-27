@@ -5,24 +5,23 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import ua.com.vadim.SQLcmd.exception.ExitException;
 import ua.com.vadim.SQLcmd.model.DatabaseManager;
-import ua.com.vadim.SQLcmd.view.UTF8Control;
 import ua.com.vadim.SQLcmd.view.View;
 
 import java.sql.SQLException;
-import java.util.ResourceBundle;
+import java.util.Locale;
 
 import static org.mockito.Mockito.*;
 
 
 public class ExitTest extends AbstractCommandTest {
-    private static ResourceBundle resources;
-    private DatabaseManager manager;
+
     private View view;
+    private DatabaseManager manager;
     private Command command;
 
     @BeforeClass
     public static void beforeAllTestSetUp() throws ExitException {
-        resources = ResourceBundle.getBundle("Exit", new UTF8Control());
+        Locale.setDefault(Locale.ENGLISH);
     }
 
     @Before
@@ -42,29 +41,35 @@ public class ExitTest extends AbstractCommandTest {
     @Test
     public void testExitYesWithSQLException() throws SQLException {
         //given
-        String expectedMessage = String.format("[%s]", resources.getString("exit.question"));
-        //when
         when(view.readLine()).thenReturn("y");
         when(manager.isConnected()).thenReturn(true);
         doThrow(new SQLException()).when(manager).disconnect();
+
+        //when
         try {
             command.execute();
         } catch (ExitException e) {
             //NOP
         }
+
         //then
-        shouldPrint(expectedMessage);
+        shouldPrint("[Do you really want to exit? <y/n>]");
     }
 
     @Test
     public void testExitNo() throws ExitException {
         //given
-        String expectedMessage = String.format("[%s]", resources.getString("exit.question"));
-        //when
         when(view.readLine()).thenReturn("n");
+
+        //when
         command.execute();
 
         //then
-        shouldPrint(expectedMessage);
+        shouldPrint("[Do you really want to exit? <y/n>]");
+    }
+
+    @Override
+    View getView() {
+        return view;
     }
 }
