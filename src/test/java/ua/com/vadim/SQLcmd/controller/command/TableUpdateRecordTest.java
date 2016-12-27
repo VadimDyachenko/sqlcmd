@@ -3,56 +3,40 @@ package ua.com.vadim.SQLcmd.controller.command;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.mockito.ArgumentCaptor;
 import ua.com.vadim.SQLcmd.controller.PropertiesLoader;
 import ua.com.vadim.SQLcmd.controller.RunParameters;
 import ua.com.vadim.SQLcmd.exception.ExitException;
-import ua.com.vadim.SQLcmd.model.DataSet;
-import ua.com.vadim.SQLcmd.model.DataSetImpl;
 import ua.com.vadim.SQLcmd.model.DatabaseManager;
-import ua.com.vadim.SQLcmd.view.UTF8Control;
 import ua.com.vadim.SQLcmd.view.View;
 
 import java.sql.SQLException;
 import java.util.LinkedHashSet;
-import java.util.ResourceBundle;
+import java.util.Locale;
 import java.util.Set;
 
-import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
 
 public class TableUpdateRecordTest extends AbstractCommandTest {
-    private static RunParameters runParameters;
-    private static ResourceBundle resources;
+    private static RunParameters parameters;
+    private View view;
     private DatabaseManager manager;
     private Command command;
     private Set<String> columnNames;
-    private final String tableName = "tableA";
-    private final String helpInfo = resources.getString("table.update.record.help");
-    private final String successful = resources.getString("table.update.successful");
-    private final String column = "[id, names, password]";
-    private final String availableColumn = resources.getString("table.update.available.column");
-    private final String availableColumnFormatted = String.format(availableColumn, column);
-    private final String createUpdateResult = "{names:Some Name, password:somepassword}";
 
     @BeforeClass
     public static void beforeAllTestSetUp() throws ExitException {
-        runParameters = new PropertiesLoader().getParameters();
-        resources = ResourceBundle.getBundle("TableUpdateRecord", new UTF8Control());
+        Locale.setDefault(Locale.ENGLISH);
+        parameters = new PropertiesLoader().getParameters();
     }
 
     @Before
     public void setUp() throws Exception {
         manager = mock(DatabaseManager.class);
         view = mock(View.class);
-        command = new TableUpdateRecord(runParameters, manager, view);
-        runParameters.setTableName(tableName);
-        DataSet[] tableData = new DataSetImpl[1];
-        DataSet dataSet = new DataSetImpl();
-        dataSet.put("id", 1);
-        dataSet.put("names", "TestName");
-        dataSet.put("password", "qwerty");
-        tableData[0] = dataSet;
+        command = new TableUpdateRecord(parameters, manager, view);
+
+        parameters.setTableName("Table");
+
         columnNames = new LinkedHashSet<>();
         columnNames.add("id");
         columnNames.add("names");
@@ -62,82 +46,82 @@ public class TableUpdateRecordTest extends AbstractCommandTest {
     @Test
     public void testTableUpdateRecord() throws SQLException {
         //given
-        String successfulFormatted = String.format(successful, createUpdateResult);
-        String expectedMessage = String.format("[%s, %s, %s]", helpInfo, availableColumnFormatted, successfulFormatted);
-        //when
-        when(manager.getTableColumnNames(tableName)).thenReturn(columnNames);
+        when(manager.getTableColumnNames("Table")).thenReturn(columnNames);
         when(view.readLine()).thenReturn("id|1|names|Some Name|password|somepassword");
+
+        //when
         command.execute();
+
         //then
-        shouldPrint(expectedMessage);
+        shouldPrint("[Enter data to update table record.\n" +
+                "Input format: id|Value_id|ColumnName1|Value1| ... |ColumnNameN|ValueN," +
+                " Available column name: [id, names, password], " +
+                "Record {names:Some Name, password:somepassword} was update successful.]");
     }
 
     @Test
     public void testTableUpdateRecordWrongId() throws SQLException {
         //given
-        String successfulFormatted = String.format(successful, createUpdateResult);
-        String wrongIdMessage = resources.getString("table.update.record.number.format");
-        String expectedMessage = String.format("[%s, %s, %s, %s]",
-                                            helpInfo,
-                                            availableColumnFormatted,
-                                            wrongIdMessage,
-                                            successfulFormatted);
-        //when
-        when(manager.getTableColumnNames(tableName)).thenReturn(columnNames);
+        when(manager.getTableColumnNames("Table")).thenReturn(columnNames);
         when(view.readLine()).thenReturn("id|wrong|names|Some Name|password|somepassword",
                                          "id|1|names|Some Name|password|somepassword" );
+
+        //when
         command.execute();
+
         //then
-        shouldPrint(expectedMessage);
+        shouldPrint("[Enter data to update table record.\n" +
+                "Input format: id|Value_id|ColumnName1|Value1| ... |ColumnNameN|ValueN," +
+                " Available column name: [id, names, password]," +
+                " Wrong id. Parameter <id> must be numeric (int). Try again.," +
+                " Record {names:Some Name, password:somepassword} was update successful.]");
     }
 
     @Test
     public void testTableUpdateRecordWrongArguments() throws SQLException {
         //given
-        String successfulFormatted = String.format(successful, createUpdateResult);
-        String wrongArguments = resources.getString("table.update.incorrect.data");
-        String exceptionMessage = resources.getString("table.update.record.invalid.number");
-        String expectedMessage = String.format("[%s, %s, %s%s, %s]",
-                helpInfo,
-                availableColumnFormatted,
-                wrongArguments,
-                exceptionMessage,
-                successfulFormatted);
-        //when
-        when(manager.getTableColumnNames(tableName)).thenReturn(columnNames);
+        when(manager.getTableColumnNames("Table")).thenReturn(columnNames);
         when(view.readLine()).thenReturn("id|1|names|password|somepassword",
                 "id|1|names|Some Name|password|somepassword" );
+
+        //when
         command.execute();
+
         //then
-        shouldPrint(expectedMessage);
+        shouldPrint("[Enter data to update table record.\n" +
+                "Input format: id|Value_id|ColumnName1|Value1| ... |ColumnNameN|ValueN," +
+                " Available column name: [id, names, password]," +
+                " Incorrect data. Invalid number of parameters. Try again., " +
+                "Record {names:Some Name, password:somepassword} was update successful.]");
     }
 
     @Test
     public void testTableIsEmpty() throws Exception {
         //given
-        String emptyTablesFormatted = String.format(resources.getString("table.update.empty.table"), tableName);
-        String expectedMessage = String.format("[%s]", emptyTablesFormatted);
         columnNames = new LinkedHashSet<>();
+        when(manager.getTableColumnNames("Table")).thenReturn(columnNames);
+
         //when
-        when(manager.getTableColumnNames(tableName)).thenReturn(columnNames);
         command.execute();
+
         //then
-        shouldPrint(expectedMessage);
+        shouldPrint("[Table <Table> does not contain any records. Command UpdateRecord cancelled.]");
     }
 
     @Test
     public void testUpdateRecordWithSQLException() throws SQLException {
         //given
-        String exceptionMessage = "Some SQLException";
-        String failMessage = resources.getString("table.update.record.failed");
-        String expectedMessage = String.format("[%s%s]",
-                failMessage,
-                exceptionMessage);
+        when(manager.getTableColumnNames("Table")).thenThrow(new SQLException("Some SQLException"));
+
         //when
-        when(manager.getTableColumnNames(tableName)).thenThrow(new SQLException(exceptionMessage));
         command.execute();
+
         //then
-        shouldPrint(expectedMessage);
+        shouldPrint("[Record is not updated because:Some SQLException]");
     }
 
+    @Override
+    View getView() {
+        return view;
+    }
 }
