@@ -7,74 +7,71 @@ import ua.com.vadim.SQLcmd.controller.PropertiesLoader;
 import ua.com.vadim.SQLcmd.controller.RunParameters;
 import ua.com.vadim.SQLcmd.exception.ExitException;
 import ua.com.vadim.SQLcmd.model.DatabaseManager;
-import ua.com.vadim.SQLcmd.view.UTF8Control;
 import ua.com.vadim.SQLcmd.view.View;
 
 import java.sql.SQLException;
 import java.util.LinkedHashSet;
-import java.util.ResourceBundle;
+import java.util.Locale;
 import java.util.Set;
 
 import static org.mockito.Mockito.*;
 
 public class DBSelectTableTest extends AbstractCommandTest{
-    private static RunParameters runParameters;
-    private static ResourceBundle resources;
+    private static RunParameters parameters;
+    private View view;
     private DatabaseManager manager;
     private Command command;
 
     @BeforeClass
     public static void beforeAllTestSetUp() throws ExitException {
-        runParameters = new PropertiesLoader().getParameters();
-        resources = ResourceBundle.getBundle("DBSelectTable", new UTF8Control());
+        Locale.setDefault(Locale.ENGLISH);
+        parameters = new PropertiesLoader().getParameters();
     }
 
     @Before
     public void setUp() throws Exception {
         manager = mock(DatabaseManager.class);
         view = mock(View.class);
-        command = new DBSelectTable(runParameters, manager, view);
+        command = new DBSelectTable(parameters, manager, view);
     }
 
     @Test
     public void testSelectTableWithoutConnectionToDatabase() throws Exception {
         //given
-        String expectedMessage = String.format("[%s]", resources.getString("dbselect.no.connection"));
-        //when
         when(manager.isConnected()).thenReturn(false);
+
+        //when
         command.execute();
+
         //then
-        shouldPrint(expectedMessage);
+        shouldPrint("[No one connection to database. Select \"Connect to database\" first.\n]");
     }
 
     @Test
     public void testSelectTableWithEmptyDatabase() throws Exception {
         //given
         Set<String> tableNames = new LinkedHashSet<>();
-        String expectedMessage = String.format("[%s]", resources.getString("dbselect.no.tables"));
-        //when
         when(manager.isConnected()).thenReturn(true);
         when(manager.getAllTableNames()).thenReturn(tableNames);
+
+        //when
         command.execute();
 
         //then
-        shouldPrint(expectedMessage);
+        shouldPrint("[There are no any tables in the database.]");
     }
 
     @Test
     public void testGetAvailableTableNamesWithSQLException() throws Exception{
         //given
-        String exceptionMessage = "Some SQLException";
-        String expectedMessage = String.format("[%s%s, %s]",
-                resources.getString("dbselect.failure"),
-                exceptionMessage,
-                resources.getString("dbselect.no.tables"));
-        //when
         when(manager.isConnected()).thenReturn(true);
-        when(manager.getAllTableNames()).thenThrow(new SQLException(exceptionMessage));
+        when(manager.getAllTableNames()).thenThrow(new SQLException("Some SQLException"));
+
+        //when
         command.execute();
+
         //then
-        shouldPrint(expectedMessage);
+        shouldPrint("[Failure, because:Some SQLException, There are no any tables in the database.]");
     }
 
     @Test
@@ -83,17 +80,15 @@ public class DBSelectTableTest extends AbstractCommandTest{
         Set<String> availableTables = new LinkedHashSet<>();
         availableTables.add("tableA");
         availableTables.add("tableB");
-        String result = "[tableA, tableB]";
-        String expectedMessage = String.format("[%s, %s]",
-                resources.getString("dbselect.enter.name.tables"),
-                result);
-        //when
         when(manager.isConnected()).thenReturn(true);
         when(manager.getAllTableNames()).thenReturn(availableTables);
         when(view.readLine()).thenReturn("tableA");
+
+        //when
         command.execute();
+
         //then
-        shouldPrint(expectedMessage);
+        shouldPrint("[Enter table name. Available tables:, [tableA, tableB]]");
     }
 
     @Test
@@ -102,18 +97,20 @@ public class DBSelectTableTest extends AbstractCommandTest{
         Set<String> availableTables = new LinkedHashSet<>();
         availableTables.add("tableA");
         availableTables.add("tableB");
-        String result = "[tableA, tableB]";
-        String expectedMessage = String.format("[%s, %s, %s, %s]",
-                resources.getString("dbselect.enter.name.tables"),
-                result,
-                resources.getString("dbselect.enter.correct.name.tables"),
-                result);
-        //when
         when(manager.isConnected()).thenReturn(true);
         when(manager.getAllTableNames()).thenReturn(availableTables);
         when(view.readLine()).thenReturn("bla-bla", "tableB");
+
+        //when
         command.execute();
+
         //then
-        shouldPrint(expectedMessage);
+        shouldPrint("[Enter table name. Available tables:, [tableA, tableB]," +
+                " Enter correct table name. Available tables:, [tableA, tableB]]");
+    }
+
+    @Override
+    View getView() {
+        return view;
     }
 }
