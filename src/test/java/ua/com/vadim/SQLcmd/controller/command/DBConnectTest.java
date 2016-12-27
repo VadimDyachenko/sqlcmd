@@ -10,12 +10,10 @@ import ua.com.vadim.SQLcmd.exception.ExitException;
 import ua.com.vadim.SQLcmd.model.DatabaseManager;
 import ua.com.vadim.SQLcmd.model.PostgresDBManager;
 import ua.com.vadim.SQLcmd.view.Console;
-import ua.com.vadim.SQLcmd.view.UTF8Control;
 import ua.com.vadim.SQLcmd.view.View;
 
 import java.sql.SQLException;
 import java.util.Locale;
-import java.util.ResourceBundle;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
@@ -23,11 +21,9 @@ import static org.mockito.Mockito.*;
 
 public class DBConnectTest extends AbstractCommandTest{
     private static RunParameters parameters;
-    private static ResourceBundle resources;
     private View view;
     private DatabaseManager manager;
     private Command command;
-    private String normalRunMessages;
 
     @BeforeClass
     public static void beforeAllTestSetUp() throws ExitException {
