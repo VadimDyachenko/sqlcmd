@@ -78,35 +78,33 @@ public class DBSelectTableTest extends AbstractCommandTest{
     public void testSelectTableExecuteWithNormalParameters() throws Exception{
         //given
         Set<String> availableTables = new LinkedHashSet<>();
-        availableTables.add("tableA");
-        availableTables.add("tableB");
+        availableTables.add("table");
         when(manager.isConnected()).thenReturn(true);
         when(manager.getAllTableNames()).thenReturn(availableTables);
-        when(view.readLine()).thenReturn("tableA");
+        when(view.readLine()).thenReturn("table");
 
         //when
         command.execute();
 
         //then
-        shouldPrint("[Enter table name. Available tables:, [tableA, tableB]]");
+        shouldPrint("[Enter table name. Available tables:, [table]]");
     }
 
     @Test
     public void testSelectTableExecuteWithWrongParameters() throws Exception {
         //given
         Set<String> availableTables = new LinkedHashSet<>();
-        availableTables.add("tableA");
-        availableTables.add("tableB");
+        availableTables.add("table");
         when(manager.isConnected()).thenReturn(true);
         when(manager.getAllTableNames()).thenReturn(availableTables);
-        when(view.readLine()).thenReturn("bla-bla", "tableB");
+        when(view.readLine()).thenReturn("wrong", "table");
 
         //when
         command.execute();
 
         //then
-        shouldPrint("[Enter table name. Available tables:, [tableA, tableB]," +
-                " Enter correct table name. Available tables:, [tableA, tableB]]");
+        shouldPrint("[Enter table name. Available tables:, [table]," +
+                " Enter correct table name. Available tables:, [table]]");
     }
 
     @Override
