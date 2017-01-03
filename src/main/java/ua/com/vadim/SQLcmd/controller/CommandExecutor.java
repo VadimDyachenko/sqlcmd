@@ -8,7 +8,7 @@ import ua.com.vadim.SQLcmd.view.View;
 import java.util.HashMap;
 import java.util.Map;
 
-final class CommandExecutor {
+class CommandExecutor {
 
     private final Map<AvailableCommand, Command> commandMap = new HashMap<>();
 

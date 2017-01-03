@@ -9,7 +9,6 @@ import java.util.Locale;
 public class SQLCmdMain {
 
     public static void main(String[] args) {
-        Locale.setDefault(Locale.ENGLISH);
         View console = new Console();
         Controller controller = new Controller(console);
         controller.run();

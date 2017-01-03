@@ -14,22 +14,23 @@ public class Controller {
 
     private View view;
     private CommandExecutor commandExecutor;
-    private RunParameters runParameters;
+    private RunParameters parameters;
     private LocaleSelector localeSelector;
-    private ResourceBundle res;
+    private ResourceBundle resource;
     private DatabaseManager manager;
 
     public Controller(View view) {
         this.view = view;
-        runParameters = new PropertiesLoader().getParameters();
+        parameters = new PropertiesLoader().getParameters();
         localeSelector= new LocaleSelector();
-
+        manager = new PostgresDBManager(parameters.getServerIP(),
+                parameters.getServerPort());
     }
 
     public void run() {
         try {
             setUp();
-            view.writeMessage(res.getString("common.welcome"));
+            view.writeMessage(resource.getString("common.welcome"));
             tryDBconnectWithDefaultParameters();
             while (true) {
                 commandExecutor.execute(AvailableCommand.PRINT_CURRENT_CONNECTION_STATUS);
@@ -43,27 +44,38 @@ public class Controller {
                 e1.printStackTrace();
             }
             finally {
-                view.writeMessage(res.getString("common.the.end"));
+                view.writeMessage(resource.getString("common.the.end"));
             }
         }
     }
 
+    private void setUp() throws ExitException {
+        localeSetUp();
+        resource = ResourceBundle.getBundle("common", new UTF8Control());
+        commandExecutor = new CommandExecutor(parameters, manager, view);
+    }
+
     private AvailableCommand askCommand() {
-        view.writeMessage(res.getString("common.choice.operation"));
+        view.writeMessage(resource.getString("common.choice.operation"));
         while (true) {
             try {
                 printMenu();
+
                 Integer numOfChoice = Integer.parseInt(view.readLine());
-                if (runParameters.isTableLevel()) return AvailableCommand.getTableCommand(numOfChoice);
-                else return AvailableCommand.getMainCommand(numOfChoice);
+
+                if (parameters.isTableLevel()) {
+                    return AvailableCommand.getTableCommand(numOfChoice);
+                } else {
+                    return AvailableCommand.getMainCommand(numOfChoice);
+                }
             } catch (IllegalArgumentException e) {
-                view.writeMessage(res.getString("common.choice.correct"));
+                view.writeMessage(resource.getString("common.choice.correct"));
             }
         }
     }
 
     private void printMenu() {
-        if (runParameters.isTableLevel()) {
+        if (parameters.isTableLevel()) {
             printTableMenu();
         } else {
             printMainMenu();
@@ -71,24 +83,17 @@ public class Controller {
     }
 
     private void printMainMenu() {
-        view.writeMessage(res.getString("common.main.menu"));
+        view.writeMessage(resource.getString("common.main.menu"));
     }
 
     private void printTableMenu() {
-        view.writeMessage(res.getString("common.table.menu"));
+        view.writeMessage(resource.getString("common.table.menu"));
     }
 
-    private void setUp() throws ExitException {
-        localeSetUp();
-        res = ResourceBundle.getBundle("common", new UTF8Control());
-        manager = new PostgresDBManager(runParameters.getServerIP(),
-                runParameters.getServerPort());
-        commandExecutor = new CommandExecutor(runParameters, manager, view);
-    }
 
     private void localeSetUp() {
         try {
-            localeSelector.setLocale(runParameters.getInterfaceLanguage());
+            localeSelector.setLocale(parameters.getInterfaceLanguage());
         } catch (UnsupportedLanguageException e) {
             view.writeMessage("Unsupported language parameter in sqlcmd.properties file.");
             view.writeMessage("Exit the program and change it to available variant: " +
@@ -99,7 +104,7 @@ public class Controller {
     }
 
     private void tryDBconnectWithDefaultParameters() throws ExitException {
-        view.writeMessage(res.getString("common.try.connect.default.parameters"));
+        view.writeMessage(resource.getString("common.try.connect.default.parameters"));
         commandExecutor.execute(AvailableCommand.DB_CONNECT);
     }
 }
