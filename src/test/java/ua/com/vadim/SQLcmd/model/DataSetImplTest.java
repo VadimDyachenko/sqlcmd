@@ -34,19 +34,19 @@ public class DataSetImplTest {
     @Test
     public void testGetNames() {
         //when
-        Set<String> resultKeySet = dataSet.getNames();
+        Set<String> names = dataSet.getNames();
 
         //then
-        assertEquals("[id, name, password]", resultKeySet.toString());
+        assertEquals("[id, name, password]", names.toString());
     }
 
     @Test
     public void testGetValues() {
         //when
-        List<Object> resultList = dataSet.getValues();
+        List<Object> values = dataSet.getValues();
 
         //then
-        assertEquals("[1, TestName, qwerty]", resultList.toString());
+        assertEquals("[1, TestName, qwerty]", values.toString());
     }
 
     @Test
@@ -57,18 +57,18 @@ public class DataSetImplTest {
 
         //when
         dataSet.updateFrom(newDataSet);
-        List<Object> resultList = dataSet.getValues();
+        List<Object> values = dataSet.getValues();
 
         //then
-        assertEquals("[1, NewName, qwerty]", resultList.toString());
+        assertEquals("[1, NewName, qwerty]", values.toString());
     }
 
     @Test
     public void testToString() {
         //when
-        String actualResult = dataSet.toString();
+        String result = dataSet.toString();
 
         //then
-        assertEquals("{id:1, name:TestName, password:qwerty}", actualResult);
+        assertEquals("{id:1, name:TestName, password:qwerty}", result);
     }
 }
