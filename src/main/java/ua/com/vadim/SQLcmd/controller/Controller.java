@@ -44,8 +44,7 @@ public class Controller {
                 manager.disconnect();
             } catch (SQLException e1) {
                 e1.printStackTrace();
-            }
-            finally {
+            } finally {
                 view.writeMessage(resource.getString("common.the.end"));
             }
         }

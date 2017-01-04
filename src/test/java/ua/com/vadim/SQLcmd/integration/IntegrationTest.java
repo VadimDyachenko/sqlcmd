@@ -246,7 +246,7 @@ public class IntegrationTest {
         assertEquals(expected, getData());
     }
 
-    @Ignore
+
     @Test
     public void testCreateRecord() {
         //given
