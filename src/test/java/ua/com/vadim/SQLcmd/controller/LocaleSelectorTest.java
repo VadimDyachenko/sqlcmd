@@ -10,7 +10,7 @@ import static org.junit.Assert.assertEquals;
 
 
 public class LocaleSelectorTest {
-    private final LocaleSelector localeSelector = new LocaleSelector();
+    private final LocaleSelector selector = new LocaleSelector();
 
     @Test
     public void testSetLocale() throws UnsupportedLanguageException {
@@ -18,7 +18,7 @@ public class LocaleSelectorTest {
         Locale.setDefault(Locale.ENGLISH);
         String locale = "ru";
         //when
-        localeSelector.setLocale(locale);
+        selector.setLocale(locale);
         //then
         assertEquals("ru_RU", Locale.getDefault().toString());
     }
@@ -27,8 +27,10 @@ public class LocaleSelectorTest {
     public void testSetEnglishLocale() throws UnsupportedLanguageException {
         //given
         Locale.setDefault(new Locale("ru", "RU"));
+
         //when
-        localeSelector.setEnglishLocale();
+        selector.setEnglishLocale();
+
         //then
         assertEquals(Locale.ENGLISH, Locale.getDefault());
     }
@@ -38,19 +40,20 @@ public class LocaleSelectorTest {
         //given
         Locale.setDefault(Locale.ENGLISH);
         String locale = "ab";
+
         //when
-        localeSelector.setLocale(locale);
+        selector.setLocale(locale);
+
         //then
         assertEquals("ru_RU", Locale.getDefault().toString());
     }
 
     @Test
     public void testGetSupportedLocale() throws UnsupportedLanguageException {
-        //given
-        String expected = "[ru, en]";
         //when
-        Set<String> supportedLocale = localeSelector.getSupportedLocale();
+        Set<String> supportedLocale = selector.getSupportedLocale();
+
         //then
-        assertEquals(expected, supportedLocale.toString());
+        assertEquals("[ru, en]", supportedLocale.toString());
     }
 }
