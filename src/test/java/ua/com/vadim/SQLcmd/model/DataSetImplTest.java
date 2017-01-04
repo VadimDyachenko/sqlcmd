@@ -21,14 +21,12 @@ public class DataSetImplTest {
 
     @Test
     public void testPutGet() {
-        //given
-        String name = "Name";
-        String value = "TestName";
         //when
-        dataSet.put(name, value );
-        String result = dataSet.get(name).toString();
+        dataSet.put("Name", "TestName");
+        String result = dataSet.get("Name").toString();
+
         //then
-        assertEquals(value, result);
+        assertEquals("TestName", result);
     }
 
     @Test
@@ -42,25 +40,22 @@ public class DataSetImplTest {
 
     @Test
     public void testGetValues() {
-        //when
-        List<Object> values = dataSet.getValues();
 
         //then
-        assertEquals("[1, TestName, qwerty]", values.toString());
+        assertEquals("[1, TestName, qwerty]", dataSet.getValues().toString());
     }
 
     @Test
     public void testUpdateFrom() {
         //given
-        DataSet newDataSet = new DataSetImpl();
-        newDataSet.put("name", "NewName");
+        DataSet data = new DataSetImpl();
+        data.put("name", "NewName");
 
         //when
-        dataSet.updateFrom(newDataSet);
-        List<Object> values = dataSet.getValues();
+        dataSet.updateFrom(data);
 
         //then
-        assertEquals("[1, NewName, qwerty]", values.toString());
+        assertEquals("[1, NewName, qwerty]", dataSet.getValues().toString());
     }
 
     @Test
