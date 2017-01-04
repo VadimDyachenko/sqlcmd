@@ -12,10 +12,10 @@ public class ConnectionStatus implements Command {
     private final ResourceBundle resource;
     private final DatabaseManager manager;
     private final View view;
-    private final RunParameters runParameters;
+    private final RunParameters parameters;
 
-    public ConnectionStatus(RunParameters runParameters, DatabaseManager manager, View view) {
-        this.runParameters = runParameters;
+    public ConnectionStatus(RunParameters parameters, DatabaseManager manager, View view) {
+        this.parameters = parameters;
         this.manager = manager;
         this.view = view;
         resource = ResourceBundle.getBundle("connectionStatus", new UTF8Control());
@@ -27,11 +27,11 @@ public class ConnectionStatus implements Command {
             view.writeMessage(resource.getString("connection.status.without.connection"));
             return;
         }
-        String message = String.format(resource.getString("connection.status.database"), runParameters.getDatabaseName());
+        String message = String.format(resource.getString("connection.status.database"), parameters.getDatabaseName());
         message += " ";
 
-        if (runParameters.isTableLevel()) {
-            message += String.format(resource.getString("connection.status.table"), runParameters.getTableName());
+        if (parameters.isTableLevel()) {
+            message += String.format(resource.getString("connection.status.table"), parameters.getTableName());
         }
         message += "\n";
         view.writeMessage(message);

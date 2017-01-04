@@ -16,10 +16,10 @@ public class TableCreateRecord extends AbstractCommand implements Command {
     private final ResourceBundle resource;
     private final DatabaseManager manager;
     private final View view;
-    private final RunParameters runParameters;
+    private final RunParameters parameters;
 
-    public TableCreateRecord(RunParameters runParameters, DatabaseManager manager, View view) {
-        this.runParameters = runParameters;
+    public TableCreateRecord(RunParameters parameters, DatabaseManager manager, View view) {
+        this.parameters = parameters;
         this.manager = manager;
         this.view = view;
         resource = ResourceBundle.getBundle("TableCreateRecord", new UTF8Control());
@@ -27,7 +27,7 @@ public class TableCreateRecord extends AbstractCommand implements Command {
 
     @Override
     public void execute() throws ExitException {
-        String tableName = runParameters.getTableName();
+        String tableName = parameters.getTableName();
         try {
             Set<String> columnNames = getAvailableColumnNames(tableName);
             if (columnNames.isEmpty()) {

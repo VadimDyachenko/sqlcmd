@@ -13,12 +13,12 @@ import java.util.Set;
 
 public class DBSelectTable extends AbstractCommand implements Command {
     private final ResourceBundle resource;
-    private final RunParameters runParameters;
+    private final RunParameters parameters;
     private final DatabaseManager manager;
     private final View view;
 
-    public DBSelectTable(RunParameters runParameters, DatabaseManager manager, View view) {
-        this.runParameters = runParameters;
+    public DBSelectTable(RunParameters parameters, DatabaseManager manager, View view) {
+        this.parameters = parameters;
         this.manager = manager;
         this.view = view;
         resource = ResourceBundle.getBundle("DBSelectTable", new UTF8Control());
@@ -48,8 +48,8 @@ public class DBSelectTable extends AbstractCommand implements Command {
         do {
             String tableName = readLine();
             if (tableNames.contains(tableName)) {
-                runParameters.setTableName(tableName);
-                runParameters.setTableLevel(true);
+                parameters.setTableName(tableName);
+                parameters.setTableLevel(true);
                 break;
             } else {
                 view.writeMessage(resource.getString("dbselect.enter.correct.name.tables"));

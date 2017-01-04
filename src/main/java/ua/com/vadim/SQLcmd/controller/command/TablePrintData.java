@@ -15,11 +15,11 @@ public class TablePrintData implements Command {
     private final ResourceBundle resource;
     private final DatabaseManager manager;
     private final View view;
-    private final RunParameters runParameters;
+    private final RunParameters parameters;
 
 
-    public TablePrintData(RunParameters runParameters, DatabaseManager manager, View view) {
-        this.runParameters = runParameters;
+    public TablePrintData(RunParameters parameters, DatabaseManager manager, View view) {
+        this.parameters = parameters;
         this.manager = manager;
         this.view = view;
         resource = ResourceBundle.getBundle("TablePrintData", new UTF8Control());
@@ -27,7 +27,7 @@ public class TablePrintData implements Command {
 
     @Override
     public void execute() {
-        String tableName = runParameters.getTableName();
+        String tableName = parameters.getTableName();
         try {
             DataSet[] tableData = getTableData(tableName);
             if (tableData.length == 0) {

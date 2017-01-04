@@ -13,10 +13,10 @@ public class DBConnect extends AbstractCommand implements Command {
     private final ResourceBundle resource;
     private final DatabaseManager manager;
     private final View view;
-    private final RunParameters runParameters;
+    private final RunParameters parameters;
 
-    public DBConnect(RunParameters runParameters, DatabaseManager manager, View view) {
-        this.runParameters = runParameters;
+    public DBConnect(RunParameters parameters, DatabaseManager manager, View view) {
+        this.parameters = parameters;
         this.manager = manager;
         this.view = view;
         resource = ResourceBundle.getBundle("DBConnect", new UTF8Control());
@@ -34,9 +34,9 @@ public class DBConnect extends AbstractCommand implements Command {
     private void connectDefaultParameters() throws ExitException {
         try {
             manager.connect(
-                    runParameters.getDatabaseName(),
-                    runParameters.getUserName(),
-                    runParameters.getPassword());
+                    parameters.getDatabaseName(),
+                    parameters.getUserName(),
+                    parameters.getPassword());
         } catch (SQLException e) {
             view.writeMessage(resource.getString("dbconnect.failed") + " " + e.getMessage());
             view.writeMessage(resource.getString("dbconnect.default.failed"));
@@ -53,7 +53,7 @@ public class DBConnect extends AbstractCommand implements Command {
             String login = getInputString(resource.getString("dbconnect.enter.login"));
             String password = getInputString(resource.getString("dbconnect.enter.password"));
             manager.connect(databaseName, login, password);
-            runParameters.setDatabaseName(databaseName);
+            parameters.setDatabaseName(databaseName);
         } catch (SQLException e) {
             view.writeMessage(resource.getString("dbconnect.failed") + " " + e.getMessage());
             view.writeMessage(resource.getString("dbconnect.try.again"));

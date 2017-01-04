@@ -13,13 +13,13 @@ import java.util.ResourceBundle;
 import java.util.Set;
 
 public class TableUpdateRecord extends AbstractCommand implements Command {
-    private final RunParameters runParameters;
+    private final RunParameters parameters;
     private final DatabaseManager manager;
     private final View view;
     private final ResourceBundle resource;
 
-    public TableUpdateRecord(RunParameters runParameters, DatabaseManager manager, View view) {
-        this.runParameters = runParameters;
+    public TableUpdateRecord(RunParameters parameters, DatabaseManager manager, View view) {
+        this.parameters = parameters;
         this.manager = manager;
         this.view = view;
         resource = ResourceBundle.getBundle("TableUpdateRecord", new UTF8Control());
@@ -27,7 +27,7 @@ public class TableUpdateRecord extends AbstractCommand implements Command {
 
     @Override
     public void execute() throws ExitException {
-        String tableName = runParameters.getTableName();
+        String tableName = parameters.getTableName();
         try {
             Set<String> columnNames = getAvailableColumnNames(tableName);
             if (columnNames.isEmpty()) {

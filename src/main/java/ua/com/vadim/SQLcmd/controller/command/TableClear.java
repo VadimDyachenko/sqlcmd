@@ -11,12 +11,12 @@ import java.util.ResourceBundle;
 
 public class TableClear implements Command {
     private final ResourceBundle resource;
-    private final RunParameters runParameters;
+    private final RunParameters parameters;
     private final DatabaseManager manager;
     private final View view;
 
-    public TableClear(RunParameters runParameters, DatabaseManager manager, View view) {
-        this.runParameters = runParameters;
+    public TableClear(RunParameters parameters, DatabaseManager manager, View view) {
+        this.parameters = parameters;
         this.manager = manager;
         this.view = view;
         resource = ResourceBundle.getBundle("TableClear", new UTF8Control());
@@ -24,7 +24,7 @@ public class TableClear implements Command {
 
     @Override
     public void execute() throws ExitException {
-        String currentTableName = runParameters.getTableName();
+        String currentTableName = parameters.getTableName();
         view.writeMessage(String.format(resource.getString("table.clear.question"), currentTableName));
         String answer = view.read().trim().toLowerCase();
         if (answer.equals("y") || answer.equals("д")) {
