@@ -9,12 +9,11 @@ public class PostgresDBManager implements DatabaseManager {
     private Connection connection;
 
     public PostgresDBManager(String serverIP, String serverPort) {
-        String driver = "jdbc:postgresql://";
-        this.url = String.format("%s%s:%s/", driver, serverIP, serverPort);
+        this.url = String.format("jdbc:postgresql://%s:%s/", serverIP, serverPort);
         try {
             Class.forName("org.postgresql.Driver");
         } catch (ClassNotFoundException e) {
-            e.getMessage();
+            e.printStackTrace();
         }
     }
 
@@ -32,66 +31,66 @@ public class PostgresDBManager implements DatabaseManager {
     }
 
     @Override
-    public void createDatabase(String databaseName) throws SQLException{
+    public void createDatabase(String database) throws SQLException{
         try (Statement statement = connection.createStatement()){
-            statement.executeUpdate(String.format("CREATE DATABASE %s;", databaseName));
+            statement.executeUpdate(String.format("CREATE DATABASE %s;", database));
         }
     }
 
     @Override
-    public void dropDatabase(String databaseName) throws SQLException {
+    public void dropDatabase(String database) throws SQLException {
         try (Statement statement = connection.createStatement()){
-            statement.executeUpdate(String.format("DROP DATABASE IF EXISTS %s;", databaseName));
+            statement.executeUpdate(String.format("DROP DATABASE IF EXISTS %s;", database));
         }
     }
 
     @Override
-    public void createTable(String createTableQuery) throws SQLException {
+    public void createTable(String query) throws SQLException {
         try (Statement statement = connection.createStatement()){
-            statement.executeUpdate(String.format("CREATE TABLE public.%s;", createTableQuery));
+            statement.executeUpdate(String.format("CREATE TABLE public.%s;", query));
         }
     }
 
     @Override
     public Set<String> getAllTableNames() throws SQLException {
-        Set<String> resultTableNames = new LinkedHashSet<>();
+        Set<String> result = new LinkedHashSet<>();
         try (Statement statement = connection.createStatement();
              ResultSet resultSet = statement.executeQuery(
                      "SELECT table_name FROM information_schema.tables " +
                              "WHERE table_schema='public' AND table_type='BASE TABLE'")
         ) {
             while (resultSet.next()) {
-                resultTableNames.add(resultSet.getString("table_name"));
+                result.add(resultSet.getString("table_name"));
             }
-            return resultTableNames;
+            return result;
         }
     }
 
     @Override
-    public void createTableRecord(String tableName, DataSet newValue) throws SQLException {
+    public void createTableRecord(String table, DataSet newValue) throws SQLException {
         try (Statement statement = connection.createStatement()) {
-            String columnName = getNameFormatted(newValue, "%s,");
+            String column = getNameFormatted(newValue, "%s,");
             String values = getValuesFormatted(newValue);
             statement.executeUpdate(
-                    String.format("INSERT INTO public.%s(%s)VALUES (%s)", tableName, columnName, values));
+                    String.format("INSERT INTO public.%s(%s)VALUES (%s)", table, column, values));
         }
     }
 
     @Override
-    public DataSet[] getTableData(String tableName) throws SQLException {
+    public DataSet[] getTableData(String table) throws SQLException {
         try (Statement statement = connection.createStatement();
-             ResultSet resultSet = statement.executeQuery(String.format("SELECT * FROM public.%s", tableName))
+             ResultSet resultSet = statement.executeQuery(String.format("SELECT * FROM public.%s", table))
         ) {
-            int size = getSize(tableName);
+            int size = getSize(table);
 
-            ResultSetMetaData resultSetMetaData = resultSet.getMetaData();
+            ResultSetMetaData metaData = resultSet.getMetaData();
             DataSet[] result = new DataSetImpl[size];
             int index = 0;
             while (resultSet.next()) {
                 DataSet dataSet = new DataSetImpl();
                 result[index++] = dataSet;
-                for (int i = 1; i <= resultSetMetaData.getColumnCount(); i++) {
-                    dataSet.put(resultSetMetaData.getColumnName(i), resultSet.getObject(i));
+                for (int i = 0; i < metaData.getColumnCount(); i++) {
+                    dataSet.put(metaData.getColumnName(i + 1), resultSet.getObject(i + 1));
                 }
             }
             return result;
@@ -99,9 +98,9 @@ public class PostgresDBManager implements DatabaseManager {
     }
 
     @Override
-    public void updateTableRecord(String tableName, int id, DataSet newValue) throws SQLException {
-        String tableNames = getNameFormatted(newValue, "%s = ?,");
-        String sql = String.format("UPDATE public.%s SET %s WHERE id = ?", tableName, tableNames);
+    public void updateTableRecord(String table, int id, DataSet newValue) throws SQLException {
+        String names = getNameFormatted(newValue, "%s = ?,");
+        String sql = String.format("UPDATE public.%s SET %s WHERE id = ?", table, names);
 
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             int index = 1;
@@ -115,19 +114,19 @@ public class PostgresDBManager implements DatabaseManager {
     }
 
     @Override
-    public void clearTable(String tableName) throws SQLException {
+    public void clearTable(String table) throws SQLException {
         try (Statement statement = connection.createStatement()) {
-            statement.executeUpdate(String.format("DELETE FROM public.%s", tableName));
+            statement.executeUpdate(String.format("DELETE FROM public.%s", table));
         }
     }
 
     @Override
-    public Set<String> getTableColumnNames(String tableName) throws SQLException {
+    public Set<String> getTableColumnNames(String table) throws SQLException {
         Set<String> result = new LinkedHashSet<>();
         try (Statement statement = connection.createStatement();
              ResultSet resultSet = statement.executeQuery(
                      String.format("SELECT column_name FROM information_schema.columns WHERE table_schema = 'public' " +
-                             "and table_name = '%s'", tableName))
+                             "and table_name = '%s'", table))
         ) {
             while (resultSet.next()) {
                 result.add(resultSet.getString("column_name"));
@@ -142,12 +141,12 @@ public class PostgresDBManager implements DatabaseManager {
     }
 
     private String getNameFormatted(DataSet newValue, String format) {
-        String string = "";
+        String result = "";
         for (String name : newValue.getNames()) {
-            string += String.format(format, name);
+            result += String.format(format, name);
         }
-        string = string.substring(0, string.length() - 1);
-        return string;
+        result = result.substring(0, result.length() - 1);
+        return result;
     }
 
     private String getValuesFormatted(DataSet input) {
@@ -159,12 +158,13 @@ public class PostgresDBManager implements DatabaseManager {
         return values;
     }
 
-    private int getSize(String tableName) throws SQLException {
-        Statement statement = connection.createStatement();
-        ResultSet resultSet = statement.executeQuery(String.format("SELECT count(*) FROM public.%s", tableName));
-        resultSet.next();
-        int size = resultSet.getInt("count");
-        resultSet.close();
-        return size;
+    private int getSize(String table) throws SQLException {
+
+        try (Statement statement = connection.createStatement();
+        ResultSet resultSet = statement.executeQuery(String.format("SELECT count(*) FROM public.%s", table));
+        ) {
+            resultSet.next();
+            return resultSet.getInt("count");
+        }
     }
 }

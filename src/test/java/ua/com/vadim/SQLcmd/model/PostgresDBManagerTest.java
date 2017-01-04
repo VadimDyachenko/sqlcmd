@@ -88,26 +88,20 @@ public class PostgresDBManagerTest {
 
     @Test
     public void testGetAllTableNames() throws SQLException {
-        //given
+        //when
         Set<String> tableNames = manager.getAllTableNames();
 
-        //when
-        printTableNames(tableNames);
-
         //then
-        assertEquals("[" + TEST_TABLE + "]", consoleOutputStream.toString());
+        assertEquals("[" + TEST_TABLE + "]", tableNames.toString());
     }
 
     @Test
     public void testGetTableColumnNames() throws SQLException {
-        //given
+        //when
         Set<String> columnNames = manager.getTableColumnNames(TEST_TABLE);
 
-        //when
-        printTableNames(columnNames);
-
         //then
-        assertEquals("[id, name, password]", consoleOutputStream.toString());
+        assertEquals("[id, name, password]", columnNames.toString());
     }
 
     @Test
@@ -177,17 +171,6 @@ public class PostgresDBManagerTest {
 
         //then
         assertFalse(manager.isConnected());
-    }
-
-    private void printTableNames(Set<String> tableNames) {
-        String availableTables = "[";
-
-        for (String name : tableNames) {
-            availableTables += name + ", ";
-        }
-
-        availableTables = availableTables.substring(0, availableTables.length() - 2) + "]";
-        System.out.print(availableTables);
     }
 
     private void putData() throws SQLException {
