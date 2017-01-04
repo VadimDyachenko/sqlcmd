@@ -2,13 +2,13 @@ package ua.com.vadim.SQLcmd.controller;
 
 enum AvailableCommand {
     DB_CONNECT,
-    DB_LIST_AVAILABLE_TABLE,
+    DB_AVAILABLE_TABLE,
     DB_SELECT_TABLE,
     TABLE_PRINT,
     TABLE_CREATE_RECORD,
     TABLE_UPDATE_RECORD,
     TABLE_CLEAR,
-    PRINT_CURRENT_CONNECTION_STATUS,
+    PRINT_CONNECTION_STATUS,
     RETURN,
     EXIT;
 
@@ -18,7 +18,7 @@ enum AvailableCommand {
             case 1:
                 return AvailableCommand.DB_CONNECT;
             case 2:
-                return AvailableCommand.DB_LIST_AVAILABLE_TABLE;
+                return AvailableCommand.DB_AVAILABLE_TABLE;
             case 3:
                 return AvailableCommand.DB_SELECT_TABLE;
             case 4:

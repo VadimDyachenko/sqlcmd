@@ -1,6 +1,5 @@
 package ua.com.vadim.SQLcmd.controller.command;
 
-
 import ua.com.vadim.SQLcmd.exception.ExitException;
 import ua.com.vadim.SQLcmd.view.View;
 
