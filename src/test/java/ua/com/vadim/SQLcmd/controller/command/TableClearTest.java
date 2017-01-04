@@ -39,7 +39,7 @@ public class TableClearTest extends AbstractCommandTest{
     public void testTableClearWithYesAnswer() throws Exception {
         //given
         when(manager.isConnected()).thenReturn(true);
-        when(view.readLine()).thenReturn("y");
+        when(view.read()).thenReturn("y");
 
         //when
         command.execute();
@@ -52,7 +52,7 @@ public class TableClearTest extends AbstractCommandTest{
     public void testTableClearWithSQLException() throws Exception {
         //given
         doThrow(new SQLException("Some SQLException")).when(manager).clearTable(testTableName);
-        when(view.readLine()).thenReturn("y");
+        when(view.read()).thenReturn("y");
 
         //then
         command.execute();

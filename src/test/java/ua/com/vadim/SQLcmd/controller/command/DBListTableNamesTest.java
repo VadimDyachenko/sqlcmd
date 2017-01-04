@@ -17,7 +17,6 @@ import java.util.Set;
 import static org.mockito.Mockito.*;
 
 public class DBListTableNamesTest extends AbstractCommandTest{
-    private static RunParameters parameters;
     private View view;
     private DatabaseManager manager;
     private Command command;
@@ -25,14 +24,13 @@ public class DBListTableNamesTest extends AbstractCommandTest{
     @BeforeClass
     public static void beforeAllTestSetUp() throws ExitException {
         Locale.setDefault(Locale.ENGLISH);
-        parameters = new PropertiesLoader().getParameters();
     }
 
     @Before
     public void setUp() {
         manager = mock(DatabaseManager.class);
         view = mock(View.class);
-        command = new DBListTableNames(parameters, manager, view);
+        command = new DBListTableNames(manager, view);
     }
 
     @Test

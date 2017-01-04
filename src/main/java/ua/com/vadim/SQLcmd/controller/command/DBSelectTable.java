@@ -1,6 +1,7 @@
 package ua.com.vadim.SQLcmd.controller.command;
 
 import ua.com.vadim.SQLcmd.controller.RunParameters;
+import ua.com.vadim.SQLcmd.exception.ExitException;
 import ua.com.vadim.SQLcmd.model.DatabaseManager;
 import ua.com.vadim.SQLcmd.view.UTF8Control;
 import ua.com.vadim.SQLcmd.view.View;
@@ -10,7 +11,7 @@ import java.util.LinkedHashSet;
 import java.util.ResourceBundle;
 import java.util.Set;
 
-public class DBSelectTable implements Command {
+public class DBSelectTable extends AbstractCommand implements Command {
     private final ResourceBundle resource;
     private final RunParameters runParameters;
     private final DatabaseManager manager;
@@ -24,7 +25,7 @@ public class DBSelectTable implements Command {
     }
 
     @Override
-    public void execute() {
+    public void execute() throws ExitException {
         if (manager.isConnected()) {
             selectTable();
         } else {
@@ -32,7 +33,7 @@ public class DBSelectTable implements Command {
         }
     }
 
-    private void selectTable() {
+    private void selectTable() throws ExitException {
         Set<String> tableNames = getAvailableTableNames();
         if (tableNames.isEmpty()) {
             view.writeMessage(resource.getString("dbselect.no.tables"));
@@ -41,11 +42,11 @@ public class DBSelectTable implements Command {
         }
     }
 
-    private void setTable(Set<String> tableNames) {
+    private void setTable(Set<String> tableNames) throws ExitException {
         view.writeMessage(resource.getString("dbselect.enter.name.tables"));
         printAvailableTables(tableNames);
         do {
-            String tableName = view.readLine();
+            String tableName = readLine();
             if (tableNames.contains(tableName)) {
                 runParameters.setTableName(tableName);
                 runParameters.setTableLevel(true);
@@ -69,5 +70,10 @@ public class DBSelectTable implements Command {
 
     private void printAvailableTables(Set<String> tableNames) {
         view.writeMessage(tableNames.toString());
+    }
+
+    @Override
+    View getView() {
+        return view;
     }
 }

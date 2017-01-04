@@ -1,6 +1,7 @@
 package ua.com.vadim.SQLcmd.controller.command;
 
 import ua.com.vadim.SQLcmd.controller.RunParameters;
+import ua.com.vadim.SQLcmd.exception.ExitException;
 import ua.com.vadim.SQLcmd.model.DatabaseManager;
 import ua.com.vadim.SQLcmd.view.UTF8Control;
 import ua.com.vadim.SQLcmd.view.View;
@@ -22,10 +23,10 @@ public class TableClear implements Command {
     }
 
     @Override
-    public void execute() {
+    public void execute() throws ExitException {
         String currentTableName = runParameters.getTableName();
         view.writeMessage(String.format(resource.getString("table.clear.question"), currentTableName));
-        String answer = view.readLine().trim().toLowerCase();
+        String answer = view.read().trim().toLowerCase();
         if (answer.equals("y") || answer.equals("д")) {
             try {
                 manager.clearTable(currentTableName);

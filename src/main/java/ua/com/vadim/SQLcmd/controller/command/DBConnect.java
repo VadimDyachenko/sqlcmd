@@ -9,7 +9,7 @@ import ua.com.vadim.SQLcmd.view.View;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
 
-public class DBConnect implements Command {
+public class DBConnect extends AbstractCommand implements Command {
     private final ResourceBundle resource;
     private final DatabaseManager manager;
     private final View view;
@@ -23,7 +23,7 @@ public class DBConnect implements Command {
     }
 
     @Override
-    public void execute() {
+    public void execute() throws ExitException{
         if (manager.isConnected()) {
             connectWithNewParameters();
         } else {
@@ -63,6 +63,11 @@ public class DBConnect implements Command {
 
     private String getInputString(String message) throws ExitException {
         view.writeMessage(message);
-        return view.readLine();
+        return readLine();
+    }
+
+    @Override
+    View getView() {
+        return view;
     }
 }

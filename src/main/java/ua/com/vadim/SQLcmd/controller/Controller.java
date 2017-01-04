@@ -30,8 +30,10 @@ public class Controller {
     public void run() {
         try {
             setUp();
+
             view.writeMessage(resource.getString("common.welcome"));
             tryDBconnectWithDefaultParameters();
+
             while (true) {
                 commandExecutor.execute(AvailableCommand.PRINT_CURRENT_CONNECTION_STATUS);
                 AvailableCommand command = askCommand();
@@ -55,13 +57,13 @@ public class Controller {
         commandExecutor = new CommandExecutor(parameters, manager, view);
     }
 
-    private AvailableCommand askCommand() {
+    private AvailableCommand askCommand() throws ExitException {
         view.writeMessage(resource.getString("common.choice.operation"));
         while (true) {
             try {
                 printMenu();
 
-                Integer numOfChoice = Integer.parseInt(view.readLine());
+                Integer numOfChoice = Integer.parseInt(readLine());
 
                 if (parameters.isTableLevel()) {
                     return AvailableCommand.getTableCommand(numOfChoice);
@@ -106,5 +108,15 @@ public class Controller {
     private void tryDBconnectWithDefaultParameters() throws ExitException {
         view.writeMessage(resource.getString("common.try.connect.default.parameters"));
         commandExecutor.execute(AvailableCommand.DB_CONNECT);
+    }
+
+    private String readLine() throws ExitException {
+
+        String result = view.read();
+        if ("exit".equalsIgnoreCase(result)) {
+            throw new ExitException();
+        }
+
+        return result;
     }
 }

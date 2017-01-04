@@ -1,7 +1,5 @@
 package ua.com.vadim.SQLcmd.view;
 
-import ua.com.vadim.SQLcmd.exception.ExitException;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -16,13 +14,10 @@ public class Console implements View {
     }
 
     @Override
-    public String readLine() {
+    public String read() {
         String result = "";
         try {
             result = reader.readLine();
-            if ("exit".equalsIgnoreCase(result)) {
-                throw new ExitException();
-            }
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -1,6 +1,7 @@
 package ua.com.vadim.SQLcmd.controller.command;
 
 import ua.com.vadim.SQLcmd.controller.RunParameters;
+import ua.com.vadim.SQLcmd.exception.ExitException;
 import ua.com.vadim.SQLcmd.model.DataSet;
 import ua.com.vadim.SQLcmd.model.DataSetImpl;
 import ua.com.vadim.SQLcmd.model.DatabaseManager;
@@ -11,7 +12,7 @@ import java.sql.SQLException;
 import java.util.ResourceBundle;
 import java.util.Set;
 
-public class TableUpdateRecord implements Command {
+public class TableUpdateRecord extends AbstractCommand implements Command {
     private final RunParameters runParameters;
     private final DatabaseManager manager;
     private final View view;
@@ -25,7 +26,7 @@ public class TableUpdateRecord implements Command {
     }
 
     @Override
-    public void execute() {
+    public void execute() throws ExitException {
         String tableName = runParameters.getTableName();
         try {
             Set<String> columnNames = getAvailableColumnNames(tableName);
@@ -53,7 +54,7 @@ public class TableUpdateRecord implements Command {
         return manager.getTableColumnNames(tableName);
     }
 
-    private void updateRecord(String tableName) throws SQLException {
+    private void updateRecord(String tableName) throws SQLException, ExitException {
         do {
             try {
                 String[] inputRecordData = inputData();
@@ -75,8 +76,8 @@ public class TableUpdateRecord implements Command {
         } while (true);
     }
 
-    private String[] inputData() throws IllegalArgumentException {
-                String[] inputUserData = view.readLine().split("\\|");
+    private String[] inputData() throws IllegalArgumentException, ExitException {
+                String[] inputUserData = readLine().split("\\|");
                 validateInputData(inputUserData);
                 return inputUserData;
     }
@@ -87,4 +88,8 @@ public class TableUpdateRecord implements Command {
         }
     }
 
+    @Override
+    View getView() {
+        return view;
+    }
 }

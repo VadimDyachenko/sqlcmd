@@ -37,7 +37,7 @@ public class TablePrintDataTest extends AbstractCommandTest{
     }
 
     @Test
-    public void testTableIsEmpty() throws SQLException {
+    public void testTableIsEmpty() throws SQLException, ExitException {
         //given
         DataSet[] tableData = new DataSetImpl[0];
         String tableName = "tableA";
@@ -52,7 +52,7 @@ public class TablePrintDataTest extends AbstractCommandTest{
     }
 
     @Test
-    public void testTablePrintData() throws SQLException {
+    public void testTablePrintData() throws SQLException, ExitException {
         //given
         DataSet[] tableData = new DataSetImpl[1];
         DataSet dataSet = new DataSetImpl();
@@ -73,7 +73,7 @@ public class TablePrintDataTest extends AbstractCommandTest{
     }
 
     @Test
-    public void testTablePrintDataWithSQLException() throws SQLException {
+    public void testTablePrintDataWithSQLException() throws SQLException, ExitException {
         //given
         String tableName = "tableA";
         parameters.setTableName(tableName);

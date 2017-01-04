@@ -44,10 +44,10 @@ public class TableUpdateRecordTest extends AbstractCommandTest {
     }
 
     @Test
-    public void testTableUpdateRecord() throws SQLException {
+    public void testTableUpdateRecord() throws SQLException, ExitException {
         //given
         when(manager.getTableColumnNames("Table")).thenReturn(columnNames);
-        when(view.readLine()).thenReturn("id|1|names|Some Name|password|somepassword");
+        when(view.read()).thenReturn("id|1|names|Some Name|password|somepassword");
 
         //when
         command.execute();
@@ -60,10 +60,10 @@ public class TableUpdateRecordTest extends AbstractCommandTest {
     }
 
     @Test
-    public void testTableUpdateRecordWrongId() throws SQLException {
+    public void testTableUpdateRecordWrongId() throws SQLException, ExitException {
         //given
         when(manager.getTableColumnNames("Table")).thenReturn(columnNames);
-        when(view.readLine()).thenReturn("id|wrong|names|Some Name|password|somepassword",
+        when(view.read()).thenReturn("id|wrong|names|Some Name|password|somepassword",
                                          "id|1|names|Some Name|password|somepassword" );
 
         //when
@@ -78,10 +78,10 @@ public class TableUpdateRecordTest extends AbstractCommandTest {
     }
 
     @Test
-    public void testTableUpdateRecordWrongArguments() throws SQLException {
+    public void testTableUpdateRecordWrongArguments() throws SQLException, ExitException {
         //given
         when(manager.getTableColumnNames("Table")).thenReturn(columnNames);
-        when(view.readLine()).thenReturn("id|1|names|password|somepassword",
+        when(view.read()).thenReturn("id|1|names|password|somepassword",
                 "id|1|names|Some Name|password|somepassword" );
 
         //when
@@ -109,7 +109,7 @@ public class TableUpdateRecordTest extends AbstractCommandTest {
     }
 
     @Test
-    public void testUpdateRecordWithSQLException() throws SQLException {
+    public void testUpdateRecordWithSQLException() throws SQLException, ExitException {
         //given
         when(manager.getTableColumnNames("Table")).thenThrow(new SQLException("Some SQLException"));
 

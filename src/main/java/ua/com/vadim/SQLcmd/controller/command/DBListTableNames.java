@@ -15,7 +15,7 @@ public class DBListTableNames implements Command {
     private final DatabaseManager manager;
     private final View view;
 
-    public DBListTableNames(RunParameters runParameters, DatabaseManager manager, View view) {
+    public DBListTableNames(DatabaseManager manager, View view) {
         this.manager = manager;
         this.view = view;
         resource = ResourceBundle.getBundle("DBListTableNames", new UTF8Control());

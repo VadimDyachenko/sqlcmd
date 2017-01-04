@@ -39,7 +39,7 @@ public class DBConnectTest extends AbstractCommandTest{
     }
 
     @Test
-    public void testConnectDefaultParameter() {
+    public void testConnectDefaultParameter() throws ExitException {
         //given
         when(manager.isConnected()).thenReturn(false);
 
@@ -70,7 +70,7 @@ public class DBConnectTest extends AbstractCommandTest{
     }
 
     @Test
-    public void testConnectNewParameter() throws SQLException {
+    public void testConnectNewParameter() throws SQLException, ExitException {
         //given
         when(manager.isConnected()).thenReturn(true);
 
@@ -83,7 +83,7 @@ public class DBConnectTest extends AbstractCommandTest{
     }
 
     @Test
-    public void testConnectNewParameterWithSQLException() throws SQLException {
+    public void testConnectNewParameterWithSQLException() throws SQLException, ExitException {
         //given
         doThrow(new SQLException("Some SQLException")).when(manager).connect(anyString(), anyString(), anyString());
 

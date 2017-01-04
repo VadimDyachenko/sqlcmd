@@ -81,7 +81,7 @@ public class DBSelectTableTest extends AbstractCommandTest{
         availableTables.add("table");
         when(manager.isConnected()).thenReturn(true);
         when(manager.getAllTableNames()).thenReturn(availableTables);
-        when(view.readLine()).thenReturn("table");
+        when(view.read()).thenReturn("table");
 
         //when
         command.execute();
@@ -97,7 +97,7 @@ public class DBSelectTableTest extends AbstractCommandTest{
         availableTables.add("table");
         when(manager.isConnected()).thenReturn(true);
         when(manager.getAllTableNames()).thenReturn(availableTables);
-        when(view.readLine()).thenReturn("wrong", "table");
+        when(view.read()).thenReturn("wrong", "table");
 
         //when
         command.execute();

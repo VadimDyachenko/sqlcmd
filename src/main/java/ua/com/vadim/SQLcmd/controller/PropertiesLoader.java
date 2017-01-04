@@ -21,7 +21,7 @@ public class PropertiesLoader {
         }
     }
 
-    public RunParameters getParameters() throws ExitException {
+    public RunParameters getParameters() {
         return new RunParameters(
                 getServerIP(),
                 getServerPort(),

@@ -43,10 +43,10 @@ public class TableCreateRecordTest extends AbstractCommandTest {
     }
 
     @Test
-    public void testTableCreateRecordWithNormalParameters() throws SQLException {
+    public void testTableCreateRecordWithNormalParameters() throws SQLException, ExitException {
         //given
         when(manager.getTableColumnNames(tableName)).thenReturn(columnNames);
-        when(view.readLine()).thenReturn("id|1|names|Some Name|password|somepassword");
+        when(view.read()).thenReturn("id|1|names|Some Name|password|somepassword");
 
         //when
         command.execute();
@@ -62,7 +62,7 @@ public class TableCreateRecordTest extends AbstractCommandTest {
     public void testTableCreateRecordWithWrongParameters() throws Exception {
         //given
         when(manager.getTableColumnNames(tableName)).thenReturn(columnNames);
-        when(view.readLine()).thenReturn("names|Some Name|password|somepassword",
+        when(view.read()).thenReturn("names|Some Name|password|somepassword",
                 "id|1|names|Some Name|password|somepassword");
 
         //when
@@ -76,7 +76,7 @@ public class TableCreateRecordTest extends AbstractCommandTest {
     }
 
     @Test
-    public void testGetAvailableColumnNamesWithSQLException() throws SQLException {
+    public void testGetAvailableColumnNamesWithSQLException() throws SQLException, ExitException {
         //given
         when(manager.getTableColumnNames(tableName)).thenThrow(new SQLException("Some SQLException"));
 

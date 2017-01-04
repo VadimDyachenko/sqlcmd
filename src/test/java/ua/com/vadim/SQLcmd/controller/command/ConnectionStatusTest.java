@@ -36,7 +36,7 @@ public class ConnectionStatusTest extends AbstractCommandTest {
     }
 
     @Test
-    public void testDBManagerNotConnected() throws SQLException{
+    public void testDBManagerNotConnected() throws SQLException, ExitException {
         //given
         manager.disconnect();
         when(manager.isConnected()).thenReturn(false);
@@ -49,7 +49,7 @@ public class ConnectionStatusTest extends AbstractCommandTest {
     }
 
     @Test
-    public void testIfTableLevelTrue() throws SQLException{
+    public void testIfTableLevelTrue() throws SQLException, ExitException {
         //given
         parameters.setDatabaseName("testDBName");
         parameters.setTableLevel(true);

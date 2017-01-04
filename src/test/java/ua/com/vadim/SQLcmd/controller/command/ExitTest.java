@@ -10,6 +10,7 @@ import ua.com.vadim.SQLcmd.view.View;
 import java.sql.SQLException;
 import java.util.Locale;
 
+import static org.junit.Assert.fail;
 import static org.mockito.Mockito.*;
 
 
@@ -31,17 +32,22 @@ public class ExitTest extends AbstractCommandTest {
         command = new Exit(manager, view);
     }
 
-    @Test(expected = ExitException.class)
+    @Test
     public void testExitYes() {
         //when
-        when(view.readLine()).thenReturn("y");
-        command.execute();
+        try {
+            when(view.read()).thenReturn("y");
+            command.execute();
+            fail();
+        } catch (ExitException e) {
+            //NOP
+        }
     }
 
     @Test
-    public void testExitYesWithSQLException() throws SQLException {
+    public void testExitYesWithSQLException() throws SQLException, ExitException {
         //given
-        when(view.readLine()).thenReturn("y");
+        when(view.read()).thenReturn("y");
         when(manager.isConnected()).thenReturn(true);
         doThrow(new SQLException()).when(manager).disconnect();
 
@@ -59,7 +65,7 @@ public class ExitTest extends AbstractCommandTest {
     @Test
     public void testExitNo() throws ExitException {
         //given
-        when(view.readLine()).thenReturn("n");
+        when(view.read()).thenReturn("n");
 
         //when
         command.execute();

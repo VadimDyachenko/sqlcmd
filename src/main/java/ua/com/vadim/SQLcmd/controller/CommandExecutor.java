@@ -14,7 +14,7 @@ class CommandExecutor {
 
     CommandExecutor(RunParameters runParameters, DatabaseManager manager, View view) {
         commandMap.put(AvailableCommand.DB_CONNECT, new DBConnect(runParameters, manager, view));
-        commandMap.put(AvailableCommand.DB_LIST_AVAILABLE_TABLE, new DBListTableNames(runParameters, manager, view));
+        commandMap.put(AvailableCommand.DB_LIST_AVAILABLE_TABLE, new DBListTableNames(manager, view));
         commandMap.put(AvailableCommand.DB_SELECT_TABLE, new DBSelectTable(runParameters, manager, view));
         commandMap.put(AvailableCommand.TABLE_PRINT, new TablePrintData(runParameters, manager, view));
         commandMap.put(AvailableCommand.TABLE_CREATE_RECORD, new TableCreateRecord(runParameters, manager, view));

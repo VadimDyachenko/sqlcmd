@@ -1,6 +1,7 @@
 package ua.com.vadim.SQLcmd.controller.command;
 
 import ua.com.vadim.SQLcmd.controller.RunParameters;
+import ua.com.vadim.SQLcmd.exception.ExitException;
 import ua.com.vadim.SQLcmd.model.DataSet;
 import ua.com.vadim.SQLcmd.model.DataSetImpl;
 import ua.com.vadim.SQLcmd.model.DatabaseManager;
@@ -11,7 +12,7 @@ import java.sql.SQLException;
 import java.util.ResourceBundle;
 import java.util.Set;
 
-public class TableCreateRecord implements Command {
+public class TableCreateRecord extends AbstractCommand implements Command {
     private final ResourceBundle resource;
     private final DatabaseManager manager;
     private final View view;
@@ -25,7 +26,7 @@ public class TableCreateRecord implements Command {
     }
 
     @Override
-    public void execute() {
+    public void execute() throws ExitException {
         String tableName = runParameters.getTableName();
         try {
             Set<String> columnNames = getAvailableColumnNames(tableName);
@@ -41,10 +42,10 @@ public class TableCreateRecord implements Command {
         }
     }
 
-    private String[] inputRecordData(Set<String> columnNames) {
+    private String[] inputRecordData(Set<String> columnNames) throws ExitException {
         do {
             try {
-                String[] inputUserData = view.readLine().split("\\|");
+                String[] inputUserData = readLine().split("\\|");
                 validateInputData(inputUserData, columnNames);
                 return inputUserData;
             } catch (IllegalArgumentException e) {
@@ -80,5 +81,10 @@ public class TableCreateRecord implements Command {
 
     private void printAvailableColumnNames(Set<String> columnNames) {
         view.writeMessage(String.format(resource.getString("table.create.available.column"), columnNames.toString()));
+    }
+
+    @Override
+    View getView() {
+        return view;
     }
 }
