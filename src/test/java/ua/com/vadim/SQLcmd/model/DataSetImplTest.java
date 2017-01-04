@@ -18,6 +18,7 @@ public class DataSetImplTest {
         dataSet.put("name", "TestName");
         dataSet.put("password", "qwerty");
     }
+
     @Test
     public void testPutGet() {
         //given
@@ -32,24 +33,20 @@ public class DataSetImplTest {
 
     @Test
     public void testGetNames() {
-        //given
-        Set<String> resultKeySet;
-        String expectedResult = "[id, name, password]";
         //when
-        resultKeySet = dataSet.getNames();
+        Set<String> resultKeySet = dataSet.getNames();
+
         //then
-        assertEquals(expectedResult, resultKeySet.toString());
+        assertEquals("[id, name, password]", resultKeySet.toString());
     }
 
     @Test
     public void testGetValues() {
-        //given
-        List<Object> resultList;
-        String expectedResult = "[1, TestName, qwerty]";
         //when
-        resultList = dataSet.getValues();
+        List<Object> resultList = dataSet.getValues();
+
         //then
-        assertEquals(expectedResult, resultList.toString());
+        assertEquals("[1, TestName, qwerty]", resultList.toString());
     }
 
     @Test
@@ -57,21 +54,21 @@ public class DataSetImplTest {
         //given
         DataSet newDataSet = new DataSetImpl();
         newDataSet.put("name", "NewName");
-        String expectedResult = "[1, NewName, qwerty]";
+
         //when
         dataSet.updateFrom(newDataSet);
         List<Object> resultList = dataSet.getValues();
+
         //then
-        assertEquals(expectedResult,resultList.toString());
+        assertEquals("[1, NewName, qwerty]", resultList.toString());
     }
 
     @Test
     public void testToString() {
-        //given
-        String expectedResult = "{id:1, name:TestName, password:qwerty}";
         //when
         String actualResult = dataSet.toString();
+
         //then
-        assertEquals(expectedResult,actualResult);
+        assertEquals("{id:1, name:TestName, password:qwerty}", actualResult);
     }
 }
