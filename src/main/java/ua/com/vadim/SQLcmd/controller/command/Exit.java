@@ -23,7 +23,7 @@ public class Exit extends AbstractCommand implements Command {
     public void execute() throws ExitException {
         view.writeMessage(resource.getString("exit.question"));
         String answer = readLine().trim().toLowerCase();
-        if (answer.equals("y") || answer.equals("д")) { //TODO выпилить хардкод y/д
+        if (answer.equals(resource.getString("exit.yes"))) {
             try {
                 manager.disconnect();
             } catch (SQLException e) {
