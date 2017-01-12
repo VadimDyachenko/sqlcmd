@@ -16,11 +16,9 @@ abstract class AbstractCommand implements Command {
         this.view = view;
     }
 
-    abstract View getView();
-
     String readLine() throws ExitException {
 
-        String result = getView().read();
+        String result = view.read();
         if ("exit".equalsIgnoreCase(result)) {
             throw new ExitException();
         }

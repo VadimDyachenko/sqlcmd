@@ -83,9 +83,4 @@ public class TableUpdateRecord extends AbstractCommand {
             throw new IllegalArgumentException(resource.getString("table.update.record.invalid.number"));
         }
     }
-
-    @Override
-    View getView() {
-        return view;
-    }
 }

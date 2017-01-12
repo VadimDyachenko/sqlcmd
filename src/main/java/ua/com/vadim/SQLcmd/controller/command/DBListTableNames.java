@@ -50,9 +50,4 @@ public class DBListTableNames extends AbstractCommand {
         view.writeMessage(resource.getString("dblist.available.tables"));
         view.writeMessage(tableNames.toString());
     }
-
-    @Override
-    View getView() {
-        return null;
-    }
 }

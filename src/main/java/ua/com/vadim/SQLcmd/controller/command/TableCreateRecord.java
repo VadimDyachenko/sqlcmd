@@ -78,9 +78,4 @@ public class TableCreateRecord extends AbstractCommand {
     private void printAvailableColumnNames(Set<String> columnNames) {
         view.writeMessage(String.format(resource.getString("table.create.available.column"), columnNames.toString()));
     }
-
-    @Override
-    View getView() {
-        return view;
-    }
 }

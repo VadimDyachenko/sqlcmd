@@ -31,9 +31,4 @@ public class Exit extends AbstractCommand {
             throw new ExitException();
         }
     }
-
-    @Override
-    View getView() {
-        return view;
-    }
 }

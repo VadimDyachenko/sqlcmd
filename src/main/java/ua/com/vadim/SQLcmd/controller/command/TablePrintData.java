@@ -20,11 +20,6 @@ public class TablePrintData extends AbstractCommand {
     }
 
     @Override
-    View getView() {
-        return null;
-    }
-
-    @Override
     public void execute() {
         String tableName = parameters.getTableName();
         try {

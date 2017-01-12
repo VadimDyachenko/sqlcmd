@@ -18,11 +18,6 @@ public class TableClear extends AbstractCommand {
     }
 
     @Override
-    View getView() {
-        return null;
-    }
-
-    @Override
     public void execute() throws ExitException {
         String currentTableName = parameters.getTableName();
         view.writeMessage(String.format(resource.getString("table.clear.question"), currentTableName));

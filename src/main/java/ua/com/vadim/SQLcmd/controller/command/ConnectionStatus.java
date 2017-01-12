@@ -32,8 +32,4 @@ public class ConnectionStatus extends AbstractCommand {
         view.writeMessage(message);
     }
 
-    @Override
-    View getView() {
-        return null;
-    }
 }

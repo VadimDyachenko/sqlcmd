@@ -66,9 +66,4 @@ public class DBConnect extends AbstractCommand {
         }
         while (!manager.isConnected());
     }
-
-    @Override
-    View getView() {
-        return view;
-    }
 }

@@ -14,9 +14,4 @@ public class Return extends AbstractCommand {
     public void execute() {
         parameters.setTableLevel(false);
     }
-
-    @Override
-    View getView() {
-        return null;
-    }
 }

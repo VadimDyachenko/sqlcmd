@@ -67,9 +67,4 @@ public class DBSelectTable extends AbstractCommand {
     private void printAvailableTables(Set<String> tableNames) {
         view.writeMessage(tableNames.toString());
     }
-
-    @Override
-    View getView() {
-        return view;
-    }
 }
