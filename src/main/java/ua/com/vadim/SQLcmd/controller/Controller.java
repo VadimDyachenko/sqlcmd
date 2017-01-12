@@ -22,7 +22,7 @@ public class Controller {
     public Controller(View view) {
         this.view = view;
         parameters = new PropertiesLoader().getParameters();
-        localeSelector= new LocaleSelector();
+        localeSelector = new LocaleSelector();
         manager = new PostgresDBManager(parameters.getServerIP(),
                 parameters.getServerPort());
     }
@@ -30,7 +30,6 @@ public class Controller {
     public void run() {
         try {
             setUp();
-
             view.writeMessage(resource.getString("common.welcome"));
             tryDBConnectWithDefaultParameters();
 
@@ -51,9 +50,27 @@ public class Controller {
     }
 
     private void setUp() throws ExitException {
+
         localeSetUp();
+
         resource = ResourceBundle.getBundle("common", new UTF8Control());
         commandExecutor = new CommandExecutor(parameters, manager, view);
+    }
+
+    private void localeSetUp() {
+        try {
+
+            localeSelector.setLocale(parameters.getInterfaceLanguage());
+
+        } catch (UnsupportedLanguageException e) {
+
+            view.writeMessage("Unsupported language parameter in sqlcmd.properties file.\n" +
+                    "Exit the program and change it to available variant: " +
+                    localeSelector.getSupportedLocale().toString() +
+                    "Current interface language setting to [en]\n");
+
+            localeSelector.setEnglishLocale();
+        }
     }
 
     private AvailableCommand askCommand() throws ExitException {
@@ -90,18 +107,6 @@ public class Controller {
         view.writeMessage(resource.getString("common.table.menu"));
     }
 
-
-    private void localeSetUp() {
-        try {
-            localeSelector.setLocale(parameters.getInterfaceLanguage());
-        } catch (UnsupportedLanguageException e) {
-            view.writeMessage("Unsupported language parameter in sqlcmd.properties file.");
-            view.writeMessage("Exit the program and change it to available variant: " +
-                    localeSelector.getSupportedLocale().toString());
-            view.writeMessage("Current interface language setting to [en]\n");
-            localeSelector.setEnglishLocale();
-        }
-    }
 
     private void tryDBConnectWithDefaultParameters() throws ExitException {
         view.writeMessage(resource.getString("common.try.connect.default.parameters"));
