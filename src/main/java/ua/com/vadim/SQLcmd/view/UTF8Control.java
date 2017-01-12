@@ -9,6 +9,9 @@ import java.util.Locale;
 import java.util.PropertyResourceBundle;
 import java.util.ResourceBundle;
 
+// https://javadocs.com/docs/com.github.mfornos/humanize/0.1.1/com/github/mfornos/humanize/util/UTF8Control.java
+// http://stackoverflow.com/questions/4659929/how-to-use-utf-8-in-resource-%20properties-with-resourcebundle
+
 public class UTF8Control extends ResourceBundle.Control {
     public ResourceBundle newBundle
             (String baseName, Locale locale, String format, ClassLoader loader, boolean reload)
