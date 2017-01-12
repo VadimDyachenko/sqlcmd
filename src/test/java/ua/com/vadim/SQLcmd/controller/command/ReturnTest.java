@@ -15,7 +15,7 @@ public class ReturnTest {
     @Before
     public void setUp() {
         runParameters = mock(RunParameters.class);
-        command = new Return(runParameters);
+        command = new Return(runParameters, null, null);
     }
 
     @Test

@@ -12,16 +12,12 @@ import java.sql.SQLException;
 import java.util.ResourceBundle;
 import java.util.Set;
 
-public class TableCreateRecord extends AbstractCommand implements Command {
+public class TableCreateRecord extends AbstractCommand {
+
     private final ResourceBundle resource;
-    private final DatabaseManager manager;
-    private final View view;
-    private final RunParameters parameters;
 
     public TableCreateRecord(RunParameters parameters, DatabaseManager manager, View view) {
-        this.parameters = parameters;
-        this.manager = manager;
-        this.view = view;
+        super(parameters, manager, view);
         resource = ResourceBundle.getBundle("TableCreateRecord", new UTF8Control());
     }
 

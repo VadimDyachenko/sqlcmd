@@ -12,16 +12,12 @@ import java.sql.SQLException;
 import java.util.ResourceBundle;
 import java.util.Set;
 
-public class TableUpdateRecord extends AbstractCommand implements Command {
-    private final RunParameters parameters;
-    private final DatabaseManager manager;
-    private final View view;
+public class TableUpdateRecord extends AbstractCommand {
+
     private final ResourceBundle resource;
 
     public TableUpdateRecord(RunParameters parameters, DatabaseManager manager, View view) {
-        this.parameters = parameters;
-        this.manager = manager;
-        this.view = view;
+        super(parameters, manager, view);
         resource = ResourceBundle.getBundle("TableUpdateRecord", new UTF8Control());
     }
 

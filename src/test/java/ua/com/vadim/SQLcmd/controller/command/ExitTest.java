@@ -29,7 +29,7 @@ public class ExitTest extends AbstractCommandTest {
     public void setUp() {
         manager = mock(DatabaseManager.class);
         view = mock(View.class);
-        command = new Exit(manager, view);
+        command = new Exit(null, manager, view);
     }
 
     @Test

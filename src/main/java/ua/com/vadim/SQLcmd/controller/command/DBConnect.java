@@ -9,16 +9,12 @@ import ua.com.vadim.SQLcmd.view.View;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
 
-public class DBConnect extends AbstractCommand implements Command {
+public class DBConnect extends AbstractCommand {
+
     private final ResourceBundle resource;
-    private final DatabaseManager manager;
-    private final View view;
-    private final RunParameters parameters;
 
     public DBConnect(RunParameters parameters, DatabaseManager manager, View view) {
-        this.parameters = parameters;
-        this.manager = manager;
-        this.view = view;
+        super(parameters, manager, view);
         resource = ResourceBundle.getBundle("DBConnect", new UTF8Control());
     }
 

@@ -1,5 +1,6 @@
 package ua.com.vadim.SQLcmd.controller.command;
 
+import ua.com.vadim.SQLcmd.controller.RunParameters;
 import ua.com.vadim.SQLcmd.exception.ExitException;
 import ua.com.vadim.SQLcmd.model.DatabaseManager;
 import ua.com.vadim.SQLcmd.view.UTF8Control;
@@ -8,14 +9,12 @@ import ua.com.vadim.SQLcmd.view.View;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
 
-public class Exit extends AbstractCommand implements Command {
-    private final DatabaseManager manager;
-    private final View view;
+public class Exit extends AbstractCommand {
+
     private final ResourceBundle resource;
 
-    public Exit(DatabaseManager manager, View view) {
-        this.manager = manager;
-        this.view = view;
+    public Exit(RunParameters parameters, DatabaseManager manager, View view) {
+        super(parameters, manager, view);
         resource = ResourceBundle.getBundle("Exit", new UTF8Control());
     }
 

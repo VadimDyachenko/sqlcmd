@@ -7,17 +7,12 @@ import ua.com.vadim.SQLcmd.view.View;
 
 import java.util.ResourceBundle;
 
-public class ConnectionStatus implements Command {
+public class ConnectionStatus extends AbstractCommand {
 
     private final ResourceBundle resource;
-    private final DatabaseManager manager;
-    private final View view;
-    private final RunParameters parameters;
 
     public ConnectionStatus(RunParameters parameters, DatabaseManager manager, View view) {
-        this.parameters = parameters;
-        this.manager = manager;
-        this.view = view;
+        super(parameters, manager, view);
         resource = ResourceBundle.getBundle("connectionStatus", new UTF8Control());
     }
 
@@ -35,5 +30,10 @@ public class ConnectionStatus implements Command {
         }
         message += "\n";
         view.writeMessage(message);
+    }
+
+    @Override
+    View getView() {
+        return null;
     }
 }

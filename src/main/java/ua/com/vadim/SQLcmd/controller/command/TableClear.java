@@ -9,17 +9,17 @@ import ua.com.vadim.SQLcmd.view.View;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
 
-public class TableClear implements Command {
+public class TableClear extends AbstractCommand {
     private final ResourceBundle resource;
-    private final RunParameters parameters;
-    private final DatabaseManager manager;
-    private final View view;
 
     public TableClear(RunParameters parameters, DatabaseManager manager, View view) {
-        this.parameters = parameters;
-        this.manager = manager;
-        this.view = view;
+        super(parameters, manager, view);
         resource = ResourceBundle.getBundle("TableClear", new UTF8Control());
+    }
+
+    @Override
+    View getView() {
+        return null;
     }
 
     @Override

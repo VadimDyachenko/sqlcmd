@@ -11,16 +11,12 @@ import java.util.LinkedHashSet;
 import java.util.ResourceBundle;
 import java.util.Set;
 
-public class DBSelectTable extends AbstractCommand implements Command {
+public class DBSelectTable extends AbstractCommand {
+
     private final ResourceBundle resource;
-    private final RunParameters parameters;
-    private final DatabaseManager manager;
-    private final View view;
 
     public DBSelectTable(RunParameters parameters, DatabaseManager manager, View view) {
-        this.parameters = parameters;
-        this.manager = manager;
-        this.view = view;
+        super(parameters, manager, view);
         resource = ResourceBundle.getBundle("DBSelectTable", new UTF8Control());
     }
 

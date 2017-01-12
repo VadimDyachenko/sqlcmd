@@ -11,18 +11,17 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.ResourceBundle;
 
-public class TablePrintData implements Command {
+public class TablePrintData extends AbstractCommand {
     private final ResourceBundle resource;
-    private final DatabaseManager manager;
-    private final View view;
-    private final RunParameters parameters;
-
 
     public TablePrintData(RunParameters parameters, DatabaseManager manager, View view) {
-        this.parameters = parameters;
-        this.manager = manager;
-        this.view = view;
+        super(parameters, manager, view);
         resource = ResourceBundle.getBundle("TablePrintData", new UTF8Control());
+    }
+
+    @Override
+    View getView() {
+        return null;
     }
 
     @Override

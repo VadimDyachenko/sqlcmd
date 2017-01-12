@@ -1,12 +1,13 @@
 package ua.com.vadim.SQLcmd.controller.command;
 
 import ua.com.vadim.SQLcmd.controller.RunParameters;
+import ua.com.vadim.SQLcmd.model.DatabaseManager;
+import ua.com.vadim.SQLcmd.view.View;
 
-public class Return implements Command {
-    private final RunParameters parameters;
+public class Return extends AbstractCommand {
 
-    public Return(RunParameters parameters) {
-        this.parameters = parameters;
+    public Return(RunParameters parameters, DatabaseManager manager, View view) {
+        super(parameters, manager, view);
     }
 
     @Override
@@ -14,4 +15,8 @@ public class Return implements Command {
         parameters.setTableLevel(false);
     }
 
+    @Override
+    View getView() {
+        return null;
+    }
 }

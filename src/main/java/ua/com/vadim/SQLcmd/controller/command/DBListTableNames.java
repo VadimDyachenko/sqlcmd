@@ -10,14 +10,11 @@ import java.util.LinkedHashSet;
 import java.util.ResourceBundle;
 import java.util.Set;
 
-public class DBListTableNames implements Command {
+public class DBListTableNames extends AbstractCommand {
     private final ResourceBundle resource;
-    private final DatabaseManager manager;
-    private final View view;
 
-    public DBListTableNames(DatabaseManager manager, View view) {
-        this.manager = manager;
-        this.view = view;
+    public DBListTableNames(RunParameters parameters, DatabaseManager manager, View view) {
+        super(parameters, manager, view);
         resource = ResourceBundle.getBundle("DBListTableNames", new UTF8Control());
     }
 
@@ -52,5 +49,10 @@ public class DBListTableNames implements Command {
     private void printResult(Set<String> tableNames) {
         view.writeMessage(resource.getString("dblist.available.tables"));
         view.writeMessage(tableNames.toString());
+    }
+
+    @Override
+    View getView() {
+        return null;
     }
 }

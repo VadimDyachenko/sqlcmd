@@ -14,17 +14,17 @@ class CommandExecutor {
 
     private Map<AvailableCommand, Command> commands = new HashMap<>();
 
-    CommandExecutor(RunParameters runParameters, DatabaseManager manager, View view) {
-        commands.put(DB_CONNECT, new DBConnect(runParameters, manager, view));
-        commands.put(DB_AVAILABLE_TABLE, new DBListTableNames(manager, view));
-        commands.put(DB_SELECT_TABLE, new DBSelectTable(runParameters, manager, view));
-        commands.put(TABLE_PRINT, new TablePrintData(runParameters, manager, view));
-        commands.put(TABLE_CREATE_RECORD, new TableCreateRecord(runParameters, manager, view));
-        commands.put(TABLE_UPDATE_RECORD, new TableUpdateRecord(runParameters, manager, view));
-        commands.put(TABLE_CLEAR, new TableClear(runParameters, manager, view));
-        commands.put(RETURN, new Return(runParameters));
-        commands.put(EXIT, new Exit(manager, view));
-        commands.put(PRINT_CONNECTION_STATUS, new ConnectionStatus(runParameters, manager, view));
+    CommandExecutor(RunParameters parameters, DatabaseManager manager, View view) {
+        commands.put(DB_CONNECT, new DBConnect(parameters, manager, view));
+        commands.put(DB_AVAILABLE_TABLE, new DBListTableNames(parameters, manager, view));
+        commands.put(DB_SELECT_TABLE, new DBSelectTable(parameters, manager, view));
+        commands.put(TABLE_PRINT, new TablePrintData(parameters, manager, view));
+        commands.put(TABLE_CREATE_RECORD, new TableCreateRecord(parameters, manager, view));
+        commands.put(TABLE_UPDATE_RECORD, new TableUpdateRecord(parameters, manager, view));
+        commands.put(TABLE_CLEAR, new TableClear(parameters, manager, view));
+        commands.put(RETURN, new Return(parameters, manager, view));
+        commands.put(EXIT, new Exit(parameters, manager, view));
+        commands.put(PRINT_CONNECTION_STATUS, new ConnectionStatus(parameters, manager, view));
     }
 
     public void execute(AvailableCommand command) throws ExitException {

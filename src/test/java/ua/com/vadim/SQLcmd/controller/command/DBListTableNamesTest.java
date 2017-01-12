@@ -30,7 +30,7 @@ public class DBListTableNamesTest extends AbstractCommandTest{
     public void setUp() {
         manager = mock(DatabaseManager.class);
         view = mock(View.class);
-        command = new DBListTableNames(manager, view);
+        command = new DBListTableNames(null, manager, view);
     }
 
     @Test
