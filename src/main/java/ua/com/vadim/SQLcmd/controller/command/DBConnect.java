@@ -23,7 +23,7 @@ public class DBConnect extends AbstractCommand implements Command {
     }
 
     @Override
-    public void execute() throws ExitException{
+    public void execute() throws ExitException {
         if (manager.isConnected()) {
             connectWithNewParameters();
         } else {
@@ -46,24 +46,29 @@ public class DBConnect extends AbstractCommand implements Command {
     }
 
     private void connectWithNewParameters() throws ExitException {
+
         view.writeMessage(resource.getString("dbconnect.enter.connection.parameters"));
+
         do try {
             manager.disconnect();
-            String databaseName = getInputString(resource.getString("dbconnect.enter.database.name"));
-            String login = getInputString(resource.getString("dbconnect.enter.login"));
-            String password = getInputString(resource.getString("dbconnect.enter.password"));
+
+            view.writeMessage(resource.getString("dbconnect.enter.database.name"));
+            String databaseName = readLine();
+
+            view.writeMessage(resource.getString("dbconnect.enter.login"));
+            String login = readLine();
+
+            view.writeMessage(resource.getString("dbconnect.enter.password"));
+            String password = readLine();
+
             manager.connect(databaseName, login, password);
             parameters.setDatabaseName(databaseName);
+
         } catch (SQLException e) {
             view.writeMessage(resource.getString("dbconnect.failed") + " " + e.getMessage());
             view.writeMessage(resource.getString("dbconnect.try.again"));
         }
-        while (!manager.isConnected()) ;
-    }
-
-    private String getInputString(String message) throws ExitException {
-        view.writeMessage(message);
-        return readLine();
+        while (!manager.isConnected());
     }
 
     @Override
