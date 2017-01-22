@@ -13,9 +13,13 @@ public class PropertiesLoader {
 
     public PropertiesLoader() {
         properties = new Properties();
+
         File file = new File(CONFIG_SQLCMD_PROPERTIES);
+
         try (FileInputStream fileInputStream = new FileInputStream(file)) {
+
             properties.load(fileInputStream);
+
         } catch (IOException e) {
             System.out.println("Error loading properties file: " + e.getMessage());
         }
