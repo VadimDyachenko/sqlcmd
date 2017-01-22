@@ -13,6 +13,7 @@ public class RunParameters {
     public RunParameters(String serverIP, String serverPort,
                          String databaseName, String userName,
                          String password, String interfaceLanguage) {
+
         this.serverIP = serverIP;
         this.serverPort = serverPort;
         this.databaseName = databaseName;
